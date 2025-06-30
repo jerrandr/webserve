@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/28 11:19:45 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/06/30 13:55:54 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ Client::Client()
         size_body = 0;
         body = "";
         stat = 0;
+        real_body = 0;
 }
 Client::~Client()
 {
@@ -39,6 +40,7 @@ Client &Client::operator=(const Client &other)
         size_body = other.size_body;
         body = other.body;
         stat = other.stat;
+        real_body = other.real_body;
         return (*this);
 }
         
@@ -53,6 +55,7 @@ Client::Client(int s,std::string req)
         size_body = 0;
         body = "";
         stat = 0;
+        real_body = 0;
 }
 std::string Client::get_requette() const
 {
@@ -247,14 +250,15 @@ static std::string get_body(std::string buffer, int &size)
         return body;
 }
 
-void    Client::body_split()
+std::vector<std::string>     Client::body_split()
 {
         std::string new_body;
         std::vector<std::string> spl;
+        std::vector <std::string> r;
 
         new_body = "";
         spl = split(body,"\r\n");
-        if(spl.size() > 5)
+        if(spl.size() >= 5)
         {
                 for(size_t i = 3 ; i < spl.size(); i++)
                 {
@@ -271,19 +275,23 @@ void    Client::body_split()
         }
         if(new_body != "")
                 body = new_body;
+        for(size_t i = 1; i < 3; i++)
+        {
+                if(i < spl.size())
+                        r.push_back(spl[i]);
+        }
+        return r;
 }
 void    Client::receve_message()
 {
-        char buffer[1024];
+        char buffer[10024];
         int status;
-        size_t real_body;
         int size;
         
-        real_body = 0;
         size = 0;
         bzero(buffer,sizeof(buffer));
         status = 0;
-        status =recv(socket,buffer,1024-1,0) ;
+        status =recv(socket,buffer,10024-1,0) ;
         if(status < 0)
                 return ;
         else if(status == 0)
@@ -294,16 +302,22 @@ void    Client::receve_message()
         }
         body += get_body(buffer, size);
         set_head(size,buffer);
-        real_body = get_len_real_body();
+        if(real_body == 0)
+                real_body = get_len_real_body();
         size_body += status - size;
-        status_requette = 1+ (real_body - size_body);
-        if(status_requette == 0 || status_requette == 1)
+        if(real_body == size_body)
         {
                 status_requette = 1;
-                requette += body;
-                std::cout << "------------------message--------------------" << std::endl;
-                std::cout  << body <<std::endl;
-                std::cout << "----------------------------------------------" << std::endl;        
+        }
+        std::cout << buffer << std::endl;
+        // std::cout << "real_" << real_body << " " << size_body << std::endl;
+        if(status_requette == 1)
+        {
+                status_requette = 1;
+                // requette += body;
+                // std::cout << "------------------message--------------------" << std::endl;
+                // std::cout  << body <<std::endl;
+                // std::cout << "----------------------------------------------" << std::endl;        
                 parse_requette();
                 requette = "";
                 size_body = 0;
@@ -315,11 +329,15 @@ void    Client::receve_message()
 void    Client::parse_requette()
 {
         std::map<std::string, std::string> config;
+        std::vector<std::string > snip;
         std::string temp1;
         std::string temp2;
 
         temp1 = "";
         temp2 = "";
+        snip = body_split();
+        for(size_t i = 0; i < snip.size(); i++)
+                requette += snip[i]+"\r\n";
         for(size_t i = 0; i < requette.size();i++)
         {
                 if (requette[i] == ' ' && ((temp1 == "GET") || (temp1 == "POST") || (temp1 == "POST")
@@ -338,12 +356,10 @@ void    Client::parse_requette()
                 {
                         temp1 = "";
                 }
-                else if(requette[i]==':' && temp1[temp1.size()-1] != ':')
+                else if(requette[i]==':' && i+1 < requette.size() && requette[i+1] == ' ')
                 {
                         temp1 += requette[i];
-                        i ++;
-                        if(i < requette.size() && requette[i] == ' ')
-                                i++;
+                        i += 2;
                         for(size_t j = i; j < requette.size(); j++)
                         {
                                 if(j+1 < requette.size() && requette[j] == '\r' && requette[j+1] == '\n')
@@ -352,6 +368,7 @@ void    Client::parse_requette()
                         }
                         if(temp1 != " " && temp2 != " ")
                         {
+                                // std::cout << temp1 << " " << temp2 << std::endl;
                                 config[temp1] = temp2;
                                 temp2 = "";
                         }
@@ -359,7 +376,7 @@ void    Client::parse_requette()
                 }
                 temp1 += requette[i];                 
         }
-        body_split();
+        // body_split();
         if(config["method"] == "POST")
         {
                 std::ofstream fd("test.out");

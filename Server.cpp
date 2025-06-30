@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:05:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/24 08:35:08 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/06/30 12:11:19 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,22 @@
 #include "Client.hpp"
 Server::Server()
 {
+
+    /*io size io ny isanle block server*/
     size = 1;
     config = -1;
-    bzero(fds,10000);
     for(int i = 0; i < size; i++)
     {
-        Socket socket_serv(fds,size,i);
+        struct pollfd fd_poll;
+        
+        Socket socket_serv;
         sockets.push_back(socket_serv);
         serv.push_back(socket_serv.get_socket());
-        fds[i].fd = socket_serv.get_socket();
-        fds[i].events = POLLIN;
-        fds[i].revents = 0;
+        fd_poll.fd = socket_serv.get_socket();
+        fd_poll.events = POLLIN;
+        fd_poll.revents = 0;
+
+        fds.push_back(fd_poll);
     }  
 }
 Server::~Server()
@@ -42,6 +47,9 @@ Server &Server::operator=(const Server &other)
     return (*this);
 }
 
+/*io name io le nom de fichier natsofoka tao amle 2 eme parametre
+de ra tsisy de le par defaut no atao de fichier de config par defaut no sokafana
+*/
 Server::Server(std::string name)
 {
     (void)name;
@@ -49,15 +57,15 @@ Server::Server(std::string name)
 
 void    Server::maj_fd()
 {
-    int len;
+    struct pollfd fd_poll;
 
-    len = 0;
+    fds.clear();
     for(size_t i = 0;i < serv.size() ; i++)
     {
-        fds[i].fd = serv[i];
-        fds[i].events = POLLIN;
-        fds[i].revents = 0;
-        len ++;
+        fd_poll.fd = serv[i];
+        fd_poll.events = POLLIN;
+        fd_poll.revents = 0;
+        fds.push_back(fd_poll);
     }
     for(size_t i = 0 ; i < sockets.size(); i++)
     {
@@ -65,14 +73,15 @@ void    Server::maj_fd()
         tmp = sockets[i].get_clients();
         for(size_t j = 0; j < tmp.size(); j++)
         {
-            fds[len].fd = tmp[j].get_socket_client();
-            fds[len].events = POLLIN | POLLOUT;
-            fds[len].revents = 0;
-            len ++; 
+            fd_poll.fd = tmp[j].get_socket_client();
+            fd_poll.events = POLLIN | POLLOUT;
+            fd_poll.revents = 0;
+
+            fds.push_back(fd_poll);
         }
         tmp.clear();
     }
-    size = len;
+    size = (int)fds.size();
 }
 void    Server::listen_sockets()
 {
@@ -121,7 +130,7 @@ void    Server::start()
         maj_fd();
         maj_size_fd_socket();
         listen_all_socket();
-        poll(fds,size,300);
+        poll(&fds[0],size,300);
         maj_all_socket();
         listen_sockets();
     }

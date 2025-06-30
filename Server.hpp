@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:57:28 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/21 14:42:18 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/06/30 10:59:54 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-
+struct pollfd;
 class Socket;
 class Server
 {
@@ -36,7 +36,8 @@ class Server
         std::vector<Socket> sockets;
         std::vector<int> serv;
         int size;
-        struct pollfd fds[10000];
+        std::vector <pollfd> fds;
+        // struct pollfd fds[10000];
     public:
         Server();
         ~Server();

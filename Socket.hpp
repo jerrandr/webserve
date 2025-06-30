@@ -6,27 +6,31 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:15:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/27 10:05:54 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/06/30 11:07:21 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SOCKET_HPP
 #define SOCKET_HPP
 #include "Server.hpp"
+
 class Client;
 class Socket
 {
     private:
         std::map<std::string, std::string> config;
+        std::vector < std::map< std::string, std::string> > location;
         struct addrinfo *info;
-        struct pollfd (fd_serv)[10000];
+        std::vector <pollfd> fd_serv;
+        // struct pollfd (fd_serv)[10000];
         int size_fd;
         int fd;
         std::vector<Client> clients;
 
-        Socket();
     public:
-        Socket(struct pollfd (&fds)[10000], int &size, int i);
+        Socket();
+        // Socket(std::map<std::string, std::string> config,std::vector < std::map< std::string, std::string> > location);
+        // Socket(std::vector <pollfd> &fds, int &size, int i);
         ~Socket();
         Socket(const Socket &other);
         Socket &operator=(const Socket &other);
@@ -34,7 +38,7 @@ class Socket
         int get_socket()const;
         void    set_size_fd(int size);
         void    listen_port();
-        void    set_poll(pollfd (fds)[10000]);
+        void    set_poll(std::vector <pollfd> &fds);
         void    maj_fd_client();
         
         void    add_new_fd();

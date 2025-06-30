@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/27 14:39:41 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/06/30 13:22:36 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,10 @@ class Client
         std::string requette;
         std::string reponse;
         std::string body;
+        size_t real_body;
         int status_requette;
         int status_connexion;
-        int size_body;
+        size_t size_body;
         int stat;
         Client();
     public:
@@ -48,7 +49,7 @@ class Client
         size_t get_len_real_body();
         size_t get_len_body(std::string buffer);
         void    set_head(int size,char buffer[1024]);
-        void    body_split();
+        std::vector<std::string>    body_split();
 
         void    parse_requette();
 };
