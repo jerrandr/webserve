@@ -1,24 +1,26 @@
+NAME = web
 
-C++ = c++ -Wall -Wextra -Werror
+SRC = main.cpp Client.cpp Server.cpp Socket.cpp\
 
-SRC = main.cpp
+OBJ = ${SRC:.cpp=.o}
 
-NAME = socket
+cc = c++
 
-OBJ = $(SRC:.cpp=.o)
+FLAG = -Wall -Wextra -Werror -std=c++98 -g
 
-all: $(NAME)
+.cpp.o:
+	${cc} ${FLAG} -c $< -o ${<:.cpp=.o}
 
-$(NAME):$(OBJ)
-	$(C++) -o $(NAME) $(OBJ) 
+all : ${NAME}
 
-clean:
-	rm -rf $(OBJ)
+${NAME} : ${OBJ}
+			${cc} ${FLAG} ${OBJ} -o ${NAME}
+clean :
+		rm -f ${OBJ}
 
-fclean:clean
-	rm -rf $(NAME)
+fclean : clean
+		rm -f ${NAME}
 
-re: fclean all
+re : fclean all
 
-.PHONY: all re fclean clean
-	
+.PHONY : all clean fclean re

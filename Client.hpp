@@ -1,0 +1,55 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Client.hpp                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
+/*   Updated: 2025/06/27 14:39:41 by msalohy          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
+#include "Socket.hpp"
+
+class Client
+{
+    private:
+        int socket;
+        std::string requette;
+        std::string reponse;
+        std::string body;
+        int status_requette;
+        int status_connexion;
+        int size_body;
+        int stat;
+        Client();
+    public:
+        ~Client();
+        Client(const Client &other);
+        Client &operator=(const Client &other);
+        
+
+        Client(int s, std::string re);
+        int get_socket_client() const;
+        std::string get_requette() const;
+        void    set_requette(std::string &n);
+        int     get_status() const;
+
+        void    set_status_connexion( int status);
+
+        void    receve_message();
+        void    send_message();
+
+        void    verify_connex(int status);
+
+        size_t get_len_real_body();
+        size_t get_len_body(std::string buffer);
+        void    set_head(int size,char buffer[1024]);
+        void    body_split();
+
+        void    parse_requette();
+};
+#endif
