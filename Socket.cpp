@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/30 12:06:47 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/01 11:12:18 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,37 +84,35 @@ struct addrinfo hints;
     // fd_serv = fds;
     size_fd = 0;
     /*initialisation apartir du fichier de config*/
-    config["listen"] = "8080";
-    config["host"] = "localhost";
-    config["root"] = "www/";
-    config["index"] = "index.html";
-    config["server_name"] = "";
-    config["def_error_page"] = "";
-    config["max_allowed_size"] = "";
+    config.set_port("8080");
+    config.set_host("localhost");
+    config.set_max_allowed_size("");
     
     /*initialisation du block location a partir du fichier de config
     mety bedebe le location*/
     for(int i = 0; i < size; i++)
     {
-        std::map<std::string, std::string> loc;
+        Location loc;
         
-        loc["URI"] = "";
+        loc.set_uri("");
         /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
-        loc["http_method_accepted"] = "";
-        loc["redirect"] ="";
-        loc["root"] = "";
+        loc.set_meth("POST GET");
+        loc.set_redir("www/");
+        loc.set_root("www/");
         /*valeur booleen*/
-        loc["enable_director_listen"] = "";
-        loc["index"]="";
+        loc.set_enabled(false);
+        loc.set_index("index.html index.php");
         /*path*/
-        loc["CGI"] = "";
+        loc.set_path_cgi("");
+        config.set_locs(loc);
     }
     
+    /*raha misy directive error page ao amn fichier de config de atao otranio location*/
     memset(&hints, 0, sizeof hints);
     hints.ai_family=AF_INET;
     hints.ai_socktype=SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;  
-    if(getaddrinfo(config.at("host").c_str(),config.at("listen").c_str(),&hints,&server)!=0)
+    if(getaddrinfo(config.get_host().c_str(),config.get_port().c_str(),&hints,&server)!=0)
     {
         std::perror("error");
         exit(1);

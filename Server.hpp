@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:57:28 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/30 10:59:54 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/01 10:56:38 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include "Location.hpp"
+#include "ErrorPage.hpp"
+#include "Config.hpp"
 struct pollfd;
 class Socket;
 class Server

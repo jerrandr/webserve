@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:15:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/30 11:07:21 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/01 10:57:36 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ class Client;
 class Socket
 {
     private:
-        std::map<std::string, std::string> config;
-        std::vector < std::map< std::string, std::string> > location;
+        Config config;
         struct addrinfo *info;
         std::vector <pollfd> fd_serv;
         // struct pollfd (fd_serv)[10000];

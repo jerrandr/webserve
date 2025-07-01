@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/30 13:55:54 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/01 10:56:01 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ void    Client::send_message()
 {
         std::string test;
         std::string html;
-        std::ifstream fd("../socket/www/index.html");
+        std::ifstream fd("index.html");
         std::stringstream ss;
         int size;
 
