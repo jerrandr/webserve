@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:57:28 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 10:56:38 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/01 13:35:39 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include "Location.hpp"
 #include "ErrorPage.hpp"
 #include "Config.hpp"
+#include "Pollfd.hpp"
 struct pollfd;
 class Socket;
 class Server
@@ -39,7 +40,8 @@ class Server
         std::vector<Socket> sockets;
         std::vector<int> serv;
         int size;
-        std::vector <pollfd> fds;
+        Pollfd *fds;
+        // std::vector <pollfd> fds;
         // struct pollfd fds[10000];
     public:
         Server();

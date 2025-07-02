@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 10:56:01 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/01 13:00:18 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,9 +220,9 @@ static std::string get_body(std::string buffer, int &size)
         {
                 if(buffer[i] == ' ')
                 {
-                        if((head == "GET") || (head == "POST") || (head == "POST")
-                                || (head == "POST")|| (head == "HEAD") || (head == "OPTIONS")
-                                 ||(head == "TRACE") || (head == "CONNECT") || (head == "PATCH"))
+                        if((head == "GET") || (head == "HEAD") || (head == "OPTIONS")
+                                || (head == "TRACE")|| (head == "PUT") || (head == "DELETE")
+                                 ||(head == "POST") || (head == "PATCH") || (head == "CONNECT"))
                         {
                                 for(size_t j = i ; j < buffer.size(); j++)
                                 {
@@ -340,9 +340,9 @@ void    Client::parse_requette()
                 requette += snip[i]+"\r\n";
         for(size_t i = 0; i < requette.size();i++)
         {
-                if (requette[i] == ' ' && ((temp1 == "GET") || (temp1 == "POST") || (temp1 == "POST")
-                                || (temp1 == "POST") || (temp1 == "HEAD") || (temp1 == "OPTIONS")
-                                 || (temp1 == "TRACE") || (temp1 == "CONNECT") || (temp1 == "PATCH")))
+                if (requette[i] == ' ' && ((temp1 == "GET") || (temp1 == "HEAD") || (temp1 == "OPTIONS")
+                                || (temp1 == "TRACE") || (temp1 == "PUT") || (temp1 == "DELETE")
+                                 || (temp1 == "POST") || (temp1 == "PATCH") || (temp1 == "CONNECT")))
                 {
                         config["method"] = temp1;
                         temp1 = "";

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 11:12:18 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/01 14:37:43 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,10 @@
 //     fd_serv[i].revents = fds[i].revents;
 
 // }
-Socket::Socket()
+
+Socket::Socket(Pollfd *tmp)
 {
-struct addrinfo hints;
+    struct addrinfo hints;
     struct addrinfo *server;
     int yes;
     int size;
@@ -82,7 +83,69 @@ struct addrinfo hints;
     yes = 1;
     size = 0;
     // fd_serv = fds;
-    size_fd = 0;
+    /*initialisation apartir du fichier de config*/
+    config.set_port("8080");
+    config.set_host("localhost");
+    config.set_max_allowed_size("");
+    
+    /*initialisation du block location a partir du fichier de config
+    mety bedebe le location*/
+    for(int i = 0; i < size; i++)
+    {
+        Location loc;
+        
+        loc.set_uri("");
+        /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
+        loc.set_meth("POST GET");
+        loc.set_redir("www/");
+        loc.set_root("www/");
+        /*valeur booleen*/
+        loc.set_enabled(false);
+        loc.set_index("index.html index.php");
+        /*path*/
+        loc.set_path_cgi("");
+        config.set_locs(loc);
+    }
+    
+    /*raha misy directive error page ao amn fichier de config de atao otranio location*/
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family=AF_INET;
+    hints.ai_socktype=SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;  
+    if(getaddrinfo(config.get_host().c_str(),config.get_port().c_str(),&hints,&server)!=0)
+    {
+        std::perror("error");
+        exit(1);
+    }
+    fd = socket(server->ai_family,server->ai_socktype,0);
+    if(fd == -1)
+    {
+        std::perror("error 1:");
+        exit(1);
+    }
+    info = server;
+    std::cout << "Server connection ......" << std::endl;
+    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
+    if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
+    {
+        std::perror("Bind error ");
+        exit(1);
+    }
+    std::cout << "server connected" << std::endl;
+    polls = tmp;
+    // size_fd = polls->get_size();
+}
+Socket::Socket()
+{
+    struct addrinfo hints;
+    struct addrinfo *server;
+    int yes;
+    int size;
+
+    yes = 1;
+    size = 0;
+    // fd_serv = fds;
+    // size_fd = 0;
     /*initialisation apartir du fichier de config*/
     config.set_port("8080");
     config.set_host("localhost");
@@ -146,10 +209,11 @@ Socket::Socket(const Socket &other)
 }
 Socket &Socket::operator=(const Socket &other)
 {
-    fd_serv.clear();
-    fd_serv = other.fd_serv;
+    polls = other.polls;
+    // fd_serv.clear();
+    // fd_serv = other.fd_serv;
     fd = other.fd;
-    size_fd  = other.size_fd;
+    // size_fd  = other.size_fd;
     info = other.info;
     return (*this);
 }
@@ -170,16 +234,17 @@ void    Socket::add_new_fd()
     }
     Client cl(socket_client,"");
     clients.push_back(cl);
+    polls->add_new_fd(socket_client);
 }
-void    Socket::set_size_fd(int size)
-{
-    this->size_fd = size;
-}
-void    Socket::set_poll(std::vector <pollfd> &fds)
-{
-    fd_serv.clear();
-    fd_serv = fds;
-}
+// void    Socket::set_size_fd(int size)
+// {
+//     this->size_fd = size;
+// }
+// void    Socket::set_poll(std::vector <pollfd> &fds)
+// {
+//     fd_serv.clear();
+//     fd_serv = fds;
+// }
 
 void    Socket::maj_fd_client()
 {
@@ -194,6 +259,7 @@ void    Socket::maj_fd_client()
             size ++;
             if(i->get_status() < 0)
             {
+                polls->erase_fd(i->get_socket_client());
                 close(i->get_socket_client());
                 clients.erase(i);
                 size = 0;
@@ -206,26 +272,45 @@ void    Socket::maj_fd_client()
 }
 void    Socket::listen_port()
 {
-    for(int i = 0; i < size_fd; i++)
+    short re;
+
+    re = polls->get_status(fd);
+    if(re != 0 && (re & POLLIN) == 1)
+        add_new_fd();
+    else
     {
-        if(fd_serv[i].fd == fd && (fd_serv[i].revents & POLLIN) == 1)
+        for(size_t j = 0; j < clients.size(); j++)
         {
-            add_new_fd();
-        }
-        else if(fd_serv[i].revents > 0)
-        {
-            for(size_t j = 0; j < clients.size(); j++)
+            re = polls->get_status(clients[j].get_socket_client());
+            if(re != 0)
             {
-                if(fd_serv[i].fd == clients[j].get_socket_client())
-                {
-                    if (fd_serv[i].revents & POLLIN)
-                        clients[j].verify_connex(1);
-                    else
-                        clients[j].verify_connex(2);
-                }
+                if (re & POLLIN)
+                    clients[j].verify_connex(1);
+                else
+                    clients[j].verify_connex(2);
             }
         }
     }
+    // for(int i = 0; i < size_fd; i++)
+    // {
+    //     if(fd_serv[i].fd == fd && (fd_serv[i].revents & POLLIN) == 1)
+    //     {
+    //         add_new_fd();
+    //     }
+    //     else if(fd_serv[i].revents > 0)
+    //     {
+    //         for(size_t j = 0; j < clients.size(); j++)
+    //         {
+    //             if(fd_serv[i].fd == clients[j].get_socket_client())
+    //             {
+    //                 if (fd_serv[i].revents & POLLIN)
+    //                     clients[j].verify_connex(1);
+    //                 else
+    //                     clients[j].verify_connex(2);
+    //             }
+    //         }
+    //     }
+    // }
     maj_fd_client();
 }
 
