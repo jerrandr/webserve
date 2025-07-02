@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:14:00 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 11:17:22 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/02 09:53:25 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ class Location
         std::string index;
         /*PATH*/
         std::string CGI;
+        /*script cgi*/
+        std::string script_cgi;
     public:
         Location();
         ~Location();
@@ -40,6 +42,7 @@ class Location
         const std::string get_index() const;
         const std::string get_path_cgi() const;
         bool    get_directory_listen() const;
+        const std::string get_script_cgi() const;
 
 
         /*setters*/
@@ -50,6 +53,7 @@ class Location
         void    set_enabled(const bool &enabled);
         void    set_index(const std::string &i);
         void    set_path_cgi(const std::string &path);
+        void    set_script(const std::string &src);
 };
 
 

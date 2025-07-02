@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:23:00 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 11:17:39 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/02 09:56:10 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ Location::Location()
     enable_director_listen = false;
     index = "";
     CGI = "";
+    script_cgi = "";
 }
 Location::~Location()
 {
@@ -39,6 +40,7 @@ Location &Location::operator=(const Location &other)
     enable_director_listen = other.enable_director_listen;
     index = other.index;
     CGI = other.CGI;
+    script_cgi = other.script_cgi;
     return *this;
 }
 
@@ -101,4 +103,12 @@ void    Location::set_index(const std::string &i)
 void    Location::set_path_cgi(const std::string &path)
 {
     CGI = path;
+}
+const std::string Location::get_script_cgi() const
+{
+    return script_cgi;
+}
+void    Location::set_script(const std::string &src)
+{
+    script_cgi = src;
 }

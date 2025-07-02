@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 14:37:43 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/02 09:55:39 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ Socket::Socket()
         loc.set_index("index.html index.php");
         /*path*/
         loc.set_path_cgi("");
+        loc.set_script("");
         config.set_locs(loc);
     }
     
