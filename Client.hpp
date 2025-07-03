@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/03 08:03:51 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:15:29 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ class Client
         size_t get_len_real_body();
         size_t get_len_body(std::string buffer);
         void    set_head(int size,char buffer[1024]);
-        std::vector<std::string>    body_split();
+        // std::vector<std::string>    body_split();
 
         void    parse_requette();
 };

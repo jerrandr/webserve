@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/03 08:06:20 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/03 11:16:40 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,41 +201,41 @@ static std::string get_body(std::string buffer, int &size)
         return body;
 }
 
-std::vector<std::string>     Client::body_split()
-{
-        std::string new_body;
-        std::vector<std::string> spl;
-        std::vector <std::string> r;
+// std::vector<std::string>     Client::body_split()
+// {
+//         std::string new_body;
+//         std::vector<std::string> spl;
+//         std::vector <std::string> r;
 
-        new_body = "";
-        std::ofstream fd("test.out");
+//         new_body = "";
+//         std::ofstream fd("test.out");
 
-        fd << requette +body;
-        spl = split(body,"\r\n");
-        if(spl.size() >= 5)
-        {
-                for(size_t i = 3 ; i < spl.size(); i++)
-                {
-                        if(i < spl.size()-1)
-                                new_body += spl[i];
-                }
-        }
-        else
-        {
-                 for(size_t i = 3 ; i < spl.size(); i++)
-                {
-                        new_body += spl[i];
-                }
-        }
-        if(new_body != "")
-                body = new_body;
-        for(size_t i = 1; i < 3; i++)
-        {
-                if(i < spl.size())
-                        r.push_back(spl[i]);
-        }
-        return r;
-}
+//         fd << requette +body;
+//         spl = split(body,"\r\n");
+//         if(spl.size() >= 5)
+//         {
+//                 for(size_t i = 3 ; i < spl.size(); i++)
+//                 {
+//                         if(i < spl.size()-1)
+//                                 new_body += spl[i];
+//                 }
+//         }
+//         else
+//         {
+//                  for(size_t i = 3 ; i < spl.size(); i++)
+//                 {
+//                         new_body += spl[i];
+//                 }
+//         }
+//         if(new_body != "")
+//                 body = new_body;
+//         for(size_t i = 1; i < 3; i++)
+//         {
+//                 if(i < spl.size())
+//                         r.push_back(spl[i]);
+//         }
+//         return r;
+// }
 void    Client::receve_message()
 {
         char buffer[10024];
@@ -283,15 +283,11 @@ void    Client::receve_message()
 void    Client::parse_requette()
 {
         std::map<std::string, std::string> config;
-        std::vector<std::string > snip;
         std::string temp1;
         std::string temp2;
 
         temp1 = "";
         temp2 = "";
-        snip = body_split();
-        for(size_t i = 0; i < snip.size(); i++)
-                requette += snip[i]+"\r\n";
         for(size_t i = 0; i < requette.size();i++)
         {
                 if (requette[i] == ' ' && ((temp1 == "GET") || (temp1 == "HEAD") || (temp1 == "OPTIONS")
@@ -308,28 +304,38 @@ void    Client::parse_requette()
                 }
                 else if(temp1.find("HTTP/1.1") != std::string::npos)
                 {
+                        config["http_version"] = temp1;
                         temp1 = "";
+                        i += 2;
                 }
                 else if(requette[i]==':' && i+1 < requette.size() && requette[i+1] == ' ')
                 {
-                        temp1 += requette[i];
-                        i += 2;
+                        i += 1;
                         for(size_t j = i; j < requette.size(); j++)
                         {
                                 if(j+1 < requette.size() && requette[j] == '\r' && requette[j+1] == '\n')
+                                {
+                                        i += 2;
                                         break;
+                                }
                                 temp2 += requette[j];
                         }
+                        i += temp2.size();
                         if(temp1 != " " && temp2 != " ")
                         {
-                                // std::cout << temp1 << " " << temp2 << std::endl;
+                                std::cout <<"{"<<temp1 << " " << temp2 <<"}"<<std::endl;
                                 config[temp1] = temp2;
                                 temp2 = "";
                         }
                         temp1 = "";
+                        if (i  >= requette.size())
+                                return ;
                 }
                 temp1 += requette[i];                 
         }
+        std::cout <<"{Methode" << " " << config["method"] <<"}"<<std::endl;
+        std::cout <<"{uri" << " " << config["uri"] <<"}"<<std::endl;
+        std::cout <<"{http_version" << " " << config["http_version"] <<"}"<<std::endl;
         // body_split();
         if(config["method"] == "POST")
         {
