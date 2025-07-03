@@ -8,11 +8,9 @@
                 <title>Document</title>
             </head>
             <body>
-                <form method=\"post\" enctype=\"multipart/form-data\">
-                    <input type=\"file\" name=\"name\">
-                    <button>OK</button>
-                </form>
+                <h1>CGI</h1>
             </body>
             </html>
-        "
+        ";
+    echo "<h4>NOM =" . $_GET['nom'] . " </h4>";
 ?>

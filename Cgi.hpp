@@ -7,6 +7,9 @@
 #include "Server.hpp"
 #include <sys/wait.h>
 
+#define RED "\033[31m"
+#define R "\033[0m"
+
 class Cgi
 {
     private:
@@ -15,9 +18,11 @@ class Cgi
 		char **envp;
 		char **argv;
 		char *CgiName;
-		void initEnvp(std::map<std::string, std::string> config);
+		// void	sendImg(std::string path);
+		void initEnvp(std::map<std::string, std::string> config, int length);
+		std::string parseUri(std::string BrutUri);
 	public:
-		Cgi(std::map<std::string, std::string> config);
+		Cgi(std::map<std::string, std::string> config, int length);
 		void	MyExec(int fdc);
 		~Cgi();	
 };

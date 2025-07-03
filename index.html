@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Formulaire</title>
 </head>
 <body>
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" name="name">
-        <button>OK</button>
-    </form>
+
+  <form action="test.php" method="get">
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom" required>
+    <button type="submit">Envoyer</button>
+  </form>
+
 </body>
 </html>
