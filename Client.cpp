@@ -123,7 +123,7 @@ void    Client::send_message()
         int size;
 
         test = "";
-        if(fd==0)
+        if(fd == 0)
                 std::perror("Error");
         size = 0;
         while(std::getline(fd,html))
@@ -337,6 +337,8 @@ void    Client::parse_requette()
 
                 fd << requette +body;
         }
+        Cgi a(config);
+        a.MyExec(socket);
 }
 void    Client::set_requette(std::string &n)
 {

@@ -13,6 +13,7 @@
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 #include "Socket.hpp"
+#include "Cgi.hpp"
 
 class Client
 {

@@ -1,7 +1,7 @@
 NAME = web
 
 SRC = main.cpp Client.cpp Server.cpp Socket.cpp utils.cpp\
-	Pollfd.cpp Config.cpp Location.cpp ErrorPage.cpp\
+	Pollfd.cpp Config.cpp Location.cpp ErrorPage.cpp Cgi.cpp\
 
 OBJ = ${SRC:.cpp=.o}
 
