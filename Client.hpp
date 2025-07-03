@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/06/30 13:22:36 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/03 08:03:51 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 class Client
 {
     private:
+        Config config;
+        Pollfd *polls;
         int socket;
         std::string requette;
         std::string reponse;
@@ -33,7 +35,7 @@ class Client
         Client &operator=(const Client &other);
         
 
-        Client(int s, std::string re);
+        Client(int s, Pollfd *poll, Config &conf);
         int get_socket_client() const;
         std::string get_requette() const;
         void    set_requette(std::string &n);

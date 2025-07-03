@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 13:00:18 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/03 08:06:20 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,16 @@ Client &Client::operator=(const Client &other)
         body = other.body;
         stat = other.stat;
         real_body = other.real_body;
+        config = other.config;
+        polls = other.polls;
         return (*this);
 }
         
 
-Client::Client(int s,std::string req)
+Client::Client(int s, Pollfd *poll, Config &conf)
 {
         socket = s;
-        requette = req;
+        requette = "";
         reponse = "";
         status_connexion = 0;
         status_requette = 0;
@@ -56,6 +58,8 @@ Client::Client(int s,std::string req)
         body = "";
         stat = 0;
         real_body = 0;
+        config = conf;
+        polls = poll;
 }
 std::string Client::get_requette() const
 {
@@ -140,59 +144,6 @@ int     Client::get_status() const
         return stat;
 }
 
-std::vector<std::string> split(std::string str, std::string sep)
-{
-        size_t status;
-        std::string tmp;
-        std::vector <std::string> new_spl;
-
-        status = 0;
-        tmp = "";
-        for(size_t i = 0; i < str.size();i++)
-        {
-                status = 0;
-                if(str[i] != sep[0])
-                {
-                        for(size_t j = i; j < str.size(); j++)
-                        {
-                                if(str[j] == sep[0])
-                                {
-                                    break;
-                                }
-                                tmp += str[j];
-                                status += 1;
-                        }
-                        i+= status;
-                        status = 0;
-                        if(str[i] == sep[0])
-                        {
-                            while(true)
-                            {
-                                status = 0;
-                                for(size_t j = 0; j < sep.size(); j++)
-                                {
-                                    if(str[i+j] != sep[j])
-                                        break;
-                                    status +=1;
-                                }
-                                i += status;
-                                if(str[i]!= sep[0])
-                                    break;
-                        }
-                        if(status >= sep.size())
-                        {
-                                i -= 1;
-                                new_spl.push_back(tmp);
-                                tmp = "";
-                        }
-                        }
-                }
-        }
-        if(tmp != "")
-            new_spl.push_back(tmp);
-        return new_spl;
-}
-
 void    Client::set_head(int size,char buffer[1024])
 {
         if(requette != "")
@@ -257,6 +208,9 @@ std::vector<std::string>     Client::body_split()
         std::vector <std::string> r;
 
         new_body = "";
+        std::ofstream fd("test.out");
+
+        fd << requette +body;
         spl = split(body,"\r\n");
         if(spl.size() >= 5)
         {
@@ -381,7 +335,7 @@ void    Client::parse_requette()
         {
                 std::ofstream fd("test.out");
 
-                fd << body;
+                fd << requette +body;
         }
 }
 void    Client::set_requette(std::string &n)

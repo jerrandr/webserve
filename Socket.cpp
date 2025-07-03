@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/02 09:55:39 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/03 08:04:24 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,7 +233,7 @@ void    Socket::add_new_fd()
         std::perror("Error :");
         exit(1);
     }
-    Client cl(socket_client,"");
+    Client cl(socket_client,this->polls,this->config);
     clients.push_back(cl);
     polls->add_new_fd(socket_client);
 }
