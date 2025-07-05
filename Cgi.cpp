@@ -21,11 +21,30 @@ std::string Cgi::parseUri(std::string BrutUri)
 	return (res);
 }
 
-//tsy mety
-// void	Cgi::sendImg(std::string path)
-// {
-// 	std::string img = "HTTP/1.1 200 OK\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/\r\n\r\n"+ test";
-// }
+void	Cgi::sendImg(std::string path, int socket)
+{
+	std::cout << "PATH: |" << path << "|" << std::endl;
+	std::ifstream img(path.c_str(), std::ios::binary);
+
+	if (img.fail())
+	{
+		perror("IMG MISY BLEM");
+		exit(0);
+	}
+
+	std::stringstream tmp;
+
+	tmp << img.rdbuf();
+	std::string rp;
+	std::string h;
+	size_t		lgth;
+
+	rp = tmp.str();
+	lgth = rp.size();
+	h = "HTTP/1.1 200 OK\r\nContent-Length: " + std::to_string(lgth)  + "\r\nContent-Type: image/png\r\n\r\n";
+	send(socket, h.c_str(), h.size(), 0);
+	send(socket, rp.c_str(), rp.size(), 0);
+}
 
 void	Cgi::initEnvp(std::map<std::string, std::string> config, int length)
 {
@@ -55,11 +74,50 @@ void	Cgi::initEnvp(std::map<std::string, std::string> config, int length)
 	envp[7] = NULL;
 }
 
+// void	Cgi::sendPdf(std::string path, int socket)
+// {
+// 	std::cout << "PATH: |" << path << "|" << std::endl;
+// 	std::ifstream img(path.c_str(), std::ios::binary);
+
+// 	if (img.fail())
+// 	{
+// 		perror("IMG MISY BLEM");
+// 		exit(0);
+// 	}
+
+// 	std::stringstream tmp;
+
+// 	tmp << img.rdbuf();
+// 	std::string rp;
+// 	std::string h;
+// 	size_t		lgth;
+
+// 	rp = tmp.str();
+// 	lgth = rp.size();
+// 	h = "HTTP/1.1 200 OK\r\nContent-Length: " + std::to_string(lgth)  + "\r\nContent-Type: applications/pdf\r\n\r\n";
+// 	send(socket, h.c_str(), h.size(), 0);
+// 	send(socket, rp.c_str(), rp.size(), 0);
+// }
+
 void    Cgi::MyExec(int fdc)
 {
 	int fd[2];
 	int pid;
 
+	std::string a = envp[2];
+	if (a.find(".png") != std::string::npos)
+	{
+		std::cout << RED << "A = " << a << R << std::endl;
+		sendImg(a.substr(a.find("=") + 1, a.length() - 1), fdc);
+		return;
+	}
+	// else if (a.find(".pdf") != std::string::npos)
+	// {
+	// 	std::cout << RED << "A = " << a << R << std::endl;
+	// 	sendPdf(a.substr(a.find("=") + 1, a.length() - 1), fdc);
+	// 	return;
+	// }
+	
 	if (pipe(fd) < 0)
 		exit(0);
 	pid = fork();

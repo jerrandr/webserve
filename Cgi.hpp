@@ -18,7 +18,8 @@ class Cgi
 		char **envp;
 		char **argv;
 		char *CgiName;
-		// void	sendImg(std::string path);
+		void	sendImg(std::string path, int socket);
+		// void	sendPdf(std::string path, int socket);
 		void initEnvp(std::map<std::string, std::string> config, int length);
 		std::string parseUri(std::string BrutUri);
 	public:

@@ -7,7 +7,7 @@ OBJ = ${SRC:.cpp=.o}
 
 cc = c++
 
-FLAG = -Wall -Wextra -Werror -std=c++98 -g
+FLAG = -Wall -Wextra -Werror -std=c++11 -g
 
 .cpp.o:
 	${cc} ${FLAG} -c $< -o ${<:.cpp=.o}

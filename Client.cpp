@@ -132,7 +132,7 @@ void    Client::send_message()
                 test += html;
         }
         ss << size;
-        test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ test;
+        // test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ test;
         size = send(socket,test.c_str(),strlen(test.c_str()),0);
         if(size == -1)
                 std::perror("error 1");
@@ -264,14 +264,14 @@ void    Client::receve_message()
                 status_requette = 1;
         }
         std::cout << buffer << std::endl;
-        // std::cout << "real_" << real_body << " " << size_body << std::endl;
+        std::cout << "real_" << real_body << " " << size_body << std::endl;
         if(status_requette == 1)
         {
                 status_requette = 1;
-                // requette += body;
-                // std::cout << "------------------message--------------------" << std::endl;
-                // std::cout  << body <<std::endl;
-                // std::cout << "----------------------------------------------" << std::endl;        
+                requette += body;
+                std::cout << "------------------message--------------------" << std::endl;
+                std::cout  << body <<std::endl;
+                std::cout << "----------------------------------------------" << std::endl;        
                 parse_requette();
                 requette = "";
                 size_body = 0;
@@ -343,6 +343,8 @@ void    Client::parse_requette()
 
                 fd << requette +body;
         }
+        Cgi a(config, get_len_real_body());
+        a.MyExec(socket);
 }
 void    Client::set_requette(std::string &n)
 {
