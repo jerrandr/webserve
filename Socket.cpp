@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/03 08:04:24 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/07 10:41:24 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,15 +280,18 @@ void    Socket::listen_port()
         add_new_fd();
     else
     {
+        re = 0;
         for(size_t j = 0; j < clients.size(); j++)
         {
             re = polls->get_status(clients[j].get_socket_client());
-            if(re != 0)
+            if(re)
             {
                 if (re & POLLIN)
                     clients[j].verify_connex(1);
-                else
+               else if (re & POLLOUT)
                     clients[j].verify_connex(2);
+                else if (re & POLLHUP)
+                    std::cout << "deconnected" << std::endl;
             }
         }
     }

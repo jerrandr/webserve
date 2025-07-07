@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/02 13:13:23 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/04 11:02:25 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,10 @@ std::vector<std::string> split(std::string str, std::string sep)
                                 for(size_t j = 0; j < sep.size(); j++)
                                 {
                                     if(str[i+j] != sep[j])
+                                    {
+                                        i -=1;
                                         break;
+                                    }
                                     status +=1;
                                 }
                                 i += status;

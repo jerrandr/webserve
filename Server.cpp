@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:05:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 14:39:23 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/07 10:41:57 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,12 +121,12 @@ void    print_all_fd(struct pollfd (fd_serv)[10000],int size)
 // }
 void    Server::start()
 {
+    listen_all_socket();
     while(1)
     {
         // print_all_fd(fds,size);
         //maj_fd();
         //maj_size_fd_socket();
-        listen_all_socket();
         fds->start_poll();
         //poll(&fds[0],size,300);
         //maj_all_socket();

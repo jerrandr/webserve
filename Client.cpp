@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/03 11:16:40 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/07 10:49:51 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,26 +116,46 @@ void    Client::set_status_connexion( int status)
 
 void    Client::send_message()
 {
-        std::string test;
-        std::string html;
-        std::ifstream fd("index.html");
-        std::stringstream ss;
-        int size;
-
-        test = "";
-        if(fd.fail())
-                std::perror("Error");
-        size = 0;
-        while(std::getline(fd,html))
+        if (reponse == "")
         {
-                size += html.length();
-                test += html;
+                std::string test;
+                std::string html;
+                std::ifstream fd("index.html");
+                std::stringstream ss;
+                int size;
+
+                test = "";
+                if(fd.fail())
+                        std::perror("Error");
+                size = 0;
+                while(std::getline(fd,html))
+                {
+                        size += html.length();
+                        test += html;
+                }
+                ss << size;
+                test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ test;
+                size = send(socket,test.c_str(),strlen(test.c_str()),0);
+                if(size == -1)
+                        std::perror("error 1");
+        }else
+        {
+                std::string test;
+                int size;
+                std::stringstream ss;
+
+                size = 0;
+                size += size_body;
+                std::cout << "size body " << size_body << " " <<reponse.size()<<std::endl;
+                ss << size_body;
+                test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: image/png\r\n\r\n";
+                size += test.size();
+                test.append(reponse,size_body);
+                size += size_body;
+                size = send(socket,&test[0],size,0);
+                if(size == -1)
+                        std::perror("error 1");
         }
-        ss << size;
-        // test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ test;
-        size = send(socket,test.c_str(),strlen(test.c_str()),0);
-        if(size == -1)
-                std::perror("error 1");
         status_requette = 0;
 }
 
@@ -144,7 +164,7 @@ int     Client::get_status() const
         return stat;
 }
 
-void    Client::set_head(int size,char buffer[1024])
+void    Client::set_head(int size,std::string buffer)
 {
         if(requette != "")
                 return ;
@@ -162,6 +182,7 @@ static std::string get_body(std::string buffer, int &size)
 {
         std::string body;
         std::string head;
+        std::vector <char> bo;
         size_t start;
 
         body = "";
@@ -183,21 +204,23 @@ static std::string get_body(std::string buffer, int &size)
                                                 start = j+4;
                                                 break;
                                         }
-                                        head += buffer[j];
+                                        head+= buffer[j];
                                         i = j;
                                 }
                         }
                         if(start != 0)
                                 break;
                 }
-                head += buffer[i];
+                head+=buffer[i];
         }
         size = start;
         while(start < buffer.size())
         {
-                body += buffer[start];
+                bo.push_back(buffer[start]);
                 start ++;
         }
+        for(size_t i = 0; i < bo.size() ; i++)
+                body += bo[i];
         return body;
 }
 
@@ -236,16 +259,53 @@ static std::string get_body(std::string buffer, int &size)
 //         }
 //         return r;
 // }
+
+static  bool is_chunked(std::string buffer)
+{
+        std::size_t size;
+        std::string tmp;
+
+        tmp = "";
+        size = buffer.find("Transfer-Encoding: ");
+        if (size == std::string::npos)
+                return false;
+        for(std::size_t i = size; i < buffer.size(); i++)
+        {
+                if (i+1 < buffer.size() && buffer[i] == '\r'&& buffer[i+1] == '\n')
+                        break;
+                tmp += buffer[i];
+        }
+        if (tmp == "Transfer-Encoding: chunked")
+                return true;
+        return false;
+}
+
+int body_chunked(int len1 , std::string body)
+{
+        for(int i = 0; i < len1;i++)
+        {
+                if (i+4 < len1 && body[i] == '0'
+                        && body[i+1] == '\r' && body[i+2] == '\n'
+                        && body[i+3] == '\r' && body[i+4] == '\n')
+                {
+                        if ((i+5) >= len1)
+                                return (0);
+                }
+        }
+        return(1);
+}
 void    Client::receve_message()
 {
-        char buffer[10024];
+        // static int u = 0;
+        char buffer[1024];
         int status;
         int size;
         
         size = 0;
         bzero(buffer,sizeof(buffer));
         status = 0;
-        status =recv(socket,buffer,10024-1,0) ;
+        status =recv(socket,buffer,1024-1,0) ;
+        // u += status;
         if(status < 0)
                 return ;
         else if(status == 0)
@@ -254,27 +314,54 @@ void    Client::receve_message()
                 stat = -1;
                 return ;
         }
-        body += get_body(buffer, size);
-        set_head(size,buffer);
-        if(real_body == 0)
-                real_body = get_len_real_body();
-        size_body += status - size;
-        if(real_body == size_body)
+        std::string tmp;
+
+        tmp.append(buffer,status);
+        // std::cout << u << std::endl;
+        // if (u == 2494804)
+                // std::cout << buffer << std::endl;
+        body+=get_body(tmp, size);
+        // std::cout << "{" << body << "}" << std::endl;
+        set_head(size,tmp);
+        if (stat >= 1 || (is_chunked(tmp)))
         {
-                status_requette = 1;
+                stat = 1;
+                std::cout << "chunked" <<std::endl;
+                stat =  body_chunked(status, tmp);
+                if (stat == 0)
+                {
+                        // std::cout << real_body << " " << size_body << std::endl;
+                        // std::cout << "dude" << std::endl;
+                        // std::cout << "{" << body << "}" << std::endl;
+                        // std::cout << requette<< std::endl;
+                        stat = 0;
+                        status_requette = 1;
+                }
         }
-        std::cout << buffer << std::endl;
-        std::cout << "real_" << real_body << " " << size_body << std::endl;
+        else if (stat != 1)
+        {
+                size_body += status - size;
+                if(real_body == 0)
+                        real_body = get_len_real_body();
+                if(real_body == size_body)
+                {
+                        status_requette = 1;
+                }
+                stat = 0;
+        }
+        // std::cout <<"{"<<buffer <<"}"<<std::endl;
+        // std::cout << "real_" << real_body << " " << size_body << std::endl;
         if(status_requette == 1)
         {
                 status_requette = 1;
-                requette += body;
-                std::cout << "------------------message--------------------" << std::endl;
-                std::cout  << body <<std::endl;
-                std::cout << "----------------------------------------------" << std::endl;        
+                status = 2;
+                size_body = 0;
+                // requette += body;
+                // std::cout << "------------------message--------------------" << std::endl;
+                // std::cout  << body <<std::endl;
+                // std::cout << "----------------------------------------------" << std::endl;        
                 parse_requette();
                 requette = "";
-                size_body = 0;
                 body = "";
         }
         
@@ -296,11 +383,13 @@ void    Client::parse_requette()
                 {
                         config["method"] = temp1;
                         temp1 = "";
+                        i += 1;
                 }
                 else if (requette[i] == ' ' && (temp1.find("/") != std::string::npos && temp1 != "HTTP/1.1"))
                 {
                         config["uri"] = temp1;
                         temp1 = "";
+                        i+=1;
                 }
                 else if(temp1.find("HTTP/1.1") != std::string::npos)
                 {
@@ -310,7 +399,7 @@ void    Client::parse_requette()
                 }
                 else if(requette[i]==':' && i+1 < requette.size() && requette[i+1] == ' ')
                 {
-                        i += 1;
+                        i += 2;
                         for(size_t j = i; j < requette.size(); j++)
                         {
                                 if(j+1 < requette.size() && requette[j] == '\r' && requette[j+1] == '\n')
@@ -323,7 +412,7 @@ void    Client::parse_requette()
                         i += temp2.size();
                         if(temp1 != " " && temp2 != " ")
                         {
-                                std::cout <<"{"<<temp1 << " " << temp2 <<"}"<<std::endl;
+                                std::cout <<"{"<<temp1 <<"}{"<< temp2 <<"}"<<std::endl;
                                 config[temp1] = temp2;
                                 temp2 = "";
                         }
@@ -333,18 +422,18 @@ void    Client::parse_requette()
                 }
                 temp1 += requette[i];                 
         }
-        std::cout <<"{Methode" << " " << config["method"] <<"}"<<std::endl;
-        std::cout <<"{uri" << " " << config["uri"] <<"}"<<std::endl;
-        std::cout <<"{http_version" << " " << config["http_version"] <<"}"<<std::endl;
-        // body_split();
+        std::cout <<"{Methode}" << "{" << config["method"] <<"}"<<std::endl;
+        std::cout <<"{uri}" << "{" << config["uri"] <<"}"<<std::endl;
+        std::cout <<"{http_version}" << "{" << config["http_version"] <<"}"<<std::endl;
+        
         if(config["method"] == "POST")
         {
                 std::ofstream fd("test.out");
 
-                fd << requette +body;
+                fd << body;
         }
-        Cgi a(config, get_len_real_body());
-        a.MyExec(socket);
+        // Cgi a(config, get_len_real_body());
+        // a.MyExec(socket);
 }
 void    Client::set_requette(std::string &n)
 {
