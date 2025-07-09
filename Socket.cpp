@@ -81,7 +81,7 @@ Socket::Socket(Pollfd *tmp)
     int size;
 
     yes = 1;
-    size = 0;
+    size = 1;
     // fd_serv = fds;
     /*initialisation apartir du fichier de config*/
     config.set_port("8080");
@@ -94,11 +94,11 @@ Socket::Socket(Pollfd *tmp)
     {
         Location loc;
         
-        loc.set_uri("");
+        loc.set_uri("/test.php");
         /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
         loc.set_meth("POST GET");
         loc.set_redir("www/");
-        loc.set_root("www/");
+        loc.set_root("test.php");
         /*valeur booleen*/
         loc.set_enabled(false);
         loc.set_index("index.html index.php");
@@ -143,7 +143,7 @@ Socket::Socket()
     int size;
 
     yes = 1;
-    size = 0;
+    size = 1;
     // fd_serv = fds;
     // size_fd = 0;
     /*initialisation apartir du fichier de config*/
@@ -157,7 +157,7 @@ Socket::Socket()
     {
         Location loc;
         
-        loc.set_uri("");
+        loc.set_uri("/");
         /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
         loc.set_meth("POST GET");
         loc.set_redir("www/");
@@ -214,6 +214,7 @@ Socket &Socket::operator=(const Socket &other)
     // fd_serv.clear();
     // fd_serv = other.fd_serv;
     fd = other.fd;
+    config = other.config;
     // size_fd  = other.size_fd;
     info = other.info;
     return (*this);

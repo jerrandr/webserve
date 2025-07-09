@@ -15,5 +15,4 @@
                 </body>
         </html>
         ";
-    echo "<h4>NOM =" . $_GET['nom'] . " </h4>";
 ?>

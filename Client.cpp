@@ -23,10 +23,9 @@ Client::Client()
         stat = 0;
         real_body = 0;
 }
-Client::~Client()
-{
 
-}
+Client::~Client() {}
+
 Client::Client(const Client &other)
 {
         *this = other;
@@ -134,7 +133,7 @@ void    Client::send_message()
                         test += html;
                 }
                 ss << size;
-                test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ test;
+                // test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ test;
                 size = send(socket,test.c_str(),strlen(test.c_str()),0);
                 if(size == -1)
                         std::perror("error 1");
@@ -148,7 +147,7 @@ void    Client::send_message()
                 size += size_body;
                 std::cout << "size body " << size_body << " " <<reponse.size()<<std::endl;
                 ss << size_body;
-                test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: image/png\r\n\r\n";
+                // test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: image/png\r\n\r\n";
                 size += test.size();
                 test.append(reponse,size_body);
                 size += size_body;
@@ -432,8 +431,8 @@ void    Client::parse_requette()
 
                 fd << body;
         }
-        // Cgi a(config, get_len_real_body());
-        // a.MyExec(socket);
+        Cgi a(config, get_len_real_body(), polls, this->config.get_locs());
+        a.MyExec(socket);
 }
 void    Client::set_requette(std::string &n)
 {
@@ -446,7 +445,7 @@ void    Client::verify_connex(int status)
         {
                 receve_message();
         }
-        else if (status == 2 && status_requette == 1)
+        else if (status == 2 && status_requette == 1 && reponse != "")
         {
                 send_message();
                 
