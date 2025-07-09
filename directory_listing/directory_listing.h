@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   directory_listing.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/20 13:58:07 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/09 13:57:49 by msalohy          ###   ########.fr       */
+/*   Created: 2025/07/02 09:09:53 by msalohy           #+#    #+#             */
+/*   Updated: 2025/07/02 14:51:37 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#ifndef DIRECTORY_LISTING_H
+#define DIRECTORY_LISTING_H
+#include <iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <unistd.h>
+#include <ctime>
+std::string    directory_listing(std::string &name);
+std::vector<std::string> split(std::string str, std::string sep);
 
-int main()
-{
-    try
-    {
-        Server serv;
-        serv.start();   
-    }
-    catch(std::exception &e)
-    {
-        std::cout << e.what() << std::endl;
-    }
-    return (0);
-}
+
+#endif

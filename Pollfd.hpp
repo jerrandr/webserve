@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:14:57 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 14:43:53 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/09 09:16:03 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <map>
 #include <list>
 #include <iostream>
+#include <unistd.h>
 struct pollfd;
 class Pollfd
 {
@@ -34,6 +35,9 @@ class Pollfd
         short   get_status(int fd);
         int get_size();
         void    erase_fd(int fd);
+
+
+        void    close_all_socket();
 };
 
 

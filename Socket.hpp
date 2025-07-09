@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:15:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 14:37:16 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/09 13:59:17 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,7 @@ class Socket
         void    add_new_fd();
 
         std::vector<Client> &get_clients();
+
+        void    free_addrinfo();
 };
 #endif

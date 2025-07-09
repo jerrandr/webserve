@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/07 10:41:24 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/09 14:03:14 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ Socket::Socket()
 }
 Socket::~Socket()
 {
-    freeaddrinfo(info);
+    // freeaddrinfo(info);
 }
 Socket::Socket(const Socket &other)
 {
@@ -322,4 +322,13 @@ void    Socket::listen_port()
 std::vector<Client> &Socket::get_clients()
 {
     return this->clients;
+}
+
+void    Socket::free_addrinfo()
+{
+    if(info)
+    {
+        freeaddrinfo(info);
+        info = NULL;
+    }
 }

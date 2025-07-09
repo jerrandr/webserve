@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/01 14:44:46 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/09 09:40:17 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Pollfd::Pollfd()
 }
 Pollfd::~Pollfd()
 {
-    std::cout << "destructor called" << std::endl;
+
 }
 Pollfd::Pollfd(const Pollfd &other)
 {
@@ -47,7 +47,7 @@ void    Pollfd::start_poll()
         return ;
     if (poll(&(fds[0]),(int)fds.size(),300) == -1)
     {
-        std::cout << "error" << std::endl;
+        return;
     }
     for(std::vector<pollfd>::iterator i = fds.begin(); i != fds.end();i++)
     {
@@ -86,6 +86,7 @@ void    Pollfd::erase_fd(int fd)
         {
             if((*i).fd == fd)
             {
+                close(fd);
                 fds.erase(i);
                 break;
             }
@@ -95,4 +96,12 @@ void    Pollfd::erase_fd(int fd)
     {
         (void)e;
     }
+}
+
+void    Pollfd::close_all_socket()
+{
+        for(std::vector<pollfd>::iterator i = fds.begin(); i != fds.end();i++)
+        {
+            close((*i).fd);
+        }
 }

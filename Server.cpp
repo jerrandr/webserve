@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:05:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/07 10:41:57 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/09 13:57:31 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,16 @@ Server::Server()
 }
 Server::~Server()
 {
-    std::cout << "server shut down-----------" << std::endl;
+    if (fds)
+    {
+        fds->close_all_socket();
+        delete fds;
+        fds = NULL;
+    }
+    for(std::size_t i = 0; i < sockets.size(); i++)
+    {
+        sockets[i].free_addrinfo();
+    }
 }
 Server::Server(const Server &other)
 {
@@ -122,6 +131,7 @@ void    print_all_fd(struct pollfd (fd_serv)[10000],int size)
 void    Server::start()
 {
     listen_all_socket();
+    signal(SIGINT,SignalHandling::handle_signal); 
     while(1)
     {
         // print_all_fd(fds,size);

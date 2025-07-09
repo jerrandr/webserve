@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:35 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/02 12:58:34 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/09 13:51:31 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 #include "ErrorPage.hpp"
 #include "Config.hpp"
 #include "Pollfd.hpp"
+#include "signal_handling/SignalHandling.hpp"
 std::vector<std::string> split(std::string str, std::string sep);
 
 
