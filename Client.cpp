@@ -348,7 +348,7 @@ void    Client::receve_message()
                 }
                 stat = 0;
         }
-        // std::cout <<"{"<<buffer <<"}"<<std::endl;
+        std::cout <<"{"<<buffer <<"}"<<std::endl;
         // std::cout << "real_" << real_body << " " << size_body << std::endl;
         if(status_requette == 1)
         {
@@ -431,8 +431,9 @@ void    Client::parse_requette()
 
                 fd << body;
         }
-        Cgi a(config, get_len_real_body(), polls, this->config.get_locs());
-        a.MyExec(socket);
+        Requette a(config, get_len_real_body(), polls, this->config.get_locs());
+
+        a.rp(socket);
 }
 void    Client::set_requette(std::string &n)
 {
@@ -448,6 +449,8 @@ void    Client::verify_connex(int status)
         else if (status == 2 && status_requette == 1 && reponse != "")
         {
                 send_message();
+                size_body = 0;
+                real_body = 0;
                 
         }
 }

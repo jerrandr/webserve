@@ -14,6 +14,7 @@
 #define CLIENT_HPP
 #include "Socket.hpp"
 #include "Cgi.hpp"
+#include "Requette.hpp"
 
 class Client
 {

@@ -2,28 +2,28 @@
 
 Cgi::~Cgi() {}
 
-Cgi::Cgi(std::map<std::string, std::string> config, int length, Pollfd *p, std::vector<Location> l)
+Cgi::Cgi(char **Envp, int length, Pollfd *p)
 {
 	argv = new char*[2];
 	CgiName = new char;
 
+	envp = Envp;
 	pl = p;
-	lc = l;
 	lv = length;
-	rq = config;
+
 	CgiName = const_cast<char*>("/usr/bin/php-cgi");
 	argv[0] = CgiName;
 	argv[1] = NULL;
 }
 
-std::string Cgi::parseUri(std::string BrutUri)
-{
-	std::string res = "";
+// std::string Cgi::parseUri(std::string BrutUri)
+// {
+// 	std::string res = "";
 
-	if (BrutUri.length() >= 3)
-		res = BrutUri.substr(1, BrutUri.find("?") - 2);
-	return (res);
-}
+// 	if (BrutUri.length() >= 3)
+// 		res = BrutUri.substr(1, BrutUri.find("?") - 2);
+// 	return (res);
+// }
 
 void	Cgi::sendImg(std::string path, int socket)
 {
@@ -50,33 +50,33 @@ void	Cgi::sendImg(std::string path, int socket)
 	send(socket, rp.c_str(), rp.size(), 0);
 }
 
-void	Cgi::initEnvp(std::string rt)
-{
-	envp = new char*[8];
-	std::stringstream c;
-	std::string cl;
-	std::string query = "";
+// void	Cgi::initEnvp(std::string rt)
+// {
+// 	envp = new char*[8];
+// 	std::stringstream c;
+// 	std::string cl;
+// 	std::string query = "";
 
-	c << lv;
-	c >> cl;
-	query = rq["uri"];
-	if (query.find("?") != std::string::npos)
-		query = query.substr(query.find("?") + 1, query.length() - 1);
-	std::string *tmp = new std::string[7]();
-	tmp[0] = "GATEWAY_INTERFACE=CGI/1.1",
-	tmp[1] = "REQUEST_METHOD=" + rq["method"];
-	if (rt == "")
-		tmp[2] = "SCRIPT_FILENAME=error.html";
-	else
-		tmp[2] = "SCRIPT_FILENAME=" + rt;
-	tmp[3] = "QUERY_STRING=" + query;
-    tmp[4] = "SERVER_PROTOCOL=HTTP/1.1";
-	tmp[5] = "CONTENT_LENGTH=" + cl;
-    tmp[6] = "REDIRECT_STATUS=200";
-	for (size_t i = 0; i < 7; i++)
-		envp[i] = const_cast<char*>(tmp[i].c_str());
-	envp[7] = NULL;
-}
+// 	c << lv;
+// 	c >> cl;
+// 	query = rq["uri"];
+// 	if (query.find("?") != std::string::npos)
+// 		query = query.substr(query.find("?") + 1, query.length() - 1);
+// 	std::string *tmp = new std::string[7]();
+// 	tmp[0] = "GATEWAY_INTERFACE=CGI/1.1",
+// 	tmp[1] = "REQUEST_METHOD=" + rq["method"];
+// 	if (rt == "")
+// 		tmp[2] = "SCRIPT_FILENAME=error.html";
+// 	else
+// 		tmp[2] = "SCRIPT_FILENAME=" + rt;
+// 	tmp[3] = "QUERY_STRING=" + query;
+//     tmp[4] = "SERVER_PROTOCOL=HTTP/1.1";
+// 	tmp[5] = "CONTENT_LENGTH=" + cl;
+//     tmp[6] = "REDIRECT_STATUS=200";
+// 	for (size_t i = 0; i < 7; i++)
+// 		envp[i] = const_cast<char*>(tmp[i].c_str());
+// 	envp[7] = NULL;
+// }
 
 void	Cgi::sendPdf(std::string path, int socket)
 {
@@ -103,15 +103,11 @@ void	Cgi::sendPdf(std::string path, int socket)
 	send(socket, rp.c_str(), rp.size(), 0);
 }
 
-std::string Cgi::findLoc()
+std::string	Cgi::NotFound()
 {
-	for (std::vector<Location>::iterator i = lc.begin(); i < lc.end(); i++)
-	{
-		std::cout << "tO_FIND: " << (*i).get_uri() << " | URI: " << rq["uri"] << std::endl;  
-		if ((*i).get_uri() == rq["uri"])
-			return ((*i).get_root());
-	}
-	return ("");
+	std::string rp = "HTTP/1.1 404 Not Found\r\nContent-Length: 22\r\nContent-Type: text/html\r\n\r\n";
+	std::string ct = "<h1>404 NOT FOUND</h1>";
+	return (rp + ct);
 }
 
 void    Cgi::MyExec(int fdc)
@@ -119,21 +115,8 @@ void    Cgi::MyExec(int fdc)
 	int fd[2];
 	int pid;
 
-	initEnvp(findLoc());
 	std::string a = envp[2];
-	std::cout << RED << "A = " << a << R << std::endl;
-	// if (a.find(".png") != std::string::npos)
-	// {
-	// 	std::cout << RED << "A = " << a << R << std::endl;
-	// 	sendImg(a.substr(a.find("=") + 1, a.length() - 1), fdc);
-	// 	return;
-	// }
-	// else if (a.find(".pdf") != std::string::npos)
-	// {
-	// 	std::cout << RED << "A = " << a << R << std::endl;
-	// 	sendPdf(a.substr(a.find("=") + 1, a.length() - 1), fdc);
-	// 	return;
-	// }
+
 	if (pipe(fd) < 0)
 		exit(0);
 	pid = fork();
@@ -146,6 +129,7 @@ void    Cgi::MyExec(int fdc)
 	}
 	else
 	{
+		std::cout << "HERE\n";
 		waitpid(pid, NULL, 0);
 		std::string p = "HTTP/1.1 200 OK\r\n";	
 		char buff[1024];
@@ -164,6 +148,15 @@ void    Cgi::MyExec(int fdc)
 		close(fd[0]);
 		if (pl->get_status(fdc) & POLLIN)
 		{
+			if (p.find("404 Not Found") != std::string::npos)
+			{
+				p = NotFound();
+				std::cout << "ETOOOOOOOOOOOOOOOOOOOOOOOOOO\n";
+				std::cout << "P: " << p << std::endl;
+				send(fdc, p.c_str(), p.size(), 0);
+				return ;
+			}
+			
 			if (send(fdc, p.c_str(), p.size(), 0) < 0)
 			{
 				std::cout << "EXECVE ERROR" << std::endl;

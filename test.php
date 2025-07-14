@@ -8,10 +8,7 @@
                 <title>Document</title>
                 </head>
                 <body>
-                    <h1>CGI</h1>
-                    <h4>++++++++++++++++</h4>
-                    <img src=\"test.png\">
-                    <h4>++++++++++++++++</h4>
+                    <h1>RESPONSE TEST</h1>
                 </body>
         </html>
         ";

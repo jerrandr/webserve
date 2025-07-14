@@ -21,16 +21,18 @@ class Cgi
 		char **argv;
 		char *CgiName;
 		int lv;
-		std::map<std::string, std::string> rq;
-		std::vector<Location> lc;
+		// std::map<std::string, std::string> rq;
+		// std::vector<Location> lc;
 		Pollfd * pl;
-		std::string findLoc();
+		// std::string findLoc();
 		void	sendImg(std::string path, int socket);
 		void	sendPdf(std::string path, int socket);
 		void initEnvp(std::string rt);
-		std::string parseUri(std::string BrutUri);
+
+		// std::string parseUri(std::string BrutUri);
 	public:
-		Cgi(std::map<std::string, std::string> config, int length , Pollfd *p, std::vector<Location> l);
+		std::string	NotFound();
+		Cgi(char **Envp, int length, Pollfd *p);
 		void	MyExec(int fdc);
 		~Cgi();	
 };

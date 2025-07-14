@@ -60,7 +60,7 @@
 //     }
 //     info = server;
 //     std::cout << "Server connection ......" << std::endl;
-//     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
+    // setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
 //     if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
 //     {
 //         std::perror("Bind error ");
@@ -93,15 +93,15 @@ Socket::Socket(Pollfd *tmp)
     for(int i = 0; i < size; i++)
     {
         Location loc;
-        
-        loc.set_uri("/test.php");
+
+        loc.set_uri("");
         /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
         loc.set_meth("POST GET");
-        loc.set_redir("www/");
-        loc.set_root("test.php");
+        loc.set_redir("302 https://www.youtube.com/watch?v=H5v-FO-jMS0&list=RDtR1ECf4sEpw&index=2");
+        loc.set_root("index.html");
         /*valeur booleen*/
         loc.set_enabled(false);
-        loc.set_index("index.html index.php");
+        loc.set_index("index.html");
         /*path*/
         loc.set_path_cgi("");
         config.set_locs(loc);
@@ -156,18 +156,17 @@ Socket::Socket()
     for(int i = 0; i < size; i++)
     {
         Location loc;
-        
-        loc.set_uri("/");
+
+        loc.set_uri("");
         /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
         loc.set_meth("POST GET");
-        loc.set_redir("www/");
-        loc.set_root("www/");
+        loc.set_redir("302 https://www.youtube.com/watch?v=H5v-FO-jMS0&list=RDtR1ECf4sEpw&index=2");
+        loc.set_root("index.html");
         /*valeur booleen*/
         loc.set_enabled(false);
-        loc.set_index("index.html index.php");
+        loc.set_index("index.html");
         /*path*/
         loc.set_path_cgi("");
-        loc.set_script("");
         config.set_locs(loc);
     }
     
