@@ -14,56 +14,30 @@
 
 std::vector<std::string> split(std::string str, std::string sep)
 {
-        size_t status;
+        std::vector<std::string> nw;
         std::string tmp;
-        std::vector <std::string> new_spl;
+        std::size_t end;
+        std::size_t start;
 
-        status = 0;
         tmp = "";
-        for(size_t i = 0; i < str.size();i++)
+        start = 0;
+        end = str.find(sep);
+        while(end != std::string::npos)
         {
-                status = 0;
-                if(str[i] != sep[0])
-                {
-                        for(size_t j = i; j < str.size(); j++)
-                        {
-                                if(str[j] == sep[0])
-                                {
-                                    break;
-                                }
-                                tmp += str[j];
-                                status += 1;
-                        }
-                        i+= status;
-                        status = 0;
-                        if(str[i] == sep[0])
-                        {
-                            while(true)
-                            {
-                                status = 0;
-                                for(size_t j = 0; j < sep.size(); j++)
-                                {
-                                    if(str[i+j] != sep[j])
-                                    {
-                                        i -=1;
-                                        break;
-                                    }
-                                    status +=1;
-                                }
-                                i += status;
-                                if(str[i]!= sep[0])
-                                    break;
-                        }
-                        if(status >= sep.size())
-                        {
-                                i -= 1;
-                                new_spl.push_back(tmp);
-                                tmp = "";
-                        }
-                        }
-                }
+            tmp = str.substr(0,end);
+            if (!tmp.empty())
+                nw.push_back(tmp);
+            start = end + sep.length();
+            if (start >= str.length())
+            {
+                str = "";
+                break;
+            }
+            str = str.substr(start, str.length());
+            end = str.find(sep);
+            tmp = "";
         }
-        if(tmp != "")
-            new_spl.push_back(tmp);
-        return new_spl;
+        if (str != "")
+            nw.push_back(str);
+        return nw;
 }
