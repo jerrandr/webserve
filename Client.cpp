@@ -470,7 +470,7 @@ void    Client::parse_requette()
 
         //         fd << body;
         // }
-        Requette a(config, get_len_real_body(), polls, this->config.get_locs());
+        Requette a(config, *this);
 
         a.rp(socket);
 }
@@ -509,3 +509,4 @@ Config Client::getConfig() const
 std::string	Client::getBody() const
 {
 	return (body);
+}
