@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:23:00 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/02 09:56:10 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/16 08:43:22 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ Location::Location()
     http_method_accepted = "";
     redirect = "";
     root = "";
-    enable_director_listen = false;
+    enable_director_listing = false;
     index = "";
     CGI = "";
     script_cgi = "";
+    extension_cgi = "";
+    path_upload = "";
 }
 Location::~Location()
 {
@@ -37,10 +39,12 @@ Location &Location::operator=(const Location &other)
     http_method_accepted = other.http_method_accepted;
     redirect = other.redirect;
     root = other.root;
-    enable_director_listen = other.enable_director_listen;
+    enable_director_listing = other.enable_director_listing;
     index = other.index;
     CGI = other.CGI;
     script_cgi = other.script_cgi;
+    extension_cgi = other.extension_cgi;
+    path_upload = other.path_upload;
     return *this;
 }
 
@@ -71,9 +75,16 @@ const std::string Location::get_path_cgi() const
 }
 bool    Location::get_directory_listen() const
 {
-    return enable_director_listen;
+    return enable_director_listing;
 }
-
+const std::string Location::get_extension_cgi() const
+{
+    return extension_cgi;
+}
+const std::string Location::get_path_upload() const
+{
+    return path_upload;
+}
 
 /*setters*/
 void    Location::set_uri(const std::string &uri)
@@ -94,7 +105,7 @@ void    Location::set_root(const std::string &roots)
 }
 void    Location::set_enabled(const bool &enabled)
 {
-    enable_director_listen = enabled;
+    enable_director_listing = enabled;
 }
 void    Location::set_index(const std::string &i)
 {
@@ -111,4 +122,13 @@ const std::string Location::get_script_cgi() const
 void    Location::set_script(const std::string &src)
 {
     script_cgi = src;
+}
+
+void     Location::set_extension_cgi(const std::string &src)
+{
+    extension_cgi = src;
+}
+void     Location::set_path_upload(const std::string &src)
+{
+    path_upload = src;
 }

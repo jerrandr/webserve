@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/09 09:40:17 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/15 09:40:28 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,6 @@ int Pollfd::get_size()
 
 void    Pollfd::erase_fd(int fd)
 {
-    int s;
-
-    s = 0;
     try
     {
         (void)tab_fds.at(fd);

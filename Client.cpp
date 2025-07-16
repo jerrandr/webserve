@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/07 10:49:51 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/15 13:49:03 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -293,6 +293,42 @@ int body_chunked(int len1 , std::string body)
         }
         return(1);
 }
+
+void    Client::body_unchunked()
+{
+        long current_size;
+        std::string tmp;
+        std::stringstream ss;
+        std::string new_body;
+        std::size_t temp;
+
+        current_size = -1;
+        tmp = "";
+        temp = 0;
+        new_body = "";
+        real_body = 0;
+        for(std::size_t i = 0; i < body.size();i++)
+        {
+                temp =body.find("\r\n") ;
+                if (temp == std::string::npos)
+                {
+                        return;
+                }
+                tmp = body.substr(i,temp);
+                ss << std::hex << tmp;
+                ss >> current_size;
+                real_body += current_size;
+                i += temp+2;
+                for(long j = 0 ; j < (current_size);j++)
+                        new_body+= body[j+i];
+                ss.clear();
+                i += current_size+1;
+                current_size = 0;
+                tmp = "";
+                temp = 0;
+        }
+        body = new_body;
+}
 void    Client::receve_message()
 {
         // static int u = 0;
@@ -301,7 +337,7 @@ void    Client::receve_message()
         int size;
         
         size = 0;
-        bzero(buffer,sizeof(buffer));
+        std::memset(buffer,0,sizeof(buffer));
         status = 0;
         status =recv(socket,buffer,1024-1,0) ;
         // u += status;
@@ -319,9 +355,11 @@ void    Client::receve_message()
         // std::cout << u << std::endl;
         // if (u == 2494804)
                 // std::cout << buffer << std::endl;
-        body+=get_body(tmp, size);
+        body += get_body(tmp, size);
+        size_body += status - size;
         // std::cout << "{" << body << "}" << std::endl;
         set_head(size,tmp);
+        // std::cout <<"{"<<buffer <<"}"<<std::endl;
         if (stat >= 1 || (is_chunked(tmp)))
         {
                 stat = 1;
@@ -329,17 +367,18 @@ void    Client::receve_message()
                 stat =  body_chunked(status, tmp);
                 if (stat == 0)
                 {
-                        // std::cout << real_body << " " << size_body << std::endl;
+                        std::cout << real_body << " " << size_body << std::endl;
                         // std::cout << "dude" << std::endl;
                         // std::cout << "{" << body << "}" << std::endl;
                         // std::cout << requette<< std::endl;
+                        std::cout << "end" << std::endl;
+                        body_unchunked();
                         stat = 0;
                         status_requette = 1;
                 }
         }
         else if (stat != 1)
         {
-                size_body += status - size;
                 if(real_body == 0)
                         real_body = get_len_real_body();
                 if(real_body == size_body)
@@ -348,7 +387,6 @@ void    Client::receve_message()
                 }
                 stat = 0;
         }
-        std::cout <<"{"<<buffer <<"}"<<std::endl;
         // std::cout << "real_" << real_body << " " << size_body << std::endl;
         if(status_requette == 1)
         {
@@ -359,6 +397,7 @@ void    Client::receve_message()
                 // std::cout << "------------------message--------------------" << std::endl;
                 // std::cout  << body <<std::endl;
                 // std::cout << "----------------------------------------------" << std::endl;        
+                std::cout << "start parse()" << std::endl;
                 parse_requette();
                 requette = "";
                 body = "";
@@ -425,12 +464,12 @@ void    Client::parse_requette()
         std::cout <<"{uri}" << "{" << config["uri"] <<"}"<<std::endl;
         std::cout <<"{http_version}" << "{" << config["http_version"] <<"}"<<std::endl;
         
-        if(config["method"] == "POST")
-        {
-                std::ofstream fd("test.out");
+        // if(config["method"] == "POST")
+        // {
+        //         std::ofstream fd("test.out");
 
-                fd << body;
-        }
+        //         fd << body;
+        // }
         Requette a(config, get_len_real_body(), polls, this->config.get_locs());
 
         a.rp(socket);
@@ -445,6 +484,7 @@ void    Client::verify_connex(int status)
         if (status == 1)
         {
                 receve_message();
+                std::cout << "vita parse()" << std::endl;
         }
         else if (status == 2 && status_requette == 1 && reponse != "")
         {

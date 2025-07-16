@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/09 14:03:14 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/15 13:49:13 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ Socket::Socket(Pollfd *tmp)
     config.set_host("localhost");
     config.set_max_allowed_size("");
     
+    polls = tmp;
     /*initialisation du block location a partir du fichier de config
     mety bedebe le location*/
     for(int i = 0; i < size; i++)
@@ -114,25 +115,35 @@ Socket::Socket(Pollfd *tmp)
     hints.ai_flags = AI_PASSIVE;  
     if(getaddrinfo(config.get_host().c_str(),config.get_port().c_str(),&hints,&server)!=0)
     {
-        std::perror("error");
-        exit(1);
+        throw std::logic_error("Error getaddrinfo()");
     }
     fd = socket(server->ai_family,server->ai_socktype,0);
     if(fd == -1)
     {
-        std::perror("error 1:");
-        exit(1);
+        freeaddrinfo(server);
+        if (polls)
+        {
+            polls->close_all_socket();
+            delete polls;
+            polls = NULL;
+        }   
+        throw std::logic_error("Error socket()");
     }
     info = server;
     std::cout << "Server connection ......" << std::endl;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
     if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
     {
-        std::perror("Bind error ");
-        exit(1);
+        freeaddrinfo(server);
+        if (polls)
+        {
+            polls->close_all_socket();
+            delete polls;
+            polls = NULL;
+        }   
+        throw std::logic_error("Error bind()");
     }
     std::cout << "server connected" << std::endl;
-    polls = tmp;
     // size_fd = polls->get_size();
 }
 Socket::Socket()
@@ -147,7 +158,7 @@ Socket::Socket()
     // fd_serv = fds;
     // size_fd = 0;
     /*initialisation apartir du fichier de config*/
-    config.set_port("8080");
+    config.set_port("80");
     config.set_host("localhost");
     config.set_max_allowed_size("");
     
@@ -177,23 +188,40 @@ Socket::Socket()
     hints.ai_flags = AI_PASSIVE;  
     if(getaddrinfo(config.get_host().c_str(),config.get_port().c_str(),&hints,&server)!=0)
     {
-        std::perror("error");
-        exit(1);
+        if (polls)
+        {
+            polls->close_all_socket();
+            delete polls;
+            polls = NULL;
+        }   
+        throw std::logic_error("Error getaddrinfo()");
     }
     fd = socket(server->ai_family,server->ai_socktype,0);
     if(fd == -1)
     {
-        std::perror("error 1:");
-        exit(1);
+        freeaddrinfo(server);
+        if (polls)
+        {
+            polls->close_all_socket();
+            delete polls;
+            polls = NULL;
+        }   
+        throw std::logic_error("Error socket()");
     }
     info = server;
     std::cout << "Server connection ......" << std::endl;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
     if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
     {
-        std::perror("Bind error ");
-        exit(1);
-    }
+        freeaddrinfo(server);
+        if (polls)
+        {
+            polls->close_all_socket();
+            delete polls;
+            polls = NULL;
+        }   
+        throw std::logic_error("Error bind()");
+    };
     std::cout << "server connected" << std::endl;
     // fd_serv[i].fd=fd;
     // fd_serv[i].events = fds[i].events;
@@ -229,10 +257,7 @@ void    Socket::add_new_fd()
 
     socket_client = accept(fd,NULL,NULL);
     if(socket_client == -1)
-    {
-        std::perror("Error :");
-        exit(1);
-    }
+        throw std::logic_error("Error accept()");
     Client cl(socket_client,this->polls,this->config);
     clients.push_back(cl);
     polls->add_new_fd(socket_client);
@@ -255,6 +280,7 @@ void    Socket::maj_fd_client()
 
     while(true)
     {
+        size = 0;
         for(std::vector<Client>::iterator i= clients.begin(); i != clients.end(); i++)
         {
             size ++;

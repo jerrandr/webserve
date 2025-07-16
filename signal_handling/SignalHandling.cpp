@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 08:22:22 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/09 09:39:44 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/15 09:43:15 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ SignalHandling::ExceptSTop::ExceptSTop()
 {
     m = "Server stop ...";
 }
-SignalHandling::ExceptSTop::~ExceptSTop()
+SignalHandling::ExceptSTop::~ExceptSTop() throw()
 {
     
 }

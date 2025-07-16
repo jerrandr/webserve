@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/07 10:48:14 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/15 12:03:55 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,6 @@ class Client
         // std::vector<std::string>    body_split();
 
         void    parse_requette();
+        void    body_unchunked();
 };
 #endif
