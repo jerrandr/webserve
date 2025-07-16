@@ -54,7 +54,10 @@ class Client
         size_t get_len_body(std::string buffer);
         void    set_head(int size,std::string buffer);
         // std::vector<std::string>    body_split();
-
+		// JERRY MODIF
+		Pollfd		*getPoll() const;
+		Config		getConfig() const;
+		std::string	getBody() const;
         void    parse_requette();
         void    body_unchunked();
 };

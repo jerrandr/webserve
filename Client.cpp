@@ -494,3 +494,18 @@ void    Client::verify_connex(int status)
                 
         }
 }
+
+// JERRY MODIF
+Pollfd *Client::getPoll() const
+{
+	return (polls);
+}
+
+Config Client::getConfig() const
+{
+	return (config);
+}
+
+std::string	Client::getBody() const
+{
+	return (body);

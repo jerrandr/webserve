@@ -124,14 +124,15 @@ void    Cgi::MyExec(int fdc)
 	{
 		close(fd[0]);
 		dup2(fd[1], STDOUT_FILENO);
+		if (a.find("CONTENT_LENGTH") != std::string::npos)
+			std::cout << "HERE\n";
 		execve("/usr/bin/php-cgi", argv, envp);
 		exit(0);
 	}
 	else
 	{
-		std::cout << "HERE\n";
 		waitpid(pid, NULL, 0);
-		std::string p = "HTTP/1.1 200 OK\r\n";	
+		std::string p = "HTTP/1.1 200 OK\r\n";
 		char buff[1024];
 		int n = 1;
 		memset(buff, 0, 1024);
@@ -148,15 +149,6 @@ void    Cgi::MyExec(int fdc)
 		close(fd[0]);
 		if (pl->get_status(fdc) & POLLIN)
 		{
-			if (p.find("404 Not Found") != std::string::npos)
-			{
-				p = NotFound();
-				std::cout << "ETOOOOOOOOOOOOOOOOOOOOOOOOOO\n";
-				std::cout << "P: " << p << std::endl;
-				send(fdc, p.c_str(), p.size(), 0);
-				return ;
-			}
-			
 			if (send(fdc, p.c_str(), p.size(), 0) < 0)
 			{
 				std::cout << "EXECVE ERROR" << std::endl;
