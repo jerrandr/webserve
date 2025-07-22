@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:57:28 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/02 12:58:42 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/22 07:49:45 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ struct pollfd;
 class Socket;
 class Server
 {
-    public:
+    private:
         int config;
         std::vector<Socket> sockets;
         std::vector<int> serv;

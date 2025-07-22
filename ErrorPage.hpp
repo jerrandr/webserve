@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:13:16 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/10 09:15:23 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/22 07:47:10 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,24 +62,24 @@ class ErrorPage
         const std::string &get_path_505() const;
 
         /*setters*/
-        void    get_path_400(std::string &path);
-        void    get_path_403(std::string &path);
-        void    get_path_404(std::string &path);
-        void    get_path_405(std::string &path);
-        void    get_path_406(std::string &path);
-        void    get_path_408(std::string &path);
-        void    get_path_410(std::string &path);
-        void    get_path_411(std::string &path);
-        void    get_path_413(std::string &path);
-        void    get_path_414(std::string &path);
-        void    get_path_415(std::string &path);
-        void    get_path_417(std::string &path);
-        void    get_path_500(std::string &path);
-        void    get_path_501(std::string &path);
-        void    get_path_502(std::string &path);
-        void    get_path_503(std::string &path);
-        void    get_path_504(std::string &path);
-        void    get_path_505(std::string &path);
+        void    set_path_400(std::string &path);
+        void    set_path_403(std::string &path);
+        void    set_path_404(std::string &path);
+        void    set_path_405(std::string &path);
+        void    set_path_406(std::string &path);
+        void    set_path_408(std::string &path);
+        void    set_path_410(std::string &path);
+        void    set_path_411(std::string &path);
+        void    set_path_413(std::string &path);
+        void    set_path_414(std::string &path);
+        void    set_path_415(std::string &path);
+        void    set_path_417(std::string &path);
+        void    set_path_500(std::string &path);
+        void    set_path_501(std::string &path);
+        void    set_path_502(std::string &path);
+        void    set_path_503(std::string &path);
+        void    set_path_504(std::string &path);
+        void    set_path_505(std::string &path);
 };
 
 #endif

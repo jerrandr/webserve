@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:46:21 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/10 09:57:48 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/22 07:48:50 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,75 +139,75 @@ const std::string &ErrorPage::get_path_505() const
 }
 
 /*setters*/
-void    ErrorPage::get_path_400(std::string &path)
+void    ErrorPage::set_path_400(std::string &path)
 {
     path_400 = path;
 }
-void    ErrorPage::get_path_403(std::string &path)
+void    ErrorPage::set_path_403(std::string &path)
 {
     path_403 = path;
 }
-void    ErrorPage::get_path_404(std::string &path)
+void    ErrorPage::set_path_404(std::string &path)
 {
     path_404 = path;
 }
-void    ErrorPage::get_path_405(std::string &path)
+void    ErrorPage::set_path_405(std::string &path)
 {
     path_405 = path;
 }
-void    ErrorPage::get_path_406(std::string &path)
+void    ErrorPage::set_path_406(std::string &path)
 {
     path_406 = path;
 }
-void    ErrorPage::get_path_408(std::string &path)
+void    ErrorPage::set_path_408(std::string &path)
 {
     path_408 = path;
 }
-void    ErrorPage::get_path_410(std::string &path)
+void    ErrorPage::set_path_410(std::string &path)
 {
     path_410 = path;
 }
-void    ErrorPage::get_path_411(std::string &path)
+void    ErrorPage::set_path_411(std::string &path)
 {
     path_411 = path;
 }
-void    ErrorPage::get_path_413(std::string &path)
+void    ErrorPage::set_path_413(std::string &path)
 {
     path_413 = path;
 }
-void    ErrorPage::get_path_414(std::string &path)
+void    ErrorPage::set_path_414(std::string &path)
 {
     path_414 = path;
 }
-void    ErrorPage::get_path_415(std::string &path)
+void    ErrorPage::set_path_415(std::string &path)
 {
     path_415 = path;
 }
-void    ErrorPage::get_path_417(std::string &path)
+void    ErrorPage::set_path_417(std::string &path)
 {
     path_417 = path;
 }
-void    ErrorPage::get_path_500(std::string &path)
+void    ErrorPage::set_path_500(std::string &path)
 {
     path_500 = path;
 }
-void    ErrorPage::get_path_501(std::string &path)
+void    ErrorPage::set_path_501(std::string &path)
 {
     path_501 = path;
 }
-void    ErrorPage::get_path_502(std::string &path)
+void    ErrorPage::set_path_502(std::string &path)
 {
     path_502 = path;
 }
-void    ErrorPage::get_path_503(std::string &path)
+void    ErrorPage::set_path_503(std::string &path)
 {
     path_503 = path;
 }
-void    ErrorPage::get_path_504(std::string &path)
+void    ErrorPage::set_path_504(std::string &path)
 {
     path_504 = path;
 }
-void    ErrorPage::get_path_505(std::string &path)
+void    ErrorPage::set_path_505(std::string &path)
 {
     path_505 = path;
 }
