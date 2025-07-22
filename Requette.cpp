@@ -1,4 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Requette.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
+/*   Updated: 2025/07/22 08:56:50 by jerrandr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include "Requette.hpp"
+
+//+++++++++++++++++++++++++CONSTRUCTO && DESTRUCTOR+++++++++++++++++++++++++
+
+Requette::~Requette() {}
 
 Requette::Requette(std::map<std::string, std::string> config, Client cl)
 {
@@ -10,7 +27,23 @@ Requette::Requette(std::map<std::string, std::string> config, Client cl)
 	std::cout << RED << "BODY: " << body << R << std::endl;
 }
 
-Requette::~Requette() {}
+//+++++++++++++++++++++++++FIND LOCATION+++++++++++++++++++++++++
+int	Requette::findLoc2(std::vector<std::string> UriLoc, std::vector<std::string> toFind)
+{
+	int nb;
+
+	nb = 0;
+	for (std::vector<std::string>::iterator j = UriLoc.begin(); j < UriLoc.end(); j++)
+	{
+		if (toFind[nb] == (*j) && nb < static_cast<int>(toFind.size()))
+		{
+			nb++;
+			if (j == (UriLoc.end() - 1))
+				break;
+		}
+	}
+	return (nb);
+}
 
 Location Requette::findLoc()
 {
@@ -20,26 +53,12 @@ Location Requette::findLoc()
 	int max = 0;
 
 	toFind = split(rq["uri"], "/");
-	for (std::vector<std::string>::iterator i = toFind.begin(); i < toFind.end(); i++)
-	{
-		std::cout << "TO_FIND: " << (*i) << std::endl;
-	}
 	for (std::vector<Location>::iterator i = lc.begin(); i < lc.end(); i++)
 	{
 		std::vector<std::string> tmp;
 		tmp = split((*i).get_uri(), "/");
 		if (tmp.size() <= toFind.size())
-		{
-			for (std::vector<std::string>::iterator j = tmp.begin(); j < tmp.end(); j++)
-			{
-				if (toFind[nb] == (*j) && nb < static_cast<int>(toFind.size()))
-				{
-					nb++;
-					if (j == (tmp.end() - 1))
-						break;
-				}
-			}
-		}
+			nb = findLoc2(tmp, toFind);
 		if (max < nb)
 		{
 			fl = i;
@@ -49,43 +68,42 @@ Location Requette::findLoc()
 	}
 	if (fl != lc.end())
 		return (*fl);
-	std::cout << "TSY METY\n";
 	return (*(lc.begin()));
 }
 
+//+++++++++++++++++++++++++INITIALISATION ENVP+++++++++++++++++++++++++
+
 void	Requette::initEnvp(std::string rt)
 {
-	envp = new char*[7];
-	std::stringstream 	c;
 	std::string 		cl;
-	std::string 		query = "";
-
-	c << lv;
-	c >> cl;
-	query = rq["uri"];
-	if (query.find("?") != std::string::npos)
-		query = query.substr(query.find("?") + 1, query.length() - 1);
-	std::string *tmp = new std::string[7]();
+	std::string 		query;
+	std::string			*tmp;
+	
+	envp = new char*[8];
+	cl = utils.ToString(lv);
+	query = "";
+	tmp = new std::string[8]();
+	if (rq["uri"].find("?") != std::string::npos)
+		query = rq["uri"].substr(rq["uri"].find("?") + 1, rq["uri"].length() - 1);
 	tmp[0] = "GATEWAY_INTERFACE=CGI/1.1",
+	tmp[1] = "REQUEST_METHOD=POST";
 	tmp[1] = "REQUEST_METHOD=" + rq["method"];
-	if (tmp[1] == "GET")
-	{
-		if (rt == "/")
-			tmp[2] = "SCRIPT_FILENAME=www/index.html";
-		else
-			tmp[2] = "SCRIPT_FILENAME=" + rt;
-	}
-	else if (tmp[1] == "POST")
+	if (rq["method"] == "GET")
+		tmp[2] = "QUERY_STRING=" + query;
+	else if (rq["method"] == "POST")
 		tmp[2] = "CONTENT_LENGTH=" + cl;
-	tmp[3] = "QUERY_STRING=" + query;
+	tmp[3] = "SCRIPT_FILENAME=" + rt;
     tmp[4] = "SERVER_PROTOCOL=HTTP/1.1";
     tmp[5] = "REDIRECT_STATUS=200";
-	for (size_t i = 0; i < 6; i++)
+	tmp[6] = "CONTENT_TYPE=application/x-www-form-urlencoded";
+	for (size_t i = 0; i < 7; i++)
 		envp[i] = const_cast<char*>(tmp[i].c_str());
-	envp[6] = NULL;
+	envp[7] = NULL;
 }
 
-std::string Requette::redir_rp(std::string redir)
+//+++++++++++++++++++++++++REDIRECTION+++++++++++++++++++++++++
+
+std::string	Requette::redir_rp2(std::string redir)
 {
 	std::vector<std::string> data;
 	std::stringstream		convert;
@@ -116,82 +134,110 @@ std::string Requette::redir_rp(std::string redir)
 				rp = "HTTP/1.1 301 Moved Permanently\r\n";
 				break;
 		}
-		rp += "Location: " + data[1] + "\r\n\r\n";
-		return (rp);
 	}
-	return ("");
+	return (rp);
 }
 
-std::stringstream Requette::getData(std::string filename)
-{
-	std::ifstream		file(filename);
-	std::string			str;
-	std::stringstream	data;
 
-	std::cout << "FILENAME: " << filename << std::endl;
-	if (file.fail())
-		std::cout << "ERROR" << std::endl;
-	while (getline(file, str))
-		data << str;
-	return (data);
+void	Requette::redir_rp(std::string redir, int socket)
+{
+	std::string	rp;
+
+	rp = redir_rp2(redir);
+	if (rp != "")
+	{
+		std::cout << "rp: " << rp << std::endl;
+		if (pl->get_status(socket) & POLLIN)
+			send(socket, rp.c_str(), rp.size(), 0);
+		return ;
+	}
+}
+
+//+++++++++++++++++++++++++REPONSE+++++++++++++++++++++++++
+
+void	Requette::ifCgi(Location Loc, int socket)
+{
+	std::string rt = "";
+	if (rq["uri"].find(Loc.get_uri()) != std::string::npos)
+		rt = rq["uri"].substr(rq["uri"].find(Loc.get_uri()), rq["uri"].length());
+	else
+		rt = rq["uri"];
+	initEnvp(rt);
+	Cgi cgi(envp, lv, pl);
+	cgi.MyExec(socket, body);
+	return;
+}
+
+void	Requette::rp3(int socket)
+{
+	std::stringstream	data = utils.getData("error/405.html");
+	std::string			strData = data.str();
+	std::stringstream	convert;
+	std::string			nbr;
+	convert << strData.size();
+	convert >> nbr;
+	std::string rp = "HTTP/1.1 405 Method not allowed\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + strData;
+	if (pl->get_status(socket) & POLLIN)
+		send(socket, rp.c_str(), rp.size(), 0);
+}
+
+
+
+void	Requette::rp2(int socket)
+{
+	if (body == "")
+	{
+		int					fl;
+		std::string			rt;
+		std::stringstream	data;
+		struct stat			file;
+		std::string			nbr;
+		std::string			rp;
+
+		memset(&file, 0, sizeof(file));
+		fl = 0;
+		rt = "/";
+		if (rq["uri"].size() > 1)
+			rt = rq["uri"].substr(1, rq["uri"].length());
+		data = utils.getData(rt);
+		if (data.str() == "")
+		{
+			data = utils.getData("error/404.html");
+			fl++;
+		}
+		if (stat(rt.c_str(), &file) == -1)
+			perror("TSY METY\n");
+		nbr = utils.ToString(file.st_size);
+		if (fl != 0)
+			rp = "HTTP/1.1 404 not found\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + data.str();
+		else
+			rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + data.str();
+		if (pl->get_status(socket) & POLLIN)
+			send(socket, rp.c_str(), rp.size(), 0);
+	}
+	else
+		rp3(socket);
 }
 
 void    Requette::rp(int socket)
 {
 	Location Loc = findLoc();
-	
+
 	std::cout << "CGI_SCRIPT: " << Loc.get_script_cgi() << std::endl; 
 	if (Loc.get_redir() != "")
 	{
 		std::cout << "REDIRECTION\n";
-		std::string redir = redir_rp(Loc.get_redir());
-		if (redir != "")
-		{
-			std::cout << "REDIR: " << redir << std::endl;
-			if (pl->get_status(socket) & POLLIN)
-				send(socket, redir.c_str(), redir.size(), 0);
-			return ;
-		}
+		redir_rp(Loc.get_redir(), socket);
 	}
-	if (Loc.get_script_cgi() != "")
+	if (Loc.get_path_cgi() != "")
 	{
-		std::cout << "HEREEEEEEEEEEEEE\n";
-		std::cout << "CGI\n";
-		initEnvp((Loc.get_uri() + Loc.get_root()));
-		Cgi cgi(envp, lv, pl);
-
-		cgi.MyExec(socket);
-		return;
-	}
+		std::cout << "SCRIPT_CGI\n";
+		ifCgi(Loc, socket);
+	}	
 	else
 	{
-		std::cout << "NORMALE\n";
-		if (body == "")
-		{
-			std::stringstream	data = getData(Loc.get_root());
-			std::string			strData = data.str();
-			std::stringstream	convert;
-			std::string			nbr;
-			
-			convert << strData.size();
-			convert >> nbr;
-			std::string rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + strData;
-			if (pl->get_status(socket) & POLLIN)
-				send(socket, rp.c_str(), rp.size(), 0);
-		}
-		else
-		{
-			std::stringstream	data = getData("error/405.html");
-			std::string			strData = data.str();
-			std::stringstream	convert;
-			std::string			nbr;
-			
-			convert << strData.size();
-			convert >> nbr;
-			std::string rp = "HTTP/1.1 405 Method not allowed\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + strData;
-			if (pl->get_status(socket) & POLLIN)
-				send(socket, rp.c_str(), rp.size(), 0);
-		}
+		std::cout << "NORMAL\n";
+		rp2(socket);
 	}
 	
 }

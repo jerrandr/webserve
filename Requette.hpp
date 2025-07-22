@@ -1,30 +1,52 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Requette.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
+/*   Updated: 2025/07/21 13:28:45 by jerrandr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef REQUETTE_HPP
 #define REQUETTE_HPP
 
+#include "ExecUtils.hpp"
 #include "Cgi.hpp"
 class Pollfd;
 class Cgi;
 
 class Requette
 {
-    private:
-        Cgi *cgi;
-        Pollfd *pl;
-		std::map<std::string, std::string> rq;
-		std::vector<Location> lc;
-        char	**envp;
-		int 	lv;
-        std::string body;
-        void	initEnvp(std::string rt);
-        Requette(Requette const & cpy);
-        Requette & operator=(Requette const & cpy);
-        Location findLoc();
-        std::string redir_rp(std::string redir);
-        std::stringstream getData(std::string filename);
-    public:
-        Requette(std::map<std::string, std::string> config, Client cl);
-        void    rp(int socket);
-        ~Requette();
+	private:
+		ExecUtils							utils;
+		Cgi									*cgi;
+		Pollfd								*pl;
+		std::map<std::string, std::string>	rq;
+		std::vector<Location>				lc;
+		std::string							body;
+		char								**envp;
+		int									lv;
+		
+		void				initEnvp(std::string rt);
+							Requette(Requette const &cpy);
+		Requette			&operator=(Requette const &cpy);
+		int					findLoc2(std::vector<std::string> UriLoc, std::vector<std::string> toFind);
+		Location			findLoc();
+
+		void				redir_rp(std::string redir, int socket);
+		std::string			redir_rp2(std::string redir);
+		void				ifCgi(Location Loc, int socket);
+		void				rp2(int socket);
+		void				rp3(int socket);
+		std::stringstream	getData(std::string filename);
+		std::string			ToString(int nbr);
+	public:
+		Requette(std::map<std::string, std::string> config, Client cl);
+		void rp(int socket);
+		~Requette();
 };
 
 #endif
