@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/22 08:39:16 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/07/22 10:37:58 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,10 +155,8 @@ void    Cgi::MyExec(int fdc, std::string body)
 {
 	int fd[2];
 	int fd2[2];
-
 	int pid;
 
-	std::string a = envp[2];
 	std::cout << "BODY_CGI: " << body << std::endl;
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		exit(0);
@@ -176,8 +174,8 @@ void    Cgi::MyExec(int fdc, std::string body)
 			write(fd2[1], body.c_str(), body.size());
 		close(fd2[0]);
 		close(fd2[1]);
-		close(fd[1]);
 		waitpid(pid, NULL, 0);
+		close(fd[1]);
 		MyExec2(fd, fdc);
 	}
 }

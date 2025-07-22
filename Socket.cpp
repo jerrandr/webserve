@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/15 13:49:13 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/22 13:41:15 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,11 +95,11 @@ Socket::Socket(Pollfd *tmp)
     {
         Location loc;
 
-        loc.set_uri("");
+        loc.set_uri("/");
         /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
         loc.set_meth("POST GET");
-        loc.set_redir("302 https://www.youtube.com/watch?v=H5v-FO-jMS0&list=RDtR1ECf4sEpw&index=2");
-        loc.set_root("index.html");
+        loc.set_redir("");
+        loc.set_root("");
         /*valeur booleen*/
         loc.set_enabled(false);
         loc.set_index("index.html");
@@ -168,11 +168,11 @@ Socket::Socket()
     {
         Location loc;
 
-        loc.set_uri("");
+        loc.set_uri("/");
         /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
         loc.set_meth("POST GET");
-        loc.set_redir("302 https://www.youtube.com/watch?v=H5v-FO-jMS0&list=RDtR1ECf4sEpw&index=2");
-        loc.set_root("index.html");
+        loc.set_redir("");
+        loc.set_root("");
         /*valeur booleen*/
         loc.set_enabled(false);
         loc.set_index("index.html");

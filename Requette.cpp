@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/22 08:56:50 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/07/22 13:45:36 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,7 @@ void	Requette::initEnvp(std::string rt)
 	tmp = new std::string[8]();
 	if (rq["uri"].find("?") != std::string::npos)
 		query = rq["uri"].substr(rq["uri"].find("?") + 1, rq["uri"].length() - 1);
-	tmp[0] = "GATEWAY_INTERFACE=CGI/1.1",
-	tmp[1] = "REQUEST_METHOD=POST";
+	tmp[0] = "GATEWAY_INTERFACE=CGI/1.1";
 	tmp[1] = "REQUEST_METHOD=" + rq["method"];
 	if (rq["method"] == "GET")
 		tmp[2] = "QUERY_STRING=" + query;
@@ -199,6 +198,8 @@ void	Requette::rp2(int socket)
 		rt = "/";
 		if (rq["uri"].size() > 1)
 			rt = rq["uri"].substr(1, rq["uri"].length());
+		else
+			rt = "index.html";
 		data = utils.getData(rt);
 		if (data.str() == "")
 		{
@@ -229,7 +230,7 @@ void    Requette::rp(int socket)
 		std::cout << "REDIRECTION\n";
 		redir_rp(Loc.get_redir(), socket);
 	}
-	if (Loc.get_path_cgi() != "")
+	else if (Loc.get_path_cgi() != "")
 	{
 		std::cout << "SCRIPT_CGI\n";
 		ifCgi(Loc, socket);
@@ -239,5 +240,4 @@ void    Requette::rp(int socket)
 		std::cout << "NORMAL\n";
 		rp2(socket);
 	}
-	
 }

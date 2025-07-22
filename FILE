@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Formulaire</title>
+</head>
+<body>
+
+  <form method="post" enctype="multipart/form-data">
+    <label for="nom">Nom :</label>
+    <input type="text" id="nom" name="nom" required>
+    <input type="file" name="saryPrE">
+    <button type="submit">Envoyer</button>
+  </form>
+
+</body>
+</html>
