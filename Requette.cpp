@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Requette.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/22 13:45:36 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/07/28 11:03:50 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Requette::Requette(std::map<std::string, std::string> config, Client cl)
     pl = cl.getPoll();
     this->lc = cl.getConfig().get_locs();
 	body = cl.getBody();
-	std::cout << RED << "BODY: " << body << R << std::endl;
+	// std::cout << RED << "BODY: " << body << R << std::endl;
 }
 
 //+++++++++++++++++++++++++FIND LOCATION+++++++++++++++++++++++++
@@ -145,8 +145,8 @@ void	Requette::redir_rp(std::string redir, int socket)
 	rp = redir_rp2(redir);
 	if (rp != "")
 	{
-		std::cout << "rp: " << rp << std::endl;
-		if (pl->get_status(socket) & POLLIN)
+		// std::cout << "rp: " << rp << std::endl;
+		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 			send(socket, rp.c_str(), rp.size(), 0);
 		return ;
 	}
@@ -176,7 +176,7 @@ void	Requette::rp3(int socket)
 	convert << strData.size();
 	convert >> nbr;
 	std::string rp = "HTTP/1.1 405 Method not allowed\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + strData;
-	if (pl->get_status(socket) & POLLIN)
+	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 		send(socket, rp.c_str(), rp.size(), 0);
 }
 
@@ -213,7 +213,7 @@ void	Requette::rp2(int socket)
 			rp = "HTTP/1.1 404 not found\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + data.str();
 		else
 			rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + data.str();
-		if (pl->get_status(socket) & POLLIN)
+		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 			send(socket, rp.c_str(), rp.size(), 0);
 	}
 	else

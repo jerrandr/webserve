@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 09:12:43 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/28 12:06:32 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -406,6 +406,7 @@ void    Client::receve_message()
                 {
                         requette = "";
                         body = "";
+                        real_body = 0;
                 }
         }
         
@@ -492,7 +493,7 @@ void    Client::parse_requette()
                 }
                 temp1 += requette[i];                 
         }
-        std::cout << requette << std::endl;
+        // std::cout << requette << std::endl;
         // std::cout <<"{Methode}" << "{" << config["method"] <<"}"<<std::endl;
         // std::cout <<"{uri}" << "{" << config["uri"] <<"}"<<std::endl;
         // std::cout <<"{http_version}" << "{" << config["http_version"] <<"}"<<std::endl;
@@ -523,7 +524,6 @@ void    Client::parse_requette()
                         if (fd_wait.size() ==  0)
                         {
                                 requette = "";
-                                requette = "";
                                 body = "";
                         }
                 }
@@ -534,10 +534,17 @@ void    Client::parse_requette()
                 return ;
         }
         // config["uri"] = this->config.get_real_path(config["uri"],this->config.get_location_match(config["uri"]));
-        
+        std::cout << "tsy dir listing" << std::endl;
         Requette a(config, *this);
 
         a.rp(socket);
+        if (fd_wait.size() == 0)
+        {
+                requette = "";
+                body = "";
+                real_body = 0;
+                size_body = 0;
+        }
 
 }
 void Client::max_body_size_trait()
