@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/23 14:03:58 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/28 09:01:48 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ void	Cgi::IfNotFound(std::string p, int fdc)
 	p = ParseCgi(p);
 	nbr = utils.ToString(st.st_size);
 	p = "HTTP/1.1 404 not found\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + p;
-	if (pl->get_status(fdc) & POLLIN)
+	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
 		if (send(fdc, p.c_str(), p.size(), 0) < 0)
 		{
@@ -114,7 +114,7 @@ void	Cgi::IfFound(std::string p, int fdc)
 {
 	p = ParseCgi(p);
 	p = "HTTP/1.1 200 OK\r\nContent-Length: " + utils.ToString(p.size()) + "\r\nContent-Type: text/html\r\n\r\n" + p;
-	if (pl->get_status(fdc) & POLLIN)
+	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
 		if (send(fdc, p.c_str(), p.size(), 0) < 0)
 		{

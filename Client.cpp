@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 07:38:39 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/28 09:12:43 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -492,6 +492,7 @@ void    Client::parse_requette()
                 }
                 temp1 += requette[i];                 
         }
+        std::cout << requette << std::endl;
         // std::cout <<"{Methode}" << "{" << config["method"] <<"}"<<std::endl;
         // std::cout <<"{uri}" << "{" << config["uri"] <<"}"<<std::endl;
         // std::cout <<"{http_version}" << "{" << config["http_version"] <<"}"<<std::endl;
@@ -501,19 +502,30 @@ void    Client::parse_requette()
         //         std::cout << body << std::endl;
         //         fd << body;
         // }
-        // std::cout << "link = " << config["uri"] << std::endl;
+        std::cout << "link = " << config["uri"] << std::endl;
         if (this->config.get_max_allowed_size() < this->get_len_real_body())
         {
+                std::cout << "max body size" << std::endl;
                 max_body_size_trait();
-                // requette = "";
+                if (fd_wait.size() ==  0)
+                {
+                        requette = "";
+                        body = "";
+                }
                 return ;
         }
         else if(is_dir_listing(config["uri"]))
         {
+                std::cout << "is dir listing" << std::endl;
                 try
                 {
                         exec_dir_listing(config["uri"]);
-                        requette = "";
+                        if (fd_wait.size() ==  0)
+                        {
+                                requette = "";
+                                requette = "";
+                                body = "";
+                        }
                 }
                 catch(std::exception &e)
                 {
@@ -526,6 +538,7 @@ void    Client::parse_requette()
         Requette a(config, *this);
 
         a.rp(socket);
+
 }
 void Client::max_body_size_trait()
 {
@@ -573,7 +586,7 @@ void Client::max_body_size_trait()
                 fd_closed(fd,polls,fd_wait,path);                
         }
 }
-void    Client::set_requette(std::string &n)
+void    Client::set_requette(std::string n)
 {
         requette = n;
 }
