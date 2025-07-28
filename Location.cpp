@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:23:00 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/16 08:43:22 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/24 13:42:09 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ const std::string Location::get_path_cgi() const
 {
     return CGI;
 }
-bool    Location::get_directory_listen() const
+bool    Location::get_directory_listing() const
 {
     return enable_director_listing;
 }
@@ -85,6 +85,7 @@ const std::string Location::get_path_upload() const
 {
     return path_upload;
 }
+
 
 /*setters*/
 void    Location::set_uri(const std::string &uri)

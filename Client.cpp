@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/15 13:49:03 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/28 07:38:39 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,11 +341,12 @@ void    Client::receve_message()
         status = 0;
         status =recv(socket,buffer,1024-1,0) ;
         // u += status;
+        // std::cout << buffer << std::endl;
         if(status < 0)
                 return ;
         else if(status == 0)
         {
-                std::cout << "Client deconnected" << std::endl;
+                // std::cout << "Client deconnected" << std::endl;
                 stat = -1;
                 return ;
         }
@@ -363,7 +364,7 @@ void    Client::receve_message()
         if (stat >= 1 || (is_chunked(tmp)))
         {
                 stat = 1;
-                std::cout << "chunked" <<std::endl;
+                // std::cout << "chunked" <<std::endl;
                 stat =  body_chunked(status, tmp);
                 if (stat == 0)
                 {
@@ -371,13 +372,14 @@ void    Client::receve_message()
                         // std::cout << "dude" << std::endl;
                         // std::cout << "{" << body << "}" << std::endl;
                         // std::cout << requette<< std::endl;
-                        std::cout << "end" << std::endl;
+                        // std::cout << "end" << std::endl;
                         body_unchunked();
+                        size_body = real_body;
                         stat = 0;
                         status_requette = 1;
                 }
         }
-        else if (stat != 1)
+        else if (stat != 1 )
         {
                 if(real_body == 0)
                         real_body = get_len_real_body();
@@ -387,24 +389,53 @@ void    Client::receve_message()
                 }
                 stat = 0;
         }
-        // std::cout << "real_" << real_body << " " << size_body << std::endl;
-        if(status_requette == 1)
+        if(status_requette == 1 && real_body == size_body)
         {
                 status_requette = 1;
                 status = 2;
                 size_body = 0;
                 // requette += body;
+                // std::cout << "real_" << real_body << " " << size_body << std::endl;
+       
                 // std::cout << "------------------message--------------------" << std::endl;
                 // std::cout  << body <<std::endl;
                 // std::cout << "----------------------------------------------" << std::endl;        
-                std::cout << "start parse()" << std::endl;
+                // std::cout << "start parse()" << std::endl;
                 parse_requette();
-                requette = "";
-                body = "";
+                if (fd_wait.size() == 0)
+                {
+                        requette = "";
+                        body = "";
+                }
         }
         
 }
 
+void    Client::exec_dir_listing(std::string uri)
+{
+        Location loc;
+        std::string path;
+
+
+        loc = config.get_location_match(uri);
+        path = config.get_real_path(uri,loc);
+        directory_listing(path);
+}
+int Client::is_dir_listing(std::string uri)
+{
+        Location loc;
+        std::string path;
+
+
+        loc = config.get_location_match(uri);
+        path = config.get_real_path(uri,loc);
+        if (is_directory(path))
+        {
+                if (loc.get_directory_listing() && loc.get_index() == "")
+                        return (1);
+        }
+        return (0);
+}
 void    Client::parse_requette()
 {
         std::map<std::string, std::string> config;
@@ -413,6 +444,7 @@ void    Client::parse_requette()
 
         temp1 = "";
         temp2 = "";
+        // std::cout <<"{"<<requette<<"}"<< std::endl;
         for(size_t i = 0; i < requette.size();i++)
         {
                 if (requette[i] == ' ' && ((temp1 == "GET") || (temp1 == "HEAD") || (temp1 == "OPTIONS")
@@ -450,7 +482,7 @@ void    Client::parse_requette()
                         i += temp2.size();
                         if(temp1 != " " && temp2 != " ")
                         {
-                                std::cout <<"{"<<temp1 <<"}{"<< temp2 <<"}"<<std::endl;
+                                // std::cout <<"{"<<temp1 <<"}{"<< temp2 <<"}"<<std::endl;
                                 config[temp1] = temp2;
                                 temp2 = "";
                         }
@@ -460,19 +492,86 @@ void    Client::parse_requette()
                 }
                 temp1 += requette[i];                 
         }
-        std::cout <<"{Methode}" << "{" << config["method"] <<"}"<<std::endl;
-        std::cout <<"{uri}" << "{" << config["uri"] <<"}"<<std::endl;
-        std::cout <<"{http_version}" << "{" << config["http_version"] <<"}"<<std::endl;
-        
+        // std::cout <<"{Methode}" << "{" << config["method"] <<"}"<<std::endl;
+        // std::cout <<"{uri}" << "{" << config["uri"] <<"}"<<std::endl;
+        // std::cout <<"{http_version}" << "{" << config["http_version"] <<"}"<<std::endl;
         // if(config["method"] == "POST")
         // {
         //         std::ofstream fd("test.out");
-
+        //         std::cout << body << std::endl;
         //         fd << body;
         // }
+        // std::cout << "link = " << config["uri"] << std::endl;
+        if (this->config.get_max_allowed_size() < this->get_len_real_body())
+        {
+                max_body_size_trait();
+                // requette = "";
+                return ;
+        }
+        else if(is_dir_listing(config["uri"]))
+        {
+                try
+                {
+                        exec_dir_listing(config["uri"]);
+                        requette = "";
+                }
+                catch(std::exception &e)
+                {
+                        (void)e;
+                }
+                return ;
+        }
+        // config["uri"] = this->config.get_real_path(config["uri"],this->config.get_location_match(config["uri"]));
+        
         Requette a(config, *this);
 
         a.rp(socket);
+}
+void Client::max_body_size_trait()
+{
+        int fd;
+        std::string path;
+        std::string t;
+        std::stringstream ss;
+
+        path = this->config.get_errors().get_path_413();
+        t = "";
+        fd = -1;
+        if (access(path.c_str(), F_OK| R_OK) < 0)
+        {
+                path = this->config.get_errors().get_path_500();
+                if (access(path.c_str(), F_OK| R_OK) < 0)
+                {
+                        t = "500 INTERNAL SERVER ERROR";
+                        ss << t.size();
+                        t  = "HTTP/1.1 500 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ t;
+                        if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
+                                send(socket, t.c_str(), t.size(), 0);
+                        return ;
+                }
+                fd = fd_is_ready(path,polls,fd_wait);
+                if (fd != -1)
+                {
+                        t = get_html_page(fd);
+                        ss << t.size();
+                        t  = "HTTP/1.1 500 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ t;
+                        if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
+                                send(socket, t.c_str(), t.size(), 0);
+                        fd_closed(fd,polls,fd_wait,path);
+                                
+                }
+                return;
+        }
+        fd = fd_is_ready(path,polls,fd_wait);
+        if (fd != -1)
+        {
+                t = get_html_page(fd);
+                ss << t.size();
+                t  = "HTTP/1.1 413 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ t;
+                if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
+                        send(socket, t.c_str(), t.size(), 0);
+                fd_closed(fd,polls,fd_wait,path);                
+        }
 }
 void    Client::set_requette(std::string &n)
 {
@@ -484,9 +583,8 @@ void    Client::verify_connex(int status)
         if (status == 1)
         {
                 receve_message();
-                std::cout << "vita parse()" << std::endl;
         }
-        else if (status == 2 && status_requette == 1 && reponse != "")
+        else if (status == 2 && status_requette == 1 && reponse != "" && fd_wait.size() == 0)
         {
                 send_message();
                 size_body = 0;
@@ -494,7 +592,10 @@ void    Client::verify_connex(int status)
                 
         }
 }
-
+std::size_t Client::size_fd_wait()
+{
+        return fd_wait.size();
+}
 // JERRY MODIF
 Pollfd *Client::getPoll() const
 {

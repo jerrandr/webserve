@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:04:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/16 09:54:32 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/25 10:44:23 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ Config::Config()
     listen = "";
     host = "";
     server_name = "";
-    max_allowed_size = "";
+    max_allowed_size = "1m";
 
     mime[".aac"] = "audio/aac";
     mime[".abw	"] = "application/x-abiword";
@@ -105,7 +105,6 @@ Config &Config::operator=(const Config &other)
     max_allowed_size = other.max_allowed_size;
     locs.clear();
     locs = other.locs;
-    errors.clear();
     errors = other.errors;
     mime = other.mime;
     return *this;
@@ -124,15 +123,35 @@ const std::string &Config::get_server_name() const
 {
     return server_name;
 }
-const std::string &Config::get_max_allowed_size() const
+std::size_t Config::get_max_allowed_size() const
 {
-    return max_allowed_size;
+    std::size_t max_body;
+    std::string tmp;
+    std::string unity;
+    std::stringstream ss;
+
+    max_body = 0;
+    unity = max_allowed_size[max_allowed_size.size()-1];
+    tmp = max_allowed_size;
+    if (!isdigit(unity[0]))
+        tmp = (tmp.substr(0,tmp.size()-1));
+    else
+        unity = "" ;
+    ss << tmp;
+    ss >> max_body;
+    if (unity == "k" || unity == "K")
+        max_body *= 1000;
+    else if (unity == "m" || unity == "M")
+        max_body *= 1000000;
+    else if (unity == "g" || unity == "G")
+        max_body *= 1000000000;
+    return max_body;
 }
 const std::vector<Location> &Config::get_locs() const
 {
     return locs;
 }
-const std::vector<ErrorPage> &Config::get_errors() const
+const ErrorPage &Config::get_errors() const
 {
     return errors;
 }
@@ -176,5 +195,68 @@ void    Config::set_locs(const Location &loc)
 }
 void    Config::set_errors(const ErrorPage &err)
 {
-    errors.push_back(err);
+    errors = err;
+}
+
+/*other get*/
+Location    Config::get_location_match(std::string uri)
+{
+    Location *def;
+    Location *re;
+    std::vector<std::string> tmp1;
+    int max;
+    int t;
+
+    def = NULL;
+    re = NULL;
+    max = -1;
+    tmp1 = split(uri,"/");
+    t = -1;
+    for(std::vector<Location>::iterator i = locs.begin(); i != locs.end();i++)
+    {
+        if ((*i).get_uri() == "/")
+        {
+            def = &(*i);
+            break; 
+        }
+    }
+    
+    for(std::vector<Location>::iterator i = locs.begin(); i != locs.end();i++)
+    {
+        std::vector<std::string> tmp;
+
+        tmp = split((*i).get_uri(),"/");
+        for(std::size_t j = 0; j < tmp.size();j++)
+        {
+            if (j < tmp1.size() && tmp1[j] == tmp[j])
+                t ++;
+        }
+        if (max < t)
+        {
+            max = t;
+            re = &(*i);
+        }
+        t = 0;
+    }
+    if (re == NULL)
+        return (*def);
+    return (*re);
+}
+
+
+std::string Config::get_real_path(std::string uri, Location loc)
+{
+    std::string real;
+    std::size_t j;
+
+    real = loc.get_root();
+    j = uri.find(loc.get_root());
+    if (j == std::string::npos)
+        return real;
+    j += real.size();
+    if (real[real.size()-1] == '/' && uri[0] == '/')
+        real = real.substr(0,real.size()-1);
+    real = "."+real;
+    real += uri.substr(j,uri.size());
+    return real;
 }

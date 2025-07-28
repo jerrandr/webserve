@@ -6,11 +6,26 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:11:57 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/02 14:51:53 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/26 11:34:06 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "directory_listing.h"
+#include "../Client.hpp"
+
+static bool is_directory(struct dirent *direct, std::string name)
+{
+    struct stat file_s;
+    std::string dir;
+
+    std::memset(&file_s,0,sizeof(file_s));
+    dir = direct->d_name;
+    stat((name+dir).c_str(), &file_s);
+    if(S_ISDIR(file_s.st_mode))
+        return true;
+    return false;
+}
+
+
 static std::string build_html_page(std::vector<std::string> files,std::string path, std::vector<std::string> name)
 {
     std::string head;
@@ -30,7 +45,7 @@ static std::string build_html_page(std::vector<std::string> files,std::string pa
         rest+="<div class=\"container\">\n";
         if (tmp.size()> 0)
         {
-            rest += "<div class =\"content\"><a href=\""+path+name[i]+"\">"+tmp[0]+"</a></div>";
+            rest += "<div class =\"content\"><a href=\""+name[i]+"\">"+tmp[0]+"</a></div>";
             for(std::size_t j = 1; j < tmp.size(); j++)
             {
                 rest += "<div class =\"content\">"+tmp[j]+"</div>";
@@ -40,61 +55,64 @@ static std::string build_html_page(std::vector<std::string> files,std::string pa
     }
     head += rest +"\n</body\\>\n</html>";
 
+    std::stringstream ss;
+
+    ss << head.size();
+    head  = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;              
+    
     return head;
 }
 
-static std::string build_html_page_error(int err)
+static std::string build_html_page_error(int err,Config config, Pollfd *polls,std::map<std::string, int> &fd_wait)
 {
     std::string head;
-    std::string buff;
+    int fd;
     
     head = "";
-    buff = "";
+    fd = -1;
     if (err == 404)
     {
-        std::ifstream fd("../error/404.html");
-        if (!fd)
-            return head;
-        while(getline(fd,buff))
-            head += buff;
+        fd = fd_is_ready(config.get_errors().get_path_404(),polls,fd_wait);
+        if (fd < 0)
+            throw std::logic_error("404");
+        head = get_html_page(fd);
+        fd_closed(fd,polls,fd_wait,config.get_errors().get_path_404());
     }
     else if(err == 403)
     {
-        std::ifstream fd("../error/403.html");
-        if (!fd)
-            return head;
-        while(getline(fd,buff))
-            head += buff;
+        fd = fd_is_ready(config.get_errors().get_path_403(),polls,fd_wait);
+        if (fd < 0)
+            throw std::logic_error("403");
+        head = get_html_page(fd);
+        fd_closed(fd,polls,fd_wait,config.get_errors().get_path_403());
     }
     return head;
 }
 
-static bool access_denied(std::string &dir, std::string name)
+static bool access_denied(std::string &dir, std::string name, Config config, Pollfd *polls,std::map<std::string, int> &fd_wait)
 {
+    std::stringstream ss;
+
+    
     if(access(name.c_str(),F_OK) < 0)
     {
-        dir = build_html_page_error(404);
+        dir = build_html_page_error(404,config,polls,fd_wait);
+        ss << dir.size();
+        dir  = "HTTP/1.1 404 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ dir;              
+    
         return true;
     }
     else if(access(name.c_str(),R_OK) < 0)
     {
-        dir = build_html_page_error(403);
+        dir = build_html_page_error(403,config,polls,fd_wait);
+        ss << dir.size();
+        dir  = "HTTP/1.1 403 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ dir;
         return true;
     }
     return false;
 }
 
-static bool is_directory(struct dirent *direct, std::string name)
-{
-    struct stat file_s;
-    std::string dir;
-            
-    dir = direct->d_name;
-    stat((name+dir).c_str(), &file_s);
-    if(S_ISDIR(file_s.st_mode))
-        return true;
-    return false;
-}
+
 
 
 static void do_directory(std::vector<std::string> &test, std::vector<std::string> &file_name, std::string dir, std::string name)
@@ -111,7 +129,7 @@ static void do_directory(std::vector<std::string> &test, std::vector<std::string
     std::strftime(buff,sizeof(buff),"%d-%m-%Y %H:%M", tm_n);
     tmp = buff;
     test.push_back(dir+"/\n"+tmp+"\n-");
-    file_name.push_back(dir);
+    file_name.push_back(dir+"/");
 }
 
 static  void    do_files(std::vector<std::string> &test, std::vector<std::string> &file_name, std::string dir, std::string name)
@@ -159,17 +177,19 @@ static  void    do_files(std::vector<std::string> &test, std::vector<std::string
     }
     file_name.push_back(dir);
 }
-std::string    directory_listing(std::string &name)
+std::string    Client::directory_listing(std::string name)
 {
     DIR *dirp;
     struct dirent *direct;
     std::vector<std::string> test;
     std::vector<std::string> file_name;
     std::string dir;
+    std::stringstream ss;
 
     dir = "";
     dirp = NULL;
-    if(access_denied(dir,name) == false)
+    std::cout << "path = " << name << std::endl;
+    if(access_denied(dir,name,config,polls,fd_wait) == false)
     {
         dirp = opendir(name.c_str());
         if (dirp == NULL)
@@ -181,23 +201,16 @@ std::string    directory_listing(std::string &name)
         {
             dir = direct->d_name;
             if(is_directory(direct, name))
-            {
                 do_directory(test,file_name,dir,name);
-            }
             else
-            {
                 do_files(test,file_name,dir,name);
-            }
             direct = readdir(dirp);
         }
         dir = "";
         dir = build_html_page(test,name,file_name);
     }
-    {
-        std::ofstream fd("index.html");
-
-        fd << dir;
-    }
+    if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
+        send(socket, dir.c_str(), dir.size(), 0);
     if(dirp)
         closedir(dirp);
     return dir;

@@ -3,7 +3,8 @@ NAME = web
 SRC = main.cpp Client.cpp Server.cpp Socket.cpp utils.cpp\
 	Pollfd.cpp Config.cpp Location.cpp ErrorPage.cpp Cgi.cpp\
 	signal_handling/SignalHandling.cpp Requette.cpp\
-	ExecUtils.cpp
+	ExecUtils.cpp\
+	directory_listing/directory_listing.cpp\
 
 OBJ = ${SRC:.cpp=.o}
 

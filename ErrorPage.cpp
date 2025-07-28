@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:46:21 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/22 07:48:50 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/23 13:08:18 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ const std::string &ErrorPage::get_path_411() const
 }
 const std::string &ErrorPage::get_path_413() const
 {
-    return path_406;
+    return path_413;
 }
 const std::string &ErrorPage::get_path_414() const
 {

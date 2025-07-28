@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/22 10:37:58 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/07/23 14:03:58 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ std::string	Cgi::getStatus(std::string p)
 	if (p.find("status") != std::string::npos)
 	{
 		res = p.substr(p.find("status"), p.length());
-		std::cout << "RES: " << res << std::endl;
+		// std::cout << "RES: " << res << std::endl;
 	}
 	return (res);
 }
@@ -144,7 +144,7 @@ void	Cgi::MyExec2(int fd[2], int fdc)
 	close(fd[1]);
 	close(fd[0]);
 	getStatus(p);
-	std::cout << "P: " << p << std::endl;
+	// std::cout << "P: " << p << std::endl;
 	if (p.find("404 not found") != std::string::npos)
 		IfNotFound(p, fdc);
 	else
@@ -157,7 +157,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 	int fd2[2];
 	int pid;
 
-	std::cout << "BODY_CGI: " << body << std::endl;
+	// std::cout << "BODY_CGI: " << body << std::endl;
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		exit(0);
 	pid = fork();

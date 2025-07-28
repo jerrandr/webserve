@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/22 13:41:15 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/07/25 08:20:18 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ Socket::Socket(Pollfd *tmp)
     /*initialisation apartir du fichier de config*/
     config.set_port("8080");
     config.set_host("localhost");
-    config.set_max_allowed_size("");
+    // config.set_max_allowed_size("");
     
     polls = tmp;
     /*initialisation du block location a partir du fichier de config
@@ -101,8 +101,8 @@ Socket::Socket(Pollfd *tmp)
         loc.set_redir("");
         loc.set_root("");
         /*valeur booleen*/
-        loc.set_enabled(false);
-        loc.set_index("index.html");
+        loc.set_enabled(true);
+        loc.set_index("");
         /*path*/
         loc.set_path_cgi("");
         config.set_locs(loc);
@@ -172,10 +172,10 @@ Socket::Socket()
         /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
         loc.set_meth("POST GET");
         loc.set_redir("");
-        loc.set_root("");
+        loc.set_root("/");
         /*valeur booleen*/
         loc.set_enabled(false);
-        loc.set_index("index.html");
+        loc.set_index("");
         /*path*/
         loc.set_path_cgi("");
         config.set_locs(loc);
@@ -316,8 +316,10 @@ void    Socket::listen_port()
                     clients[j].verify_connex(1);
                else if (re & POLLOUT)
                     clients[j].verify_connex(2);
-                else if (re & POLLHUP)
-                    std::cout << "deconnected" << std::endl;
+            }
+            if (clients[j].size_fd_wait())
+            {
+                clients[j].parse_requette();
             }
         }
     }

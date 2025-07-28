@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/15 12:03:55 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/26 10:04:20 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ class Client
         int status_connexion;
         size_t size_body;
         int stat;
+        std::map<std::string, int> fd_wait;
         Client();
     public:
         ~Client();
@@ -53,6 +54,17 @@ class Client
         size_t get_len_real_body();
         size_t get_len_body(std::string buffer);
         void    set_head(int size,std::string buffer);
+
+        /*max body size*/
+        void max_body_size_trait();
+        std::size_t size_fd_wait();
+
+
+        /*dir list*/
+        int is_dir_listing(std::string uri);
+        std::string    directory_listing(std::string name);
+        void    exec_dir_listing(std::string uri);
+        
         // std::vector<std::string>    body_split();
 		// JERRY MODIF
 		Pollfd		*getPoll() const;

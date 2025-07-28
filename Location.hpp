@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:14:00 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/16 08:42:05 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/24 13:42:05 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class Location
         const std::string get_root() const;
         const std::string get_index() const;
         const std::string get_path_cgi() const;
-        bool    get_directory_listen() const;
+        bool    get_directory_listing() const;
         const std::string get_script_cgi() const;
         const std::string get_extension_cgi() const;
         const std::string get_path_upload() const;
@@ -63,6 +63,8 @@ class Location
         void    set_script(const std::string &src);
         void    set_extension_cgi(const std::string &src);
         void    set_path_upload(const std::string &src);
+
+
 };
 
 

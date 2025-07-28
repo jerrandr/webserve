@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/04 11:02:25 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/26 11:37:17 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,61 @@ std::vector<std::string> split(std::string str, std::string sep)
         if (str != "")
             nw.push_back(str);
         return nw;
+}
+
+std::string get_html_page(int fd)
+{
+    std::string reponse;
+    char buff[127];
+    std::size_t len;
+    
+    std::memset(buff,0,126);
+    len = read(fd,buff,126);
+    while(len > 0)
+    {
+        reponse.append(buff,len);
+        std::memset(buff,0,126);
+        len = read(fd,buff,126);
+    }
+    return reponse;
+}
+
+int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_wait)
+{
+    int fd;
+
+    fd = -1;
+    try
+    {
+        fd = fd_wait.at(path);
+        if ((polls->get_status(fd) & POLLIN))
+            return fd;
+    }
+    catch(const std::exception &e)
+    {
+        fd = open(path.c_str(), O_RDWR);
+        if (fd < 1)
+            throw std::logic_error("error open");
+        (void)e;
+        polls->add_new_fd(fd);
+        fd_wait[path] = fd;
+    }
+    return -1;
+}
+
+void  fd_closed(int fd,Pollfd *polls, std::map<std::string, int> &fd_wait, std::string path)
+{
+    polls->erase_fd(fd);
+    fd_wait.erase(path);
+}
+
+bool is_directory(std::string path)
+{
+    struct stat file_s;
+
+    std::memset(&file_s,0,sizeof(file_s));
+    stat(path.c_str(), &file_s);
+    if(S_ISDIR(file_s.st_mode))
+        return true;
+    return false;
 }

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/15 09:40:28 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/25 14:03:54 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ short   Pollfd::get_status(int fd)
     catch(std::exception &e)
     {
         (void)e;
-        return 0;
+        return -1;
     }
 }
 
@@ -78,7 +78,6 @@ void    Pollfd::erase_fd(int fd)
     try
     {
         (void)tab_fds.at(fd);
-        tab_fds.erase(fd);
         for(std::vector<pollfd>::iterator i = fds.begin(); i != fds.end();i++)
         {
             if((*i).fd == fd)
@@ -88,6 +87,7 @@ void    Pollfd::erase_fd(int fd)
                 break;
             }
         }
+        tab_fds.erase(fd);
     }
     catch(std::exception &e)
     {
