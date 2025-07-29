@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 12:11:58 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/29 08:34:50 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ Socket::Socket(Pollfd *tmp)
     /*initialisation apartir du fichier de config*/
     config.set_port("8080");
     config.set_host("localhost");
-    // config.set_max_allowed_size("");
+    config.set_max_allowed_size("100m");
     
     polls = tmp;
     /*initialisation du block location a partir du fichier de config

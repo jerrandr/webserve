@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Requette.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/28 11:03:50 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/29 08:53:43 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,10 @@ Requette::Requette(std::map<std::string, std::string> config, Client cl)
     pl = cl.getPoll();
     this->lc = cl.getConfig().get_locs();
 	body = cl.getBody();
-	// std::cout << RED << "BODY: " << body << R << std::endl;
+	BodyUpload up(body);
+	
+	std::cout << RED << "BODY: " << body << R << std::endl;
+	up.ParseBody();
 }
 
 //+++++++++++++++++++++++++FIND LOCATION+++++++++++++++++++++++++

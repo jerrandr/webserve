@@ -6,13 +6,14 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/21 13:28:45 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/07/29 07:48:02 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef REQUETTE_HPP
 #define REQUETTE_HPP
 
+#include "BodyUpload.hpp"
 #include "ExecUtils.hpp"
 #include "Cgi.hpp"
 class Pollfd;
