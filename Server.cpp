@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:05:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/15 09:25:25 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/28 14:48:53 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,40 +16,56 @@
 Server::Server()
 {
 
+    // /*io size io ny isanle block server*/
+    // size = 1;
+    // config = -1;
+    // fds = new Pollfd();
+    // if(fds == NULL)
+    //     return ;
+    // for(int i = 0; i < size; i++)
+    // {
+    //     Socket socket_serv(fds,);
+    //     sockets.push_back(socket_serv);
+    //     serv.push_back(socket_serv.get_socket());
+    //     fds->add_new_fd(socket_serv.get_socket());
+    // }  
+}
+
+Server::Server(Config c, Pollfd *p)
+{
+
     /*io size io ny isanle block server*/
     size = 1;
-    config = -1;
-    fds = new Pollfd();
+    // config = -1;
+    fds = p;
+    config = c;
     if(fds == NULL)
         return ;
     for(int i = 0; i < size; i++)
     {
-        Socket socket_serv(fds);
+        Socket socket_serv(p, c);
         sockets.push_back(socket_serv);
         serv.push_back(socket_serv.get_socket());
         fds->add_new_fd(socket_serv.get_socket());
-    }  
+    } 
+     listen_all_socket(); 
 }
 Server::~Server()
 {
-    if (fds)
-    {
-        fds->close_all_socket();
-        delete fds;
-        fds = NULL;
-    }
-    for(std::size_t i = 0; i < sockets.size(); i++)
-    {
-        sockets[i].free_addrinfo();
-    }
+    
+    
 }
 Server::Server(const Server &other)
 {
-    (void)other;
+    *this = other;
 }
 Server &Server::operator=(const Server &other)
 {
-    (void)other;
+    config = other.config;
+    sockets = other.sockets;
+    serv = other.serv;
+    size = other.size;
+    fds = other.fds;
     return (*this);
 }
 
@@ -130,16 +146,24 @@ void    print_all_fd(struct pollfd (fd_serv)[10000],int size)
 // }
 void    Server::start()
 {
-    listen_all_socket();
-    signal(SIGINT,SignalHandling::handle_signal); 
-    while(1)
-    {
+    // listen_all_socket();
+    // signal(SIGINT,SignalHandling::handle_signal); 
+    // while(1)
+    // {
         // print_all_fd(fds,size);
         //maj_fd();
         //maj_size_fd_socket();
-        fds->start_poll();
+        // fds->start_poll();
         //poll(&fds[0],size,300);
         //maj_all_socket();
         listen_sockets();
+    // }
+}
+
+void    Server::free_all_socket_info()
+{
+    for(std::size_t i = 0; i < sockets.size(); i++)
+    {
+            sockets[i].free_addrinfo();
     }
 }

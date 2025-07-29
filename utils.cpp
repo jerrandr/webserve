@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/26 11:37:17 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/29 09:16:44 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,26 @@ bool is_directory(std::string path)
     if(S_ISDIR(file_s.st_mode))
         return true;
     return false;
+}
+
+
+std::string decode_str(std::string d)
+{
+    std::string tmp;
+
+    tmp = "";
+
+    for(std::size_t i = 0; i < d.size();i++)
+    {
+         if (d[i] == '%' && i+2 < d.size() && d[i+1] == '2' && d[i+2] == '0')
+         {
+            tmp += " ";
+            i+=2;
+         }
+         else if (d[i] == '+')
+            tmp += " ";
+         else
+            tmp += d[i];
+    }
+    return tmp;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/29 08:34:50 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/07/29 09:24:41 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,42 +73,16 @@
 
 // }
 
-Socket::Socket(Pollfd *tmp)
+Socket::Socket(Pollfd *tmp, Config c)
 {
     struct addrinfo hints;
     struct addrinfo *server;
     int yes;
-    int size;
+
 
     yes = 1;
-    size = 1;
-    // fd_serv = fds;
-    /*initialisation apartir du fichier de config*/
-    config.set_port("8080");
-    config.set_host("localhost");
-    config.set_max_allowed_size("100m");
-    
     polls = tmp;
-    /*initialisation du block location a partir du fichier de config
-    mety bedebe le location*/
-    for(int i = 0; i < size; i++)
-    {
-        Location loc;
-
-        loc.set_uri("/");
-        /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
-        loc.set_meth("POST GET");
-        loc.set_redir("");
-        loc.set_root("");
-        /*valeur booleen*/
-        loc.set_enabled(true);
-        loc.set_index("");
-        /*path*/
-        loc.set_path_cgi("");
-        config.set_locs(loc);
-    }
-    
-    /*raha misy directive error page ao amn fichier de config de atao otranio location*/
+    config = c;
     memset(&hints, 0, sizeof hints);
     hints.ai_family=AF_INET;
     hints.ai_socktype=SOCK_STREAM;
@@ -121,111 +95,22 @@ Socket::Socket(Pollfd *tmp)
     if(fd == -1)
     {
         freeaddrinfo(server);
-        if (polls)
-        {
-            polls->close_all_socket();
-            delete polls;
-            polls = NULL;
-        }   
         throw std::logic_error("Error socket()");
     }
-    info = server;
     std::cout << "Server connection ......" << std::endl;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
     if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
     {
         freeaddrinfo(server);
-        if (polls)
-        {
-            polls->close_all_socket();
-            delete polls;
-            polls = NULL;
-        }   
         throw std::logic_error("Error bind()");
     }
     std::cout << "server connected" << std::endl;
+    info = server;
     // size_fd = polls->get_size();
 }
 Socket::Socket()
 {
-    struct addrinfo hints;
-    struct addrinfo *server;
-    int yes;
-    int size;
-
-    yes = 1;
-    size = 1;
-    // fd_serv = fds;
-    // size_fd = 0;
-    /*initialisation apartir du fichier de config*/
-    config.set_port("80");
-    config.set_host("localhost");
-    config.set_max_allowed_size("");
-    
-    /*initialisation du block location a partir du fichier de config
-    mety bedebe le location*/
-    for(int i = 0; i < size; i++)
-    {
-        Location loc;
-
-        loc.set_uri("/");
-        /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
-        loc.set_meth("POST GET");
-        loc.set_redir("");
-        loc.set_root("/");
-        /*valeur booleen*/
-        loc.set_enabled(false);
-        loc.set_index("");
-        /*path*/
-        loc.set_path_cgi("");
-        config.set_locs(loc);
-    }
-    
-    /*raha misy directive error page ao amn fichier de config de atao otranio location*/
-    memset(&hints, 0, sizeof hints);
-    hints.ai_family=AF_INET;
-    hints.ai_socktype=SOCK_STREAM;
-    hints.ai_flags = AI_PASSIVE;  
-    if(getaddrinfo(config.get_host().c_str(),config.get_port().c_str(),&hints,&server)!=0)
-    {
-        if (polls)
-        {
-            polls->close_all_socket();
-            delete polls;
-            polls = NULL;
-        }   
-        throw std::logic_error("Error getaddrinfo()");
-    }
-    fd = socket(server->ai_family,server->ai_socktype,0);
-    if(fd == -1)
-    {
-        freeaddrinfo(server);
-        if (polls)
-        {
-            polls->close_all_socket();
-            delete polls;
-            polls = NULL;
-        }   
-        throw std::logic_error("Error socket()");
-    }
-    info = server;
-    std::cout << "Server connection ......" << std::endl;
-    setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
-    if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
-    {
-        freeaddrinfo(server);
-        if (polls)
-        {
-            polls->close_all_socket();
-            delete polls;
-            polls = NULL;
-        }   
-        throw std::logic_error("Error bind()");
-    };
-    std::cout << "server connected" << std::endl;
-    // fd_serv[i].fd=fd;
-    // fd_serv[i].events = fds[i].events;
-    // fd_serv[i].revents = fds[i].revents;
+   
 }
 Socket::~Socket()
 {
@@ -233,10 +118,14 @@ Socket::~Socket()
 }
 Socket::Socket(const Socket &other)
 {
+    if (this == &other)
+        return ;
     *this = other;
 }
 Socket &Socket::operator=(const Socket &other)
 {
+     if (this == &other)
+        return *this;
     polls = other.polls;
     // fd_serv.clear();
     // fd_serv = other.fd_serv;
@@ -353,7 +242,7 @@ std::vector<Client> &Socket::get_clients()
 
 void    Socket::free_addrinfo()
 {
-    if(info)
+    if(info != NULL)
     {
         freeaddrinfo(info);
         info = NULL;

@@ -5,7 +5,8 @@ SRC = main.cpp Client.cpp Server.cpp Socket.cpp utils.cpp\
 	signal_handling/SignalHandling.cpp Requette.cpp\
 	ExecUtils.cpp\
 	directory_listing/directory_listing.cpp\
-	BodyUpload.cpp
+	BodyUpload.cpp\
+	WebServer.cpp\
 OBJ = ${SRC:.cpp=.o}
 
 cc = c++

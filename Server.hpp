@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:57:28 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/22 07:49:45 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/28 14:53:00 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,16 @@ class Socket;
 class Server
 {
     private:
-        int config;
+        Config config;
         std::vector<Socket> sockets;
         std::vector<int> serv;
         int size;
         Pollfd *fds;
         // std::vector <pollfd> fds;
         // struct pollfd fds[10000];
-    public:
         Server();
+    public:
+        Server(Config c, Pollfd *p);
         ~Server();
         Server(const Server &other);
         Server &operator=(const Server &other);
@@ -39,5 +40,6 @@ class Server
         void    maj_all_socket();
 
         void    maj_size_fd_socket();
+                void    free_all_socket_info();
 };
 #endif

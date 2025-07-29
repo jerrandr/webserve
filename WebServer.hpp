@@ -1,28 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   WebServer.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/20 13:58:07 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 13:57:54 by msalohy          ###   ########.fr       */
+/*   Created: 2025/07/28 12:50:04 by msalohy           #+#    #+#             */
+/*   Updated: 2025/07/28 14:52:57 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "WebServer.hpp"
-
-int main()
+#ifndef WEBSERVER_HPP
+#define WEBSERVER_HPP
+#include "utils.h"
+class Server;
+class WebServer
 {
-    try
-    {
-        WebServer w;
-    
-        w.start_webserver(0); 
-    }
-    catch(std::exception &e)
-    {
-        std::cout << e.what() << std::endl;
-    }
-    return (0);
-}
+    private:
+        Pollfd *polls;
+        std::vector<Server> servs;
+        void    non_stop_serv();
+    public:
+        WebServer();
+        ~WebServer();
+        WebServer(const WebServer &other);
+        WebServer &operator=(const WebServer &other);
+        void start_webserver(int fd);
+};
+#endif

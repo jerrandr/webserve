@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:04:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/25 10:44:23 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/29 07:09:32 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,7 @@ std::string Config::get_mime(const std::string &type)
     catch(const std::exception &e)
     {
         (void)e;
-        s = "text/html";
+        s = "text/plain";
     }
     return s;
 }
@@ -249,6 +249,7 @@ std::string Config::get_real_path(std::string uri, Location loc)
     std::string real;
     std::size_t j;
 
+    uri = decode_str(uri);
     real = loc.get_root();
     j = uri.find(loc.get_root());
     if (j == std::string::npos)

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:35 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/26 11:35:46 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/28 14:01:53 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
+#include "signal.h"
 #include "Location.hpp"
 #include "ErrorPage.hpp"
 #include "Config.hpp"
@@ -42,4 +43,6 @@ int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_
 void  fd_closed(int fd,Pollfd *polls, std::map<std::string, int> &fd_wait,std::string path);
 
 bool is_directory(std::string path);
+std::string decode_str(std::string d);
+
 #endif
