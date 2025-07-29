@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 12:06:32 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/29 13:40:01 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,34 +298,36 @@ void    Client::body_unchunked()
 {
         long current_size;
         std::string tmp;
-        std::stringstream ss;
         std::string new_body;
         std::size_t temp;
 
-        current_size = -1;
+        current_size = 0;
         tmp = "";
         temp = 0;
         new_body = "";
         real_body = 0;
         for(std::size_t i = 0; i < body.size();i++)
         {
-                temp =body.find("\r\n") ;
+                temp =body.find("\r\n",i) ;
                 if (temp == std::string::npos)
                 {
-                        return;
+                        break;
                 }
-                tmp = body.substr(i,temp);
-                ss << std::hex << tmp;
-                ss >> current_size;
+                tmp = body.substr(i,(temp-i));
+                // std::cout <<"i = "<<i<<"{"<<tmp <<"}size="<<emp<< std::endl;
+                current_size = strtol(tmp.c_str(),NULL,16);
                 real_body += current_size;
-                i += temp+2;
+                // std::cout << "size = " << current_size << std::endl;
+                i = temp;
+                i+=2;
                 for(long j = 0 ; j < (current_size);j++)
-                        new_body+= body[j+i];
-                ss.clear();
+                        new_body += body[j+i];
                 i += current_size+1;
                 current_size = 0;
                 tmp = "";
                 temp = 0;
+                if (i >= body.size())
+                        break;
         }
         body = new_body;
 }
@@ -374,6 +376,9 @@ void    Client::receve_message()
                         // std::cout << requette<< std::endl;
                         // std::cout << "end" << std::endl;
                         body_unchunked();
+                        // std::ofstream fd("test.out"); 
+                        // // std::cout << body << std::endl;
+                        // fd << body ;
                         size_body = real_body;
                         stat = 0;
                         status_requette = 1;
@@ -398,7 +403,7 @@ void    Client::receve_message()
                 // std::cout << "real_" << real_body << " " << size_body << std::endl;
        
                 // std::cout << "------------------message--------------------" << std::endl;
-                // std::cout  << body <<std::endl;
+                // std::cout  << requette + body <<std::endl;
                 // std::cout << "----------------------------------------------" << std::endl;        
                 // std::cout << "start parse()" << std::endl;
                 parse_requette();
@@ -430,6 +435,7 @@ int Client::is_dir_listing(std::string uri)
 
         loc = config.get_location_match(uri);
         path = config.get_real_path(uri,loc);
+        std::cout << "path = " << path << std::endl;
         if (is_directory(path))
         {
                 if (loc.get_directory_listing() && loc.get_index() == "")

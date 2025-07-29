@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 08:24:34 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/24 14:13:46 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/29 13:48:34 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ class Config
     private:
         std::string listen;
         std::string host;
-        std::string server_name;
         std::string max_allowed_size;
         std::vector<Location> locs;
         ErrorPage errors;
@@ -33,7 +32,6 @@ class Config
         /*getters*/
         const std::string &get_port() const;
         const std::string &get_host() const;
-        const std::string &get_server_name() const;
         std::size_t get_max_allowed_size() const;
         const std::vector<Location> &get_locs() const;
         const ErrorPage &get_errors() const;
@@ -42,7 +40,6 @@ class Config
         /*setters*/
         void    set_port(const std::string &port);
         void    set_host(const std::string &h);
-        void    set_server_name(const std::string &name);
         void    set_max_allowed_size(const std::string &max);
         void    set_locs(const Location &loc);
         void    set_errors(const ErrorPage &err);

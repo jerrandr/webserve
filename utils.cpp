@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/29 09:16:44 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/29 10:39:51 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,6 @@ std::string decode_str(std::string d)
             tmp += " ";
             i+=2;
          }
-         else if (d[i] == '+')
-            tmp += " ";
          else
             tmp += d[i];
     }

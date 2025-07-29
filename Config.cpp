@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:04:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/29 07:09:32 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/29 13:49:06 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ Config::Config()
 {
     listen = "";
     host = "";
-    server_name = "";
     max_allowed_size = "1m";
 
     mime[".aac"] = "audio/aac";
@@ -101,7 +100,6 @@ Config &Config::operator=(const Config &other)
 {
     listen = other.listen;
     host = other.host;
-    server_name = other.server_name;
     max_allowed_size = other.max_allowed_size;
     locs.clear();
     locs = other.locs;
@@ -119,10 +117,7 @@ const std::string &Config::get_host() const
 {
     return host;
 }
-const std::string &Config::get_server_name() const
-{
-    return server_name;
-}
+
 std::size_t Config::get_max_allowed_size() const
 {
     std::size_t max_body;
@@ -181,10 +176,7 @@ void    Config::set_host(const std::string &h)
 {
     host = h;
 }
-void    Config::set_server_name(const std::string &name)
-{
-    server_name = name;
-}
+
 void    Config::set_max_allowed_size(const std::string &max)
 {
     max_allowed_size = max;
