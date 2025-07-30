@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:05:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 14:48:53 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/30 09:17:59 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,14 @@ Server::Server()
 
 Server::Server(Config c, Pollfd *p)
 {
-
-    /*io size io ny isanle block server*/
-    size = 1;
+    std::vector<std::string> ports;
+    std::vector<std::string> hosts;
+    /*io size io ny isanle socket*/
+    ports = split(c.get_port()," ");
+    hosts = split(c.get_host()," ");
+    if (hosts.size() != ports.size())
+        throw std::logic_error("configuration error");
+    size = ports.size();
     // config = -1;
     fds = p;
     config = c;
@@ -43,6 +48,8 @@ Server::Server(Config c, Pollfd *p)
         return ;
     for(int i = 0; i < size; i++)
     {
+        c.set_host(hosts[i]);
+        c.set_port(ports[i]);
         Socket socket_serv(p, c);
         sockets.push_back(socket_serv);
         serv.push_back(socket_serv.get_socket());
