@@ -12,13 +12,47 @@
 
 #include "WebServer.hpp"
 
-int main()
+static int      open_file(std::string   input, int arg)
 {
+    int     fd;
+
+    std::cout << "infile-> " << input << std::endl;
+    if (arg)
+        fd = open(input.c_str(), O_RDONLY);
+    else
+        fd = open("./config/default_config.txt", O_RDONLY);
+    return (fd);
+};
+
+int main(int argc, char **argv)
+{
+    int         fd;
+    std::string input;
+
+    if (argc > 2)
+    {
+        std::cout << "invalid arg" << std::endl;
+        return (1); 
+    }
     try
     {
         WebServer w;
-    
-        w.start_webserver(0); 
+        if (argc == 2)
+        {
+            input = argv[1];
+            fd = open_file(input, 1);
+        }
+        else
+        {
+            input = "none";
+            fd = open_file(input, 0);
+        }
+        if (fd < 0)
+        {
+            std::cout << "Open file failed" << std::endl;
+            return (1);
+        }
+        w.start_webserver(fd); 
     }
     catch(std::exception &e)
     {
