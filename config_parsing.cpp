@@ -24,11 +24,10 @@ static void     get_all_line(std::string input)
     while (pos < input.size())
     {
         len = new_input.find("\n");
-        line = input.substr(pos, len);
-        if (new_input[len + 1])
-            new_input = input.substr(len + 1, input.size() - pos);
-        std::cout << "-----" << line << "----" << std::endl;
-        pos = pos + line.size() + 1;
+        line = input.substr(pos,len);
+        pos += len+1;
+        new_input = input.substr(pos,input.size() - pos);
+        std::cout << new_input << std::endl;
     };
 };
 
