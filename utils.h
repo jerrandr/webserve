@@ -13,22 +13,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-typedef struct OneServerConfigurationFile
-{
-    std::string     host;
-    std::string     listen;
-    std::string     error_page;
-    std::string     cmbs;
-    std::string     local;
-    std::string     method;
-    std::string     root;
-    std::string     autoindex;
-    std::string     index;
-    std::string     route;
-    std::string     upload;
-    std::string     cgi;
-}   OscF;
-
 #include <cstring>
 #include <iostream>
 #include <netinet/in.h>
@@ -54,6 +38,7 @@ typedef struct OneServerConfigurationFile
 #include "Config.hpp"
 #include "Pollfd.hpp"
 #include "signal_handling/SignalHandling.hpp"
+
 std::vector<std::string> split(std::string str, std::string sep);
 std::string get_html_page(int fd);
 int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_wait);

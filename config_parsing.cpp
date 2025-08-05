@@ -71,8 +71,7 @@ void    config_parsing(int fd)
     std::string         string;
     size_t              length;
     char                buffer[100];
-    std::vector<OscF>   all_server;
-    std::vector<OscF>   oneserver;
+
     length = 100;
     string = "";
     std::memset(buffer, 0, 100);
@@ -82,5 +81,4 @@ void    config_parsing(int fd)
         std::memset(buffer, 0, 100);
     };
     get_all_line(string);
-    all_server.push_back(oneserver);
 };
