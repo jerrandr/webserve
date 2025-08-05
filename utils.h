@@ -12,6 +12,23 @@
 
 #ifndef UTILS_H
 #define UTILS_H
+
+typedef struct OneServerConfigurationFile
+{
+    std::string     host;
+    std::string     listen;
+    std::string     error_page;
+    std::string     cmbs;
+    std::string     local;
+    std::string     method;
+    std::string     root;
+    std::string     autoindex;
+    std::string     index;
+    std::string     route;
+    std::string     upload;
+    std::string     cgi;
+}   OscF;
+
 #include <cstring>
 #include <iostream>
 #include <netinet/in.h>

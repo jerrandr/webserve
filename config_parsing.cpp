@@ -12,19 +12,18 @@
 
 #include "Server.hpp"
 
-static int      content_error_handling(std::string line)
+static int      keys_error_handling(std::string line)
 {
-    std::string all_keys[13] = {"server", "host", "listen", "error_page",
+    std::vector<std::string> all_keys = {"server", "host", "listen", "error_page",
          "client_max_body_size", "local", "method", "root", "autoindex",
           "index", "route", "upload", "cgi"};
-    /*int t = all_keys->find(line);
-    std::cout << "content erro_handling" << all_keys[t] << std::endl;
-    return (0);*/
-    (void) line;
-    return (1);
+    auto it = find(all_keys.begin(), all_keys.end(), line);
+    if (it != all_keys.end())
+        return (1);
+    return (0);
 };
 
-static void     line_parsing(std::string line)
+static int     line_parsing(std::string line)
 {
     int             last;
     size_t          i;
@@ -36,7 +35,9 @@ static void     line_parsing(std::string line)
     new_line = line.substr(i, line.size() - i);
     last = new_line.find(" ");
     key_w = new_line.substr(0, last);
-    std::cout << key_w << std::endl;
+    if (!keys_error_handling(key_w))
+        return (0);
+    return (1);    
 };
 
 static void     get_all_line(std::string input)
@@ -53,21 +54,25 @@ static void     get_all_line(std::string input)
     {
         len = new_input.find("\n");
         line = input.substr(pos,len);
-        line_parsing(line);
+        if (!line_parsing(line))
+        {
+            std::cout << "Error content" << std::endl;
+            break;
+        }
         if (len == -1)
             break ;
         pos += len + 1;
         new_input = input.substr(pos,input.size() - pos);
     };
-    content_error_handling("anana");
 };
 
 void    config_parsing(int fd)
 {
-    std::string string;
-    size_t      length;
-    char        buffer[100];
-
+    std::string         string;
+    size_t              length;
+    char                buffer[100];
+    std::vector<OscF>   all_server;
+    std::vector<OscF>   oneserver;
     length = 100;
     string = "";
     std::memset(buffer, 0, 100);
@@ -76,5 +81,6 @@ void    config_parsing(int fd)
         string +=  buffer;
         std::memset(buffer, 0, 100);
     };
-    get_all_line(string);   
+    get_all_line(string);
+    all_server.push_back(oneserver);
 };
