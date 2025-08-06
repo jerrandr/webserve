@@ -12,6 +12,7 @@
 
 #ifndef UTILS_H
 #define UTILS_H
+
 #include <cstring>
 #include <iostream>
 #include <netinet/in.h>
@@ -37,6 +38,7 @@
 #include "Config.hpp"
 #include "Pollfd.hpp"
 #include "signal_handling/SignalHandling.hpp"
+
 std::vector<std::string> split(std::string str, std::string sep);
 std::string get_html_page(int fd);
 int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_wait);
@@ -44,6 +46,7 @@ void  fd_closed(int fd,Pollfd *polls, std::map<std::string, int> &fd_wait,std::s
 
 bool is_directory(std::string path);
 std::string decode_str(std::string d);
+void    config_parsing(int fd);
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 #endif
