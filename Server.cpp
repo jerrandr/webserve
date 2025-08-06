@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:05:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/30 09:17:59 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/31 10:12:25 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Server::Server()
     // }  
 }
 
-Server::Server(Config c, Pollfd *p)
+Server::Server(Config c, Pollfd *p,std::vector<struct addrinfo *> &struct_addr)
 {
     std::vector<std::string> ports;
     std::vector<std::string> hosts;
@@ -50,7 +50,7 @@ Server::Server(Config c, Pollfd *p)
     {
         c.set_host(hosts[i]);
         c.set_port(ports[i]);
-        Socket socket_serv(p, c);
+        Socket socket_serv(p, c,struct_addr);
         sockets.push_back(socket_serv);
         serv.push_back(socket_serv.get_socket());
         fds->add_new_fd(socket_serv.get_socket());
@@ -76,13 +76,7 @@ Server &Server::operator=(const Server &other)
     return (*this);
 }
 
-/*io name io le nom de fichier natsofoka tao amle 2 eme parametre
-de ra tsisy de le par defaut no atao de fichier de config par defaut no sokafana
-*/
-Server::Server(std::string name)
-{
-    (void)name;
-}
+
 
 // void    Server::maj_fd()
 // {
@@ -167,10 +161,10 @@ void    Server::start()
     // }
 }
 
-void    Server::free_all_socket_info()
-{
-    for(std::size_t i = 0; i < sockets.size(); i++)
-    {
-            sockets[i].free_addrinfo();
-    }
-}
+// void    Server::free_all_socket_info()
+// {
+//     for(std::size_t i = 0; i < sockets.size(); i++)
+//     {
+//             sockets[i].free_addrinfo();
+//     }
+// }

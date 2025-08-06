@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/29 10:39:51 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/31 10:12:46 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,16 @@ std::string decode_str(std::string d)
             tmp += d[i];
     }
     return tmp;
+}
+
+void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr)
+{
+    for(std::size_t i = 0; i < struct_addr.size();i++)
+    {
+        if (struct_addr[i])
+        {
+                freeaddrinfo(struct_addr[i]);
+                struct_addr[i] = NULL;
+        }
+    }
 }

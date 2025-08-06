@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:50:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 14:52:57 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/31 10:01:15 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,13 @@ class WebServer
         Pollfd *polls;
         std::vector<Server> servs;
         void    non_stop_serv();
+        std::vector<struct addrinfo *> struct_addr;
     public:
         WebServer();
         ~WebServer();
         WebServer(const WebServer &other);
         WebServer &operator=(const WebServer &other);
         void start_webserver(int fd);
+        void    add_new_addrinfo(std::vector<struct addrinfo *> i);
 };
 #endif

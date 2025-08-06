@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:35 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 14:01:53 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/31 10:07:00 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,5 @@ void  fd_closed(int fd,Pollfd *polls, std::map<std::string, int> &fd_wait,std::s
 bool is_directory(std::string path);
 std::string decode_str(std::string d);
 
+void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 #endif

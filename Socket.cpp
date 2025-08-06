@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/29 09:24:41 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/31 10:25:00 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@
 
 // }
 
-Socket::Socket(Pollfd *tmp, Config c)
+Socket::Socket(Pollfd *tmp, Config c,std::vector<struct addrinfo *> &struct_addr)
 {
     struct addrinfo hints;
     struct addrinfo *server;
@@ -91,17 +91,18 @@ Socket::Socket(Pollfd *tmp, Config c)
     {
         throw std::logic_error("Error getaddrinfo()");
     }
+    struct_addr.push_back(server);
     fd = socket(server->ai_family,server->ai_socktype,0);
     if(fd == -1)
     {
-        freeaddrinfo(server);
+        free_addrinfo(struct_addr);
         throw std::logic_error("Error socket()");
     }
     std::cout << "Server connection ......" << std::endl;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
     if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
     {
-        freeaddrinfo(server);
+        free_addrinfo(struct_addr);
         throw std::logic_error("Error bind()");
     }
     std::cout << "server connected" << std::endl;
@@ -210,6 +211,8 @@ void    Socket::listen_port()
             {
                 clients[j].parse_requette();   
             }
+            // if (clients[j].get_status_requette() == 1 && clients[j].size_fd_wait() == 0 && clients[j].get_requette() != "")
+            //     std::cout << "AH zalah ai" << std::endl;
         }
     }
     // for(int i = 0; i < size_fd; i++)
@@ -240,11 +243,11 @@ std::vector<Client> &Socket::get_clients()
     return this->clients;
 }
 
-void    Socket::free_addrinfo()
-{
-    if(info != NULL)
-    {
-        freeaddrinfo(info);
-        info = NULL;
-    }
-}
+// void    Socket::free_addrinfo()
+// {
+//     if(info != NULL)
+//     {
+//         freeaddrinfo(info);
+//         info = NULL;
+//     }
+// }

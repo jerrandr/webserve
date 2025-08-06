@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 08:41:12 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/31 10:23:12 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ class Client
         std::string get_requette() const;
         void    set_requette(std::string n);
         int     get_status() const;
+        int     get_status_requette();
 
         void    set_status_connexion( int status);
 

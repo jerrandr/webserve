@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:14:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/29 09:24:21 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/01 11:38:39 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ WebServer::WebServer()
 }
 WebServer::~WebServer()
 {
-    for(std::size_t i = 0; i < servs.size();i++)
-        servs[i].free_all_socket_info();
+    free_addrinfo(struct_addr);
     if (polls)
     {
         polls->close_all_socket();
@@ -65,8 +64,8 @@ void WebServer::start_webserver(int fd)
     {
         Config config;
         
-        config.set_port("8080");
-        config.set_host("localhost");
+        config.set_port("8080 8090 8090");
+        config.set_host("localhost localhost localhost");
         // config.set_max_allowed_size("");
     
         /*initialisation du block location a partir du fichier de config
@@ -89,7 +88,7 @@ void WebServer::start_webserver(int fd)
         }
     
         /*raha misy directive error page ao amn fichier de config de atao otranio location*/
-        Server sev(config, polls);
+        Server sev(config, polls,struct_addr);
         servs.push_back(sev);
     }
 

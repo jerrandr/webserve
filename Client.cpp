@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/29 14:19:08 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/01 13:31:24 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,11 @@ int     Client::get_status() const
         return stat;
 }
 
+
+int     Client::get_status_requette()
+{
+        return status_requette;
+}
 void    Client::set_head(int size,std::string buffer)
 {
         if(requette != "")
@@ -377,7 +382,7 @@ void    Client::receve_message()
                         // std::cout << "end" << std::endl;
                         body_unchunked();
                         // std::ofstream fd("test.out"); 
-                        // // std::cout << body << std::endl;
+                        std::cout << body << std::endl;
                         // fd << body ;
                         size_body = real_body;
                         stat = 0;

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:15:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 13:36:10 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/07/31 10:11:37 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Socket
         Socket();
 
     public:
-        Socket(Pollfd *tmp, Config c);
+        Socket(Pollfd *tmp, Config c,std::vector<struct addrinfo *> &struct_addr);
         // Socket(std::map<std::string, std::string> config,std::vector < std::map< std::string, std::string> > location);
         // Socket(std::vector <pollfd> &fds, int &size, int i);
         ~Socket();
@@ -46,6 +46,6 @@ class Socket
 
         std::vector<Client> &get_clients();
 
-        void    free_addrinfo();
+        // void    free_addrinfo();
 };
 #endif

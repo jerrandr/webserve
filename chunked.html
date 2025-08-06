@@ -1,67 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <title>Document</title>
+  <title>Formulaire</title>
 </head>
 <body>
-    <script>
-        async function envoyerRequeteChunked(url, donnees) {
-  const lecteur = donnees.getReader();
-  const ecouteur = {
-    enLigne: true,
-    fermer() {
-      this.enLigne = false;
-      lecteur.cancel();
-    },
-    lire() {
-      return lecteur.read();
-    },
-  };
 
-  const encodage = new TextEncoder();
-
-  const requete = new XMLHttpRequest();
-  requete.open("POST", url, true);
-  requete.setRequestHeader("Transfer-Encoding", "chunked");
-  requete.setRequestHeader("Content-Type", "application/octet-stream"); // Ou le type MIME approprié
-
-  requete.onload = function () {
-    console.log("Requête terminée, statut:", requete.status);
-  };
-
-  requete.onerror = function () {
-    console.error("Erreur lors de la requête");
-  };
-
-  requete.send();
-
-  while (ecouteur.enLigne) {
-    const { done, value } = await ecouteur.lire();
-
-    if (done) {
-      ecouteur.fermer();
-      break;
-    }
-
-    const chunk = encodage.encode(value);
-    const tailleChunk = chunk.byteLength;
-    const chunkStr = tailleChunk.toString(16) + '\r\n' + new TextDecoder().decode(chunk) + '\r\n';
-
-    requete.send(chunkStr);
-  }
-}
-
-// Exemple d'utilisation :
-const donneesAEnvoyer = new ReadableStream({
-    start(controller) {
-      controller.enqueue(new Uint8Array([72, 101, 108, 108, 111])); // "Hello" en ASCII
-      controller.enqueue(new Uint8Array([32, 119, 111, 114, 108, 100])); // " world" en ASCII
-      controller.close();
-    }
-});
-const url = "/api/upload";
-
-envoyerRequeteChunked(url, donneesAEnvoyer);
-    </script>
+  <form method="post" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <button type="submit">Envoyer</button>
+  </form>
 </body>
 </html>
