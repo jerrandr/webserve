@@ -7,6 +7,7 @@ SRC = main.cpp Client.cpp Server.cpp Socket.cpp utils.cpp\
 	directory_listing/directory_listing.cpp\
 	WebServer.cpp\
 	BodyUpload.cpp config_parsing.cpp address_checking.cpp\
+	port_checking.cpp
 
 OBJ = ${SRC:.cpp=.o}
 
