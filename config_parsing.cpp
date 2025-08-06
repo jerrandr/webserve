@@ -15,8 +15,8 @@
 static int      keys_error_handling(std::string line)
 {
     std::vector<std::string> all_keys = {"server", "host", "listen", "error_page",
-         "client_max_body_size", "local", "method", "root", "autoindex",
-          "index", "route", "upload", "cgi"};
+         "client_max_body_size", "location", "method", "root", "autoindex",
+          "index", "upload", "cgi", "{", "}", "#"};
     auto it = find(all_keys.begin(), all_keys.end(), line);
     if (it != all_keys.end())
         return (1);
@@ -29,6 +29,8 @@ static int     line_parsing(std::string line)
     size_t          i;
     std::string     key_w;
     std::string     new_line;
+    std::string     new_values;
+    
     i = 0;
     while (isspace(line[i]))
         i ++;
@@ -37,6 +39,9 @@ static int     line_parsing(std::string line)
     key_w = new_line.substr(0, last);
     if (!keys_error_handling(key_w))
         return (0);
+    new_values = new_line.substr(last + 1, new_line.size() - last);
+    if (key_w == "host")
+        address_check(new_values);
     return (1);    
 };
 

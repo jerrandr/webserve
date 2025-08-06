@@ -1,0 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   address_checking.cpp                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: randrina <randrina@student.42antananarivo  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/06 09:13:25 by randrina          #+#    #+#             */
+/*   Updated: 2025/08/06 09:13:26 by randrina         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Server.hpp"
+
+static int  check_one_add(std::string add)
+{
+    std::stringstream   content;
+    int                 nbr;
+    int                 inc;
+    char                pt;
+
+    if (add == "localhost")
+        return (1);
+    inc = 0;
+    content << add;
+    while (!content.fail())
+    {
+        content >> nbr;
+        content >> pt;
+        if (nbr < 0 || nbr > 255 || pt != '.')
+            return (0);
+        inc ++;
+    };
+    return (1);
+};
+
+int     address_check(std::string   host)
+{
+    std::string     one_add;
+    std::string     last_host;
+    size_t          pos;
+    int             len;
+
+    pos = 0;
+    last_host = host;
+    while (pos < host.size())
+    {
+        len = last_host.find(" ");
+        one_add = host.substr(pos, len);
+        if (!check_one_add(one_add))
+            std::cout << "Ip address not valid" << std::endl;
+        else
+            std::cout << "Ip address valid" << std::endl;
+        if (len == -1)
+            break;
+        pos += len + 1;
+        last_host = host.substr(pos, host.size() - pos);
+    }
+    std::cout << "[" << host << "]" << std::endl;
+    return (1);
+};
