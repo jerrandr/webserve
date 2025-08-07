@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "../Server.hpp"
+#include "../utils.h"
 
 static int      keys_error_handling(std::string line)
 {
@@ -41,7 +42,11 @@ static int     line_parsing(std::string line)
         return (0);
     new_values = new_line.substr(last + 1, new_line.size() - last);
     if (key_w == "host")
-        address_check(new_values);
+       address_check(new_values);
+    if (key_w == "listen")
+        port_check(new_values);
+    if (key_w == "error_page")
+        error_page_set(new_values);
     return (1);    
 };
 
@@ -71,12 +76,13 @@ static void     get_all_line(std::string input)
     };
 };
 
-void    config_parsing(int fd)
+void    config_parsing(int fd, Config cfg)
 {
     std::string         string;
     size_t              length;
     char                buffer[100];
 
+    (void) cfg;
     length = 100;
     string = "";
     std::memset(buffer, 0, 100);

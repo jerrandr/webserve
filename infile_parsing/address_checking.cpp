@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "../Server.hpp"
 
 static int  check_one_add(std::string add)
 {
@@ -40,22 +40,28 @@ int     address_check(std::string   host)
     std::string     last_host;
     size_t          pos;
     int             len;
+    int             nbr;
 
     pos = 0;
+    nbr = 0;
     last_host = host;
     while (pos < host.size())
     {
         len = last_host.find(" ");
         one_add = host.substr(pos, len);
         if (!check_one_add(one_add))
-            std::cout << "Ip address not valid" << std::endl;
+        {
+            std::cout << "Ip address not valid" << std::endl;\
+            return (0);
+        }
         else
             std::cout << "Ip address valid" << std::endl;
+        nbr ++;
         if (len == -1)
             break;
         pos += len + 1;
         last_host = host.substr(pos, host.size() - pos);
     }
-    std::cout << "[" << host << "]" << std::endl;
-    return (1);
+    std::cout << "[" << host << "]" << "{" << nbr << "}" << std::endl;
+    return (nbr);
 };

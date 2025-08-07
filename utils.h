@@ -46,8 +46,10 @@ void  fd_closed(int fd,Pollfd *polls, std::map<std::string, int> &fd_wait,std::s
 
 bool is_directory(std::string path);
 std::string decode_str(std::string d);
-void    config_parsing(int fd);
+void    config_parsing(int fd, Config cfg);
 int     address_check(std::string add);
+int     port_check(std::string port);
+int     error_page_set(std::string path);
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 #endif

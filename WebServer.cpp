@@ -56,8 +56,9 @@ void WebServer::start_webserver(int fd)
 {
 
     polls = new Pollfd();
+    Config  cfg;
     /*initialisation de tous les socket selon le fichier de config venant du fd*/
-    config_parsing(fd);
+    config_parsing(fd, cfg);
     int size = 1;
 
     for(int i = 0; i < size; i++)

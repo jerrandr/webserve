@@ -12,7 +12,27 @@
 
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
-#include "utils.h"
+#include "Location.hpp"
+#include "ErrorPage.hpp"
+#include <cstring>
+#include <iostream>
+#include <netinet/in.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <cstdio>
+#include <cstdlib>
+#include <netdb.h>
+#include <poll.h>
+#include <fstream>
+#include <sstream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <fcntl.h>
+#include <ctime>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <dirent.h>
 class Config
 {
     private:
