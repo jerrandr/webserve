@@ -24,7 +24,8 @@ static int      keys_error_handling(std::string line)
     return (0);
 };
 
-static int     line_parsing(std::string line)
+static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
+     std::vector<std::string> &err_vector)
 {
     int             last;
     size_t          i;
@@ -42,21 +43,23 @@ static int     line_parsing(std::string line)
         return (0);
     new_values = new_line.substr(last + 1, new_line.size() - last);
     if (key_w == "host")
-       address_check(new_values);
+       address_check(new_values, cfg);
     if (key_w == "listen")
-        port_check(new_values);
+        port_check(new_values, cfg);
     if (key_w == "error_page")
-        error_page_set(new_values);
+        error_page_set(new_values, err_page, err_vector);
     return (1);    
 };
 
-static void     get_all_line(std::string input)
+static void     get_all_line(std::string input, Config &cfg)
 {
     int                                 len;
     size_t                              pos;
     std::string                         line;
     std::string                         new_input;
     std::vector<std::string>            key_vect;
+    ErrorPage                           err_page;
+    std::vector<std::string>            err_vector;
 
     pos = 0;
     new_input = input;
@@ -64,7 +67,7 @@ static void     get_all_line(std::string input)
     {
         len = new_input.find("\n");
         line = input.substr(pos,len);
-        if (!line_parsing(line))
+        if (!line_parsing(line, cfg, err_page, err_vector))
         {
             std::cout << "Error content" << std::endl;
             break;
@@ -74,13 +77,16 @@ static void     get_all_line(std::string input)
         pos += len + 1;
         new_input = input.substr(pos,input.size() - pos);
     };
+    error_page_occurences(err_vector);
+    cfg.set_errors(err_page);
 };
 
-void    config_parsing(int fd, Config cfg)
+void    config_parsing(int fd, Config &cfg)
 {
     std::string         string;
     size_t              length;
     char                buffer[100];
+    ErrorPage           err_p;
 
     (void) cfg;
     length = 100;
@@ -91,5 +97,13 @@ void    config_parsing(int fd, Config cfg)
         string +=  buffer;
         std::memset(buffer, 0, 100);
     };
-    get_all_line(string);
+    get_all_line(string, cfg);
+    std::cout << "---------all_content---------" << std::endl;
+    std::cout << cfg.get_host() << std::endl;
+    std::cout << cfg.get_port() << std::endl;
+    err_p = cfg.get_errors();
+    std::cout << err_p.get_path_400() << std::endl;
+    std::cout << err_p.get_path_404() << std::endl;
+    std::cout << err_p.get_path_405() << std::endl;
+    std::cout << "-----------------------------" << std::endl;
 };

@@ -34,7 +34,7 @@ static int  check_one_add(std::string add)
     return (1);
 };
 
-int     address_check(std::string   host)
+int     address_check(std::string   host, Config &cfg)
 {
     std::string     one_add;
     std::string     last_host;
@@ -42,6 +42,7 @@ int     address_check(std::string   host)
     int             len;
     int             nbr;
 
+    (void) cfg;
     pos = 0;
     nbr = 0;
     last_host = host;
@@ -63,5 +64,6 @@ int     address_check(std::string   host)
         last_host = host.substr(pos, host.size() - pos);
     }
     std::cout << "[" << host << "]" << "{" << nbr << "}" << std::endl;
+    cfg.set_host(host);
     return (nbr);
 };
