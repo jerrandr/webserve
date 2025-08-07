@@ -85,9 +85,23 @@ static void     path_set(int page_ind, ErrorPage &err_page, std::string err_path
 int  error_page_occurences(std::vector<std::string> &error_vect)
 {
     std::vector<std::string>::iterator first = error_vect.begin();
-    std::vector<std::string>::iterator last = error_vect.end() - 1;
-    std::cout << "Error page_size-> " << error_vect.size() << "-" <<  *first << "--" <<
-    *last << std::endl;
+    std::vector<std::string>::iterator last;
+    for (size_t i = 0; i < error_vect.size(); i ++)
+    {
+        last = first;
+        last ++;
+        while (last != error_vect.end())
+        {
+            if (*first == *last)
+            {
+                std::cout << "Somme occurence of error_page: " << *first << std::endl;
+                return (0); 
+            };
+            last ++;
+        }
+        i ++;
+        first ++;
+    }
     return (1);
 };
 int error_page_set(std::string path, ErrorPage &err_page, std::vector<std::string> &err_vect)
