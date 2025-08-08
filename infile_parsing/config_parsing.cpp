@@ -6,7 +6,7 @@
 /*   By: randrina <randrina@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/01 09:11:58 by randrina          #+#    #+#             */
-/*   Updated: 2025/08/01 09:12:00 by randrina         ###   ########.fr       */
+/*   Updated: 2025/08/08 12:45:40 by randrina         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,13 @@ static int      body_size_checking(std::string value, Config &cfg)
 
 static int      keys_error_handling(std::string line)
 {
-    std::vector<std::string> all_keys = {"server", "host", "listen", "error_page",
+    std::vector<std::string> all_keys;
+    std::string key_array[] = {"server", "host", "listen", "error_page",
          "client_max_body_size", "location", "method", "root", "autoindex",
           "index", "upload", "cgi", "{", "}", "#"};
-    auto it = find(all_keys.begin(), all_keys.end(), line);
+    for (size_t i = 0; i < key_array->size(); i ++)
+        all_keys.push_back(key_array[i]);
+    std::vector<std::string>::iterator it = find(all_keys.begin(), all_keys.end(), line);
     if (it != all_keys.end())
         return (1);
     return (0);
