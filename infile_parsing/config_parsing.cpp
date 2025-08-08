@@ -22,11 +22,21 @@ static int      body_size_checking(std::string value, Config &cfg)
 static int      keys_error_handling(std::string line)
 {
     std::vector<std::string> all_keys;
-    std::string key_array[] = {"server", "host", "listen", "error_page",
-         "client_max_body_size", "location", "method", "root", "autoindex",
-          "index", "upload", "cgi", "{", "}", "#"};
-    for (size_t i = 0; i < key_array->size(); i ++)
-        all_keys.push_back(key_array[i]);
+    all_keys.push_back("server");
+    all_keys.push_back("host");
+    all_keys.push_back("listen");
+    all_keys.push_back("error_page");
+    all_keys.push_back("client_max_body_size");
+    all_keys.push_back("location");
+    all_keys.push_back("method");
+    all_keys.push_back("root");
+    all_keys.push_back("autoindex");
+    all_keys.push_back("index");
+    all_keys.push_back("upload");
+    all_keys.push_back("cgi");
+    all_keys.push_back("{");       
+    all_keys.push_back("}");       
+    all_keys.push_back("#");
     std::vector<std::string>::iterator it = find(all_keys.begin(), all_keys.end(), line);
     if (it != all_keys.end())
         return (1);
@@ -37,6 +47,8 @@ static int     other_checking(std::string key_w, std::string value, Config &cfg)
 {
     if (key_w == "client_max_body_size")
         body_size_checking(value, cfg);
+    if (key_w == "location")
+        get_principal_uri(value, cfg);
     return (1);
 };
 
@@ -86,7 +98,7 @@ static void     get_all_line(std::string input, Config &cfg)
         line = input.substr(pos,len);
         if (!line_parsing(line, cfg, err_page, err_vector))
         {
-            std::cout << "Error content" << std::endl;
+            std::cout << "Error of configuration file content !!!" << std::endl;
             break;
         }
         if (len == -1)

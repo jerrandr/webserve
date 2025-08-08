@@ -1,0 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   location_parsing.cpp                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: randrina <randrina@student.42antananarivo  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/08 14:39:00 by randrina          #+#    #+#             */
+/*   Updated: 2025/08/08 14:39:01 by randrina         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../Server.hpp"
+
+int     get_principal_uri(std::string value, Config cfg)
+{
+    std::cout << "get_principal_uri-> " << value << std::endl;
+    (void) cfg;
+    return (1);
+};
