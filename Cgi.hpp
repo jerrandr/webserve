@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:25:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/22 08:32:09 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/05 13:03:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ class Cgi
 		void				initEnvp(std::string rt);
 		void				IfNotFound(std::string p, int fdc);
 		void				IfFound(std::string p, int fdc);
-		void				MyExec2(int fd[2], int fdc);
+		void				MyExec2(int &fd, int fdc);
 		std::string			ParseCgi(std::string content);
 
 	public:

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:37:58 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/23 12:28:35 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/07/29 12:27:21 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class BodyUpload
 					BodyUpload(BodyUpload const & cpy);
 					BodyUpload();
 		BodyUpload	&operator=(BodyUpload const & cpy);
-
+		std::string	ParseHeader(std::string header);
 	public:
 					BodyUpload(std::string body);
 					~BodyUpload();

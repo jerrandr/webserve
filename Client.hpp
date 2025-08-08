@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/31 10:23:12 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/08 11:10:06 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

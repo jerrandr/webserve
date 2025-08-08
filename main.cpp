@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:58:07 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/28 13:57:54 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/08 10:24:34 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

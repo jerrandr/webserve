@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/07/22 08:31:03 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/04 13:37:04 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,21 @@
 #include <unistd.h>
 #include <cstring>
 #include <sys/stat.h>
-
+#include <vector>
+#include <map>
+#include <algorithm>
 class ExecUtils
 {
 	private:
-		ExecUtils(ExecUtils const & cpy);
-		ExecUtils &operator=(ExecUtils const & cpy);
+		std::string	getErrorUtils(std::string st);
+		std::string	getStatus(std::string fl);
+		std::map<std::string, std::string> Er;		
 	public:
+		ExecUtils &operator=(ExecUtils const & cpy) {(void)cpy;return(*this);};
+		ExecUtils(ExecUtils const & cpy) {(void)cpy;};
 		std::string			ToString(int nbr);
-		std::stringstream	getData(std::string filename);
+		std::string			getData(std::string filename);
+		std::string			getError(std::string filename);
 		std::string			getData(int fd);
 							ExecUtils();
 							~ExecUtils();
