@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/08 12:52:38 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/09 10:19:37 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
-#include "Client.hpp"
+// #include "Client.hpp"
 // Socket::Socket(std::vector <pollfd> &fds, int &size, int i)
 // {
 //     struct addrinfo hints;

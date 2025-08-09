@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/08 11:32:38 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/08 14:53:30 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,15 @@
 
 Cgi::~Cgi() {}
 
-Cgi::Cgi(char **Envp, int length, Pollfd *p)
+Cgi::Cgi(char **Envp, int length, Client cl)
 {
 	argv = new char*[2];
 	CgiName = new char;
 
 	envp = Envp;
-	pl = p;
+	pl = cl.getPoll();
 	lv = length;
-
+	dataFd = cl.getFdWait();
 	CgiName = const_cast<char*>("/usr/bin/php-cgi");
 	argv[0] = CgiName;
 	argv[1] = NULL;
@@ -46,7 +46,7 @@ void	Cgi::IfNotFound(std::string p, int fdc)
 	std::string filename;
 
 	filename = "error/" + p + ".html";
-	p = utils.getError(filename);
+	p = utils.getError(filename, pl, dataFd);
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
 		if (send(fdc, p.c_str(), p.size(), 0) < 0)

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/05 17:56:57 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/09 13:58:07 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,21 @@ std::string		ExecUtils::getStatus(std::string fl)
 	return (res);
 }
 
-std::string		ExecUtils::getErrorUtils(std::string st)
+std::string		ExecUtils::getErrorUtils(std::string st,  Pollfd *polls, std::map<std::string, int> &fd_wait)
 {
 	std::string res;
 	std::string	status;
 	std::string	ct;
 	std::string	nbr;
 	
-	ct = getData(st);
+	ct = getData(st, polls, fd_wait);
 	nbr = ToString(ct.size());
 	status = getStatus(st);
 	res = "HTTP/1.1 " + status + Er[status] + "\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + ct;
 	return (res);
 }
 
-std::string	ExecUtils::getError(std::string filename)
+std::string	ExecUtils::getError(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait)
 {
 	std::string					rp;
 	std::vector<std::string>	dt;
@@ -89,11 +89,11 @@ std::string	ExecUtils::getError(std::string filename)
 	dt.push_back("error/417.html");
 
 	if (std::find(dt.begin(), dt.end(), filename) != dt.end())
-		rp = getErrorUtils(filename);
+		rp = getErrorUtils(filename, polls, fd_wait);
 	return (rp);
 }
 
-std::string ExecUtils::getData(std::string filename)
+std::string ExecUtils::getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait)
 {
 	std::string			data;
 	struct stat			st;
@@ -102,15 +102,15 @@ std::string ExecUtils::getData(std::string filename)
 	std::cout << "FILENAME: " << filename << std::endl;
 	data = "";
 	if (stat(filename.c_str(), &st) == -1)
-		data = getData("error/404.html");
+		data = getData("error/404.html", polls, fd_wait);
 	else if (access(filename.c_str(), O_RDWR) != 0)
-		data = getData("error/403.html");
+		data = getData("error/403.html", polls, fd_wait);
 	else
 	{
 		fd = open(filename.c_str(), O_RDONLY);
 		data = getData(fd);
 		close(fd);
-	}	
+	}
 	return (data);
 }
 

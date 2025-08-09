@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/08 11:10:06 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/08 14:52:16 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ class Client
 		// JERRY MODIF
 		Pollfd		*getPoll() const;
 		Config		getConfig() const;
-		std::string	getBody() const;
+        std::map<std::string, int>  &getFdWait();
+        std::string	getBody() const;
         void    parse_requette();
         void    body_unchunked();
 };

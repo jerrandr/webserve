@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/04 09:59:44 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/09 13:56:54 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,32 @@ BodyUpload::BodyUpload(std::string body) : Bdy(body) {}
 std::string	BodyUpload::ParseHeader(std::string header)
 {
 	std::string res;
+	int			start;
+	int			end;
 
+	start = 0;
+	end = 0;
 	res = "";
 	if (header.find("filename") != std::string::npos)
+	{
 		res = header.substr(header.find("filename"), header.find("\r\n"));
-	res = res.substr(res.find("."), res.length());
-	res = res.substr(0, res.find("\""));
+		start = res.find("\"");
+		res = res.substr(start + 1, res.length());
+		end = res.find("\"");
+		res = res.substr(0, end);
+		start = 0;
+		if (res.find(".") != std::string::npos)
+		{
+			for (size_t i = res.length(); i > 0; i--)
+			{
+				if (res[i] == '.' && start == 0)
+					start = i;
+			}
+			res = res.substr(start, res.length() - 1);
+		}
+		else
+			res = "";
+	}
 	return (res);
 }
 
@@ -43,11 +63,13 @@ void BodyUpload::ParseBody()
 	while (Bdy.find("\r\n\r\n") != std::string::npos)
 	{
 		header = Bdy.substr(0, Bdy.find("\r\n\r\n"));
-		header = ParseHeader(header);
-		std::cout << "header: " << header << std::endl;
 		ct = Bdy.substr(Bdy.find("\r\n\r\n") + 4, Bdy.length());
 		ct = ct.substr(0, ct.find("------WebKit"));
 		Bdy = Bdy.substr(Bdy.find(ct) + ct.length(), Bdy.length());
+		if (header.find("filename") != std::string::npos)
+			header = ParseHeader(header);
+		else
+			continue ;
 		if (ct == "\r\n\r\n\r\n")
 			break;
 		filename = ("file" + utils.ToString(fl) + header); 

@@ -6,12 +6,13 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/08 11:30:58 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/09 13:32:34 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Requette.hpp"
+#include "Client.hpp"
 //+++++++++++++++++++++++++CONSTRUCTO && DESTRUCTOR+++++++++++++++++++++++++
 
 Requette::~Requette() {}
@@ -27,11 +28,13 @@ Requette::Requette(std::map<std::string, std::string> config, Client cl)
 			break ;
 		}
 	}
+	Cl = &cl;
     rq = config;
     lv = cl.get_len_real_body();
     pl = cl.getPoll();
     this->lc = cl.getConfig().get_locs();
 	body = cl.getBody();
+	dataFd = cl.getFdWait();
 	// BodyUpload bd(body);
 
 	// bd.ParseBody();
@@ -193,7 +196,7 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 		rt = rq["uri"];
 	std::cout << "BD: " << bd << std::endl;
 	initEnvp(rt, Loc.get_script_cgi(), bd);
-	Cgi cgi(envp, lv, pl);
+	Cgi cgi(envp, lv, *Cl);
 	cgi.MyExec(socket, body);
 	return ;
 }
@@ -202,7 +205,12 @@ void	Requette::rp3(int socket)
 {
 	std::string	rp;
 
-	rp = utils.getError("error/405.html");
+	if (body.find("filename") != std::string::npos)
+	{
+		BodyUpload bd(body);
+		bd.ParseBody();
+	}
+	rp = utils.getError("error/405.html", pl, dataFd);
 	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 		send(socket, rp.c_str(), rp.size(), 0);
 }
@@ -223,11 +231,11 @@ void	Requette::rp2(int socket)
 		rt = "/";
 		if (rq["uri"].size() > 1)
 			rt = rq["uri"].substr(1, rq["uri"].length());
-		data << utils.getData(rt);
+		data << utils.getData(rt, pl, dataFd);
 		std::cout << RED << "FILE: " << rt << R << std::endl;
 		nbr = utils.ToString(data.str().size());
 		if (stat(rt.c_str(), &file) == -1)
-			rp = utils.getError("error/404.html");
+			rp = utils.getError("error/404.html", pl, dataFd);
 		else
 			rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + data.str();
 		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
@@ -252,9 +260,9 @@ int	Requette::IfDelete(int socket)
 		if (rq["uri"].size() > 1)
 			rt = rq["uri"].substr(1, rq["uri"].length());
 		if (stat(rt.c_str(), &st) == -1 && rp == "")
-			rp = utils.getData("error/404.html");
+			rp = utils.getData("error/404.html", pl, dataFd);
 		if (access(rt.c_str(), O_RDWR) != 0 && rp == "")
-			rp = utils.getData("error/403.html");
+			rp = utils.getData("error/403.html",  pl, dataFd);
 		if (rp == "")
 		{
 			std::remove(rt.c_str());
@@ -274,14 +282,11 @@ void    Requette::rp(int socket)
 
 	Loc = findLoc();
 	if (rq["uri"].find("favicon") != std::string::npos)
-	{
-		std::cout << "+++++++++++++\n";
 		return ;
-	}
 	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
-		rp = utils.getError("error/405.html");
+		rp = utils.getError("error/405.html", pl, dataFd);
 		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 			send(socket, rp.c_str(), rp.size(), 0);
 		return ;

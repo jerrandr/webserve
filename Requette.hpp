@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/06 13:22:27 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/09 10:20:27 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 #include "ExecUtils.hpp"
 #include "Cgi.hpp"
 #include <cstdio>
+// #include "Client.hpp"
 
 class Pollfd;
 class Cgi;
+class Client;
 
 class Requette
 {
@@ -33,6 +35,8 @@ class Requette
 		std::string							ctType;
 		char								**envp;
 		int									lv;
+		std::map<std::string, int>			dataFd;
+		Client								*Cl;
 		
 		void				initEnvp(std::string rt, std::string st, std::string bd);
 							Requette(Requette const &cpy);

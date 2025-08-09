@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:25:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/05 13:03:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/09 10:22:04 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,27 +22,25 @@
 #include "Pollfd.hpp"
 #include <iostream>
 #include <sys/stat.h>
+#include "Client.hpp"
 
 #define RED "\033[31m"
 #define R "\033[0m"
-
+class Client;
 class Cgi
 {
     private:
-		ExecUtils	utils;
-		char		**envp;
-		char		**argv;
-		char		*CgiName;
-		Pollfd		*pl;
-		int			lv;
+		ExecUtils					utils;
+		char						**envp;
+		char						**argv;
+		char						*CgiName;
+		Pollfd						*pl;
+		int							lv;
+		std::map<std::string, int>	dataFd;
 		
 		Cgi					&operator=(Cgi const & cpy);
 							Cgi(Cgi const & cpy);
-		std::stringstream	getData(std::string filename);
 		std::string			getStatus(std::string p);
-		// void				sendImg(std::string path, int socket);
-		// void				sendPdf(std::string path, int socket);
-		void				initEnvp(std::string rt);
 		void				IfNotFound(std::string p, int fdc);
 		void				IfFound(std::string p, int fdc);
 		void				MyExec2(int &fd, int fdc);
@@ -50,7 +48,7 @@ class Cgi
 
 	public:
 				~Cgi();	
-				Cgi(char **Envp, int length, Pollfd *p);
+				Cgi(char **Envp, int length, Client cl);
 		void	MyExec(int fdc, std::string body);
 };
 
