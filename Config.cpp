@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:04:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/29 13:51:05 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/11 14:20:43 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,6 @@ Location    Config::get_location_match(std::string uri)
 
     def = NULL;
     re = NULL;
-    max = -1;
     tmp1 = split(uri,"/");
     t = -1;
     for(std::vector<Location>::iterator i = locs.begin(); i != locs.end();i++)
@@ -213,26 +212,31 @@ Location    Config::get_location_match(std::string uri)
             break; 
         }
     }
-    
+    max = -1;
     for(std::vector<Location>::iterator i = locs.begin(); i != locs.end();i++)
     {
         std::vector<std::string> tmp;
 
         tmp = split((*i).get_uri(),"/");
+        t = 0;
         for(std::size_t j = 0; j < tmp.size();j++)
         {
             if (j < tmp1.size() && tmp1[j] == tmp[j])
                 t ++;
         }
-        if (max < t)
+        if (max < t && t == (int)tmp.size())
         {
             max = t;
             re = &(*i);
         }
-        t = 0;
+        tmp.clear();
     }
     if (re == NULL)
+    {
+        if (def == NULL)
+            throw std::logic_error("Configuration error");
         return (*def);
+    }
     return (*re);
 }
 
@@ -244,13 +248,18 @@ std::string Config::get_real_path(std::string uri, Location loc)
 
     uri = decode_str(uri);
     real = loc.get_root();
-    j = uri.find(loc.get_root());
+    j = uri.find(loc.get_uri());
     if (j == std::string::npos)
         return real;
-    j += real.size();
-    if (real[real.size()-1] == '/' && uri[0] == '/')
+    j += loc.get_uri().size();
+    if (real.size() > 0 && real[real.size()-1] == '/' && j < uri.size() && uri[j] == '/')
+    {
         real = real.substr(0,real.size()-1);
-    real = "."+real;
+    }
+    else if (real.size() > 0 && real[real.size()-1] != '/' && j < uri.size() && uri[j] != '/')
+        real += "/";
+
     real += uri.substr(j,uri.size());
+        std::cout << "real path " << real <<" uri "<<uri<<std::endl;
     return real;
 }
