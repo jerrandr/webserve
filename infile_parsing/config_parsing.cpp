@@ -19,6 +19,29 @@ static int      body_size_checking(std::string value, Config &cfg)
     return (1);
 };
 
+std::string file_set_line(std::string line)
+{
+    std::string new_line;
+    std::string key_w;
+    std::string one_line;
+    int         last;
+    int         i;
+
+    i = 0;
+    last = line.find("\n");
+    one_line = line.substr(0, last);
+    while (isspace(one_line[i]))
+        i ++;
+    new_line = line.substr(i, line.size() - i);  
+    last = new_line.find(" ");
+    key_w = one_line.substr(i, last);
+    if (key_w == "location")
+    {
+        last = new_line.find("}");
+        one_line = new_line.substr(0, last);
+    }
+    return (one_line); 
+};
 static int      keys_error_handling(std::string line)
 {
     std::vector<std::string> all_keys;
@@ -61,6 +84,7 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
     std::string     new_line;
     std::string     new_values;
     
+
     i = 0;
     while (isspace(line[i]))
         i ++;
@@ -94,8 +118,8 @@ static void     get_all_line(std::string input, Config &cfg)
     new_input = input;
     while (pos < input.size())
     {
-        len = new_input.find("\n");
-        line = input.substr(pos,len);
+        line = file_set_line(new_input);
+        len = line.size();
         if (!line_parsing(line, cfg, err_page, err_vector))
         {
             std::cout << "Error of configuration file content !!!" << std::endl;
@@ -104,7 +128,10 @@ static void     get_all_line(std::string input, Config &cfg)
         if (len == -1)
             break ;
         pos += len + 1;
-        new_input = input.substr(pos,input.size() - pos);
+        if (pos < input.size())
+            new_input = input.substr(pos,input.size() - pos);
+        else
+            new_input = input.substr(pos -1 , input.size() - (pos - 1));
     };
     error_page_occurences(err_vector);
     cfg.set_errors(err_page);
@@ -112,21 +139,24 @@ static void     get_all_line(std::string input, Config &cfg)
 
 void    config_parsing(int fd, Config &cfg)
 {
-    std::string         string;
+    std::string         all_string;
     size_t              length;
     char                buffer[100];
     ErrorPage           err_p;
 
     (void) cfg;
     length = 100;
-    string = "";
+    all_string = "";
     std::memset(buffer, 0, 100);
     while (read(fd, buffer, length - 1) > 0)
     {
-        string +=  buffer;
+        all_string +=  buffer;
         std::memset(buffer, 0, 100);
     };
-    get_all_line(string, cfg);
+    std::cout << "-----------------------string-----------------" << std::endl;
+    std::cout << all_string << std::endl;
+    std::cout << "----------------------------------------------" << std::endl;
+    get_all_line(all_string, cfg);
     std::cout << "---------all_content---------" << std::endl;
     std::cout << cfg.get_host() << std::endl;
     std::cout << cfg.get_port() << std::endl;
@@ -135,5 +165,7 @@ void    config_parsing(int fd, Config &cfg)
     std::cout << err_p.get_path_404() << std::endl;
     std::cout << err_p.get_path_405() << std::endl;
     std::cout << cfg.get_max_allowed_size() << std::endl;
+
+    std::cout << "---------location------------" << std::endl;
     std::cout << "-----------------------------" << std::endl;
 };

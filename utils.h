@@ -51,7 +51,7 @@ int     address_check(std::string add, Config &cfg);
 int     port_check(std::string port, Config &cfg);
 int     error_page_set(std::string path, ErrorPage &err_page, std::vector<std::string> &err_vect);
 int     error_page_occurences(std::vector<std::string> &error_vect);
-int     get_principal_uri(std::string value, Config cfg);
+int     get_principal_uri(std::string value, Config &cfg);
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 #endif
