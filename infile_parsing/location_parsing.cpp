@@ -12,9 +12,16 @@
 
 #include "../Server.hpp"
 
-int     get_principal_uri(std::string value, Config cfg)
+int     get_principal_uri(std::string value, Config &cfg)
 {
-    std::cout << "get_principal_uri-> " << value << std::endl;
-    (void) cfg;
+    Location    locs;
+    std::string uri_value;
+    int         last;
+
+    last = value.find(" ");
+    uri_value = value.substr(0, last);
+    std::cout << "get_principal_uri-> [" << value << "]" << std::endl;
+    locs.set_uri(uri_value);
+    cfg.set_locs(locs);
     return (1);
 };
