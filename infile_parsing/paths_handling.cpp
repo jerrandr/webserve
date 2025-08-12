@@ -114,11 +114,9 @@ int error_page_set(std::string path, ErrorPage &err_page, std::vector<std::strin
     last = path.find(" ");
     page_name = path.substr(0, last);
     err_vect.push_back(page_name);
-    std::cout << "push_back->" << err_vect[0] << std::endl;
     page_path = path.substr(last + 1, path.size() - (last + 1));
     page_path_checking(page_path);
     err_set = std::atoi(page_name.c_str());
     path_set(err_set, err_page, page_path);
-    std::cout << "page_name-> " << page_name << "-page_path-> " << page_path << std::endl;
     return (1);
 };

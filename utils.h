@@ -52,6 +52,15 @@ int     port_check(std::string port, Config &cfg);
 int     error_page_set(std::string path, ErrorPage &err_page, std::vector<std::string> &err_vect);
 int     error_page_occurences(std::vector<std::string> &error_vect);
 int     get_principal_uri(std::string value, Config &cfg);
+int     method_check(std::string value);
+int     root_check(std::string value);
+int     autoindex_check(std::string value, Location &lcs);
+int     index_check(std::string value);
+int     upload_check(std::string value);
+int     cgi_check(std::string value);
+int     redirect_check(std::string value);
+int     cgi_path_check(std::string value);
+int     cgi_script_check(std::string value);
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 

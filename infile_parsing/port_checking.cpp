@@ -25,7 +25,6 @@ static int      check_one_port(std::string  port)
         }
         i ++;
     };
-    std::cout << "one_port-> " << port << std::endl;
     return (1);
 };
 
@@ -52,7 +51,6 @@ int     port_check(std::string port, Config &cfg)
         pos += len + 1;
         last_port = port.substr(pos, port.size() - pos);
     };
-    std::cout << "port->" << port << "[" << nbr << "]" << std::endl;
     cfg.set_port(port);
     return (nbr);
 };

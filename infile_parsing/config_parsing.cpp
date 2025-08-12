@@ -51,12 +51,6 @@ static int      keys_error_handling(std::string line)
     all_keys.push_back("error_page");
     all_keys.push_back("client_max_body_size");
     all_keys.push_back("location");
-    all_keys.push_back("method");
-    all_keys.push_back("root");
-    all_keys.push_back("autoindex");
-    all_keys.push_back("index");
-    all_keys.push_back("upload");
-    all_keys.push_back("cgi");
     all_keys.push_back("{");       
     all_keys.push_back("}");       
     all_keys.push_back("#");
@@ -153,19 +147,5 @@ void    config_parsing(int fd, Config &cfg)
         all_string +=  buffer;
         std::memset(buffer, 0, 100);
     };
-    std::cout << "-----------------------string-----------------" << std::endl;
-    std::cout << all_string << std::endl;
-    std::cout << "----------------------------------------------" << std::endl;
     get_all_line(all_string, cfg);
-    std::cout << "---------all_content---------" << std::endl;
-    std::cout << cfg.get_host() << std::endl;
-    std::cout << cfg.get_port() << std::endl;
-    err_p = cfg.get_errors();
-    std::cout << err_p.get_path_400() << std::endl;
-    std::cout << err_p.get_path_404() << std::endl;
-    std::cout << err_p.get_path_405() << std::endl;
-    std::cout << cfg.get_max_allowed_size() << std::endl;
-
-    std::cout << "---------location------------" << std::endl;
-    std::cout << "-----------------------------" << std::endl;
 };

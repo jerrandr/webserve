@@ -63,7 +63,6 @@ int     address_check(std::string   host, Config &cfg)
         pos += len + 1;
         last_host = host.substr(pos, host.size() - pos);
     }
-    std::cout << "[" << host << "]" << "{" << nbr << "}" << std::endl;
     cfg.set_host(host);
     return (nbr);
 };
