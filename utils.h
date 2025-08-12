@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:35 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/31 10:07:00 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/12 08:55:44 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,6 @@ int     error_page_occurences(std::vector<std::string> &error_vect);
 int     get_principal_uri(std::string value, Config &cfg);
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
+
+std::string get_mime_type(std::string type);
 #endif
