@@ -1,8 +1,13 @@
-NAME = web
+NAME = webserv
 
 SRC = main.cpp Client.cpp Server.cpp Socket.cpp utils.cpp\
 	Pollfd.cpp Config.cpp Location.cpp ErrorPage.cpp Cgi.cpp\
 	signal_handling/SignalHandling.cpp Requette.cpp\
+	exec_bad_request.cpp\
+	NotReady.cpp\
+	exec_request_timeout.cpp\
+	chunked.cpp\
+	request_processing.cpp\
 	ExecUtils.cpp\
 	directory_listing/directory_listing.cpp\
 	WebServer.cpp\

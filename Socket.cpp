@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/09 10:19:37 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/13 13:16:55 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,21 +200,43 @@ void    Socket::listen_port()
         for(size_t j = 0; j < clients.size(); j++)
         {
             re = polls->get_status(clients[j].get_socket_client());
-            if(re)
+            try
             {
-                if (re & POLLIN)
-                    clients[j].verify_connex(1);
-               else if (re & POLLOUT)
-                    clients[j].verify_connex(2);
+                if(re)
+                {
+                    if (re & POLLIN)
+                        clients[j].verify_connex(1);
+            //    else if (re & POLLOUT)
+            //         clients[j].verify_connex(2);
+                }
+                if (clients[j].size_fd_wait() != 0 && clients[j].get_status_requette() == 1 )
+                {
+                    clients[j].parse_requette();
+                    std::cout << "size fd wait" << std::endl;
+                }
+                else if (clients[j].get_status_requette() == 1 && clients[j].size_fd_wait() == 0 && clients[j].get_requette() != "")
+                {
+                    clients[j].parse_requette();
+                    std::cout << "wait" << std::endl;
+                }
+                else if (clients[j].get_status_requette() != 1 && clients[j].get_requette() != "")
+                {
+                // std::cout << "ato " << time(NULL) - clients[j].get_timeout()<<std::endl;
+                    if (time(NULL) - clients[j].get_timeout() >= 6 && !(re & POLLIN))
+                    {
+                        clients[j].exec_request_timeout();
+                    }
+                }
             }
-            if (clients[j].size_fd_wait() != 0)
+            catch(std::bad_alloc &e)
             {
-                clients[j].parse_requette();   
+                (void)e;
             }
-            else if (clients[j].get_status_requette() == 1 && clients[j].size_fd_wait() == 0 && clients[j].get_requette() != "")
+            catch (std::out_of_range &e)
             {
-                clients[j].parse_requette();
+                (void)e;
             }
+            
         }
     }
     // for(int i = 0; i < size_fd; i++)

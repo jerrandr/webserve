@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:58:07 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/08 10:24:34 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/13 13:53:03 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,13 @@ int main(int argc, char **argv)
         }
         w.start_webserver(fd); 
     }
-    catch(std::exception &e)
+    catch(SignalHandling::ExceptSTop &e)
     {
         std::cout << e.what() << std::endl;
+    }
+    catch(std::logic_error &e)
+    {
+        std::cerr << e.what() << std::endl;
     }
     return (0);
 }

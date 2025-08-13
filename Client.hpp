@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/08 14:52:16 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/13 13:19:36 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Client
         size_t size_body;
         int stat;
         std::map<std::string, int> fd_wait;
+        ssize_t request_time;
         Client();
     public:
         ~Client();
@@ -66,7 +67,23 @@ class Client
         std::string    directory_listing(std::string name);
         void    exec_dir_listing(std::string uri);
         
+        /*bad request*/
+        bool    is_bad_request();
+        void    exec_bad_request();
+
+        /*modif page */
+        bool    other_traitment(std::map<std::string, std::string> config);
         // std::vector<std::string>    body_split();
+
+
+        /*pour 408*/
+        ssize_t get_timeout();
+        void    set_timeout(ssize_t t);
+        void    exec_request_timeout();
+        void    read_timeout();
+
+        /*pour 500*/
+        void    exec_error_server();
 		// JERRY MODIF
 		Pollfd		*getPoll() const;
 		Config		getConfig() const;

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:35 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/12 08:55:44 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/13 13:54:23 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@
 #include "Config.hpp"
 #include "Pollfd.hpp"
 #include "signal_handling/SignalHandling.hpp"
-
+#include "NotReady.hpp"
 std::vector<std::string> split(std::string str, std::string sep);
 std::string get_html_page(int fd);
 int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_wait);
@@ -65,4 +65,6 @@ int     cgi_script_check(std::string value);
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 
 std::string get_mime_type(std::string type);
+int body_chunked(int len1, std::string body);
+std::vector<std::string> split_sep(std::string input, std::string sep);
 #endif

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:11:57 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/26 11:34:06 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/13 13:38:23 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,19 +72,33 @@ static std::string build_html_page_error(int err,Config config, Pollfd *polls,st
     fd = -1;
     if (err == 404)
     {
-        fd = fd_is_ready(config.get_errors().get_path_404(),polls,fd_wait);
-        if (fd < 0)
-            throw std::logic_error("404");
-        head = get_html_page(fd);
-        fd_closed(fd,polls,fd_wait,config.get_errors().get_path_404());
+        if (access(config.get_errors().get_path_404().c_str(),F_OK | R_OK) < 0)
+	    {
+		    head = "<center><h1>404  Not Found </h1></center>";
+	    }
+        else
+        {
+            fd = fd_is_ready(config.get_errors().get_path_404(),polls,fd_wait);
+            if (fd < 0)
+                throw NotReady("404");
+            head = get_html_page(fd);
+            fd_closed(fd,polls,fd_wait,config.get_errors().get_path_404());
+        }
     }
     else if(err == 403)
     {
-        fd = fd_is_ready(config.get_errors().get_path_403(),polls,fd_wait);
-        if (fd < 0)
-            throw std::logic_error("403");
-        head = get_html_page(fd);
-        fd_closed(fd,polls,fd_wait,config.get_errors().get_path_403());
+        if (access(config.get_errors().get_path_403().c_str(),F_OK | R_OK) < 0)
+	    {
+		    head = "<center><h1>403  Permission Denied </h1></center>";
+	    }
+        else
+        {
+            fd = fd_is_ready(config.get_errors().get_path_403(),polls,fd_wait);
+            if (fd < 0)
+                throw NotReady("403");
+            head = get_html_page(fd);
+            fd_closed(fd,polls,fd_wait,config.get_errors().get_path_403());
+        }
     }
     return head;
 }

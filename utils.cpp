@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/12 08:56:50 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/13 12:56:28 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,20 @@ std::vector<std::string> split(std::string str, std::string sep)
         return nw;
 }
 
+
 std::string get_html_page(int fd)
 {
-    std::string reponse;
-    char buff[127];
-    std::size_t len;
-    
-    std::memset(buff,0,126);
-    len = read(fd,buff,126);
-    while(len > 0)
-    {
-        reponse.append(buff,len);
-        std::memset(buff,0,126);
-        len = read(fd,buff,126);
+    std::string content;
+    char buffer[100]; // Buffer de lecture
+    ssize_t len;
+
+    content = "";
+    len = 0;    
+    while ((len = read(fd, buffer, sizeof(buffer))) > 0) {
+        content.append(buffer, len);
     }
-    return reponse;
+
+    return content;
 }
 
 int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_wait)
@@ -219,4 +218,43 @@ std::string get_mime_type(std::string type)
         s = "text/plain";
     }
     return s;
+}
+
+std::vector<std::string> split_sep(std::string input, std::string sep)
+{
+    std::size_t start;
+    std::size_t end;
+    std::vector<std::string> nw;
+    std::string tmp;
+
+
+    start = 0;
+    end =0;
+    tmp = "";
+    while(start < input.size())
+    {
+        end = input.find(sep,start);
+        if (end == std::string::npos)
+        {
+            end = input.size();
+        }
+        tmp = input.substr(start, end - start);
+        nw.push_back(tmp);
+        start = end + sep.size();
+        tmp = "";
+    }
+    return nw;
+}
+
+int body_chunked(int len1, std::string body)
+{
+	for (int i = 0; i < len1; i++)
+	{
+		if (i + 4 < len1 && body[i] == '0' && body[i + 1] == '\r' && body[i + 2] == '\n' && body[i + 3] == '\r' && body[i + 4] == '\n')
+		{
+			if ((i + 5) >= len1)
+				return (0);
+		}
+	}
+	return (1);
 }
