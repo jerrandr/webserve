@@ -20,7 +20,7 @@ static int      open_file(std::string   input, int arg)
     if (arg)
         fd = open(input.c_str(), O_RDONLY);
     else
-        fd = open("./config/default_config.txt", O_RDONLY);
+        fd = open("./config/default_config.cfg", O_RDONLY);
     return (fd);
 };
 

@@ -92,7 +92,7 @@ void WebServer::start_webserver(int fd)
         }
     
         /*raha misy directive error page ao amn fichier de config de atao otranio location*/
-        Server sev(config, polls,struct_addr);
+        Server sev(cfg, polls,struct_addr);
         servs.push_back(sev);
     }
 
