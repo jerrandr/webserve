@@ -14,7 +14,7 @@
 
 static int  page_path_checking(std::string path)
 {
-    std::cout << "paths_page-> " << path << std::endl;
+    std::cout << "mbola tsy vita -> " << path << std::endl;
     return (1);
 };
 

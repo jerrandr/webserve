@@ -14,53 +14,24 @@
 
 static int      insert_value(std::string key_w, std::string value, Location &lcs)
 {
-    int     count;
-
-    count = 0;
     if (key_w == "method" && method_check(value))
-    {
         lcs.set_meth(value);
-        count ++;
-    };
     if (key_w == "root" && root_check(value))
-    {
         lcs.set_root(value);
-        count ++;
-    };
-    if (key_w == "autoindex" && autoindex_check(value, lcs))
-    {
-        count ++;
-    };
+    if (key_w == "autoindex")
+        autoindex_check(value, lcs);
     if (key_w == "index" && index_check(value))
-    {
         lcs.set_index(value);
-        count ++;
-    };
     if (key_w == "upload" && upload_check(value))
-    {
         lcs.set_path_upload(value);
-        count ++;
-    }
     if (key_w == "cgi" && cgi_check(value))
-    {
         lcs.set_extension_cgi(value);
-        count ++;
-    };
     if (key_w == "cgi_path" && cgi_path_check(value))
-    {
         lcs.set_path_cgi(value);
-        count ++;
-    };
     if (key_w == "cgi_script" && cgi_script_check(value))
-    {
         lcs.set_script(value);
-        count ++;
-    };
     if (key_w == "redirect" && redirect_check(value))
-    {
         lcs.set_redir(value);
-        count ++;
-    };
     return (1);
 };
 

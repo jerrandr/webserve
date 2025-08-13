@@ -14,70 +14,93 @@
 
 int     method_check(std::string value)
 {
-    std::string erase_space;
-    std::string check_value;
-    std::string last_value;
-    int         index;
+    std::vector<std::string>  splited = split(value, " ");
+    std::vector<std::string>::iterator it = splited.begin();
+    int         count = 0;
 
-    index = 0;
-    while (isspace(value[index]))
-        index ++;
-    erase_space = value.substr(index, value.size() - index);
-    std::cout << "value_method-> [" << erase_space << "]" << std::endl;
+    if (value.empty())
+        return (0);
+    while (it != splited.end())
+    {
+        if (*it != "GET" && *it != "POST" && *it != "DELETE")
+        {
+            std::cout << *it << ": methode value not accepted." << std::endl;
+            return (0);
+        }
+        it ++;
+        count ++;
+    }
+    if (count > 3)
+    {
+        std::cout << "too many arguments of method" << std::endl;
+        return (0);
+    }
     return (1);
 };
 
 int     root_check(std::string value)
 {
-    std::cout << "valu-> " << value << std::endl;
-    return (1);
-};
-
-int     autoindex_check(std::string value, Location &lcs)
-{
-    if (value == "YES")
-        lcs.set_enabled(1);
-    else if (value == "NO")
-        lcs.set_enabled(0);
-    else
+    if (value.empty())
+        return (0);
+    if (value[value.size() - 1] != '/')
     {
-        std::cout << "autoindex value not accepted !!!" << std::endl;
+        std::cout << value << ": root_path not valid" << std::endl;
         return (0);
     }
     return (1);
+};
+
+void     autoindex_check(std::string value, Location &lcs)
+{
+    if (value == "YES" || value == "yes")
+        lcs.set_enabled(1);
+    else if (value == "NO" || value == "no")
+        lcs.set_enabled(0);
+    else
+        std::cout << "autoindex value not accepted !!!" << std::endl;
 }
 int     index_check(std::string value)
 {
-    std::cout << "valu-> " << value << std::endl;
+    if (value.empty())
+        return (0);
     return (1);
 };
 
 int     upload_check(std::string value)
 {
-    std::cout << "valu-> " << value << std::endl;
+    if (value.empty())
+        return (0);
+    if (value != "yes" && value != "YES" && value != "no" && value != "NO")
+    {
+        std::cout << "invalid value of upload" << std::endl;
+        return (0);
+    }
     return (1);
 };
 
 int     cgi_check(std::string value)
 {
-    std::cout << "valu-> " << value << std::endl;
+    if (value.empty())
+        return (0);
     return (1);
 }
 
 int     redirect_check(std::string value)
 {
-    std::cout << "valu-> " << value << std::endl;
+    if (value.empty())
+        return (0);
     return (1);
 };
 
 int     cgi_path_check(std::string value)
 {
-    std::cout << "valu-> " << value << std::endl;
+    if (value.empty())
+        return (0);
     return (1);
 }
 int     cgi_script_check(std::string value)
 {
-    std::cout << "valut-> " << value << std::endl;
+    if (value.empty())
+        return (0);
     return (1);
 };
-
