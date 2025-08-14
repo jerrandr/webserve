@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 13:19:36 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/14 09:45:42 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ class Client
 
         /*pour 500*/
         void    exec_error_server();
+        void    error_serv();
 		// JERRY MODIF
 		Pollfd		*getPoll() const;
 		Config		getConfig() const;

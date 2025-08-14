@@ -8,6 +8,7 @@ SRC = main.cpp Client.cpp Server.cpp Socket.cpp utils.cpp\
 	exec_request_timeout.cpp\
 	chunked.cpp\
 	request_processing.cpp\
+	exec_error_server.cpp\
 	ExecUtils.cpp\
 	directory_listing/directory_listing.cpp\
 	WebServer.cpp\
