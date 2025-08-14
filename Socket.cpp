@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/14 09:34:15 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/14 09:50:25 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ void    Socket::listen_port()
                 else if (clients[j].get_status_requette() != 1 && clients[j].get_requette() != "")
                 {
                 // std::cout << "ato " << time(NULL) - clients[j].get_timeout()<<std::endl;
-                    if (time(NULL) - clients[j].get_timeout() >= 6 && !(re & POLLIN))
+                    if (time(NULL) - clients[j].get_timeout() >= 60 && !(re & POLLIN))
                     {
                         clients[j].exec_request_timeout();
                     }
