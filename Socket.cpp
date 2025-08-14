@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 13:16:55 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/14 09:25:58 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,10 +231,12 @@ void    Socket::listen_port()
             catch(std::bad_alloc &e)
             {
                 (void)e;
+                clients[j].exec_error_server();
             }
             catch (std::out_of_range &e)
             {
                 (void)e;
+                clients[j].exec_error_server();
             }
             
         }

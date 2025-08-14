@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   WebServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:14:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/08 11:36:44 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/14 08:18:54 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
