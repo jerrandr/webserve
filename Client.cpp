@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 10:32:42 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/14 10:06:27 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,8 +170,10 @@ int Client::get_status_requette()
 }
 void Client::set_head(int size, std::string buffer)
 {
-	if (requette != "")
+	if (requette != "" && requette.find("\r\n\r\n") != std::string::npos)
+	{
 		return;
+	}
 	if (size == 0)
 		return;
 	else
