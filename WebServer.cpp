@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   WebServer.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:14:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/14 08:18:54 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/15 15:08:49 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,10 @@ void WebServer::start_webserver(int fd)
     
         /*raha misy directive error page ao amn fichier de config de atao otranio location*/
         Server sev(*it_cfg, polls,struct_addr);
+        std::cout << (*it_cfg).get_host() << std::endl;
+        std::cout << (*it_cfg).get_port() << std::endl;
         servs.push_back(sev);
+
     }
 
     non_stop_serv();

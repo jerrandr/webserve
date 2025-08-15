@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/09 13:58:07 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/15 14:51:27 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,11 @@ std::string ExecUtils::getData(std::string filename, Pollfd *polls, std::map<std
 		data = getData("error/403.html", polls, fd_wait);
 	else
 	{
-		fd = open(filename.c_str(), O_RDONLY);
+		fd = fd_is_ready(filename, polls, fd_wait);
+		if (fd == -1)
+			throw NotReady("TSY METYYYYYYYYYYYYYYYYYY");
 		data = getData(fd);
-		close(fd);
+		fd_closed(fd,polls,fd_wait,filename);
 	}
 	return (data);
 }
@@ -118,11 +120,36 @@ std::string	ExecUtils::getData(int fd)
 {
 	std::string	res;
 	char		buff[1024];
-	int			n;
+	size_t			n;
 
 	n = 4;
 	res = "";
 	while ((n = read(fd, buff, sizeof(buff))) > 0)
-		res.append(buff, n);
+			res.append(buff, n);				
+	return (res);
+}
+
+std::string	ExecUtils::getExt(std::string filename)
+{
+	std::string res;
+	int			st;
+	int			fl;
+
+	st = 0;
+	fl = 0;
+	res = "";
+	if (filename.find(".") != std::string::npos)
+	{
+		for (size_t i = filename.length(); i > 0; i--)
+		{
+			if (filename[i] == '.' && fl == 0)
+			{
+				st = i;
+				fl = 1;
+				break;
+			}
+		}
+		res = filename.substr(st, filename.length());
+	}
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/08 14:53:30 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/14 13:41:43 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,13 @@
 
 Cgi::~Cgi() {}
 
-Cgi::Cgi(char **Envp, int length, Client cl)
+Cgi::Cgi(char **Envp, int length, Client &cl): Cl(cl)
 {
 	argv = new char*[2];
 	CgiName = new char;
 
 	envp = Envp;
-	pl = cl.getPoll();
 	lv = length;
-	dataFd = cl.getFdWait();
 	CgiName = const_cast<char*>("/usr/bin/php-cgi");
 	argv[0] = CgiName;
 	argv[1] = NULL;
@@ -43,10 +41,11 @@ std::string	Cgi::getStatus(std::string p)
 
 void	Cgi::IfNotFound(std::string p, int fdc)
 {
-	std::string filename;
+	std::string	filename;
+	Pollfd		*pl = Cl.getPoll();
 
 	filename = "error/" + p + ".html";
-	p = utils.getError(filename, pl, dataFd);
+	p = utils.getError(filename, Cl.getPoll(), Cl.getFdWait());
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
 		if (send(fdc, p.c_str(), p.size(), 0) < 0)
@@ -59,11 +58,15 @@ void	Cgi::IfNotFound(std::string p, int fdc)
 
 void	Cgi::IfFound(std::string p, int fdc)
 {
-	p = ParseCgi(p);
-	p = "HTTP/1.1 200 OK\r\nContent-Length: " + utils.ToString(p.size()) + "\r\nContent-Type: text/html\r\n\r\n" + p;
+	Pollfd	*pl = Cl.getPoll();
+	std::string	ext = getType(envp[5]);
+	std::cout << "P: {" << p<< "}\n";
+	std::string	rp;
+	rp = ParseCgi(p);
+	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + utils.ToString(rp.size()) + "\r\nContent-Type: " + ext + "\r\n\r\n" + rp;
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
-		if (send(fdc, p.c_str(), p.size(), 0) < 0)
+		if (send(fdc, rp.c_str(), rp.size(), 0) < 0)
 		{
 			std::cout << "EXECVE ERROR" << std::endl;
 			exit(0);
@@ -77,21 +80,34 @@ std::string	Cgi::ParseCgi(std::string content)
 
 	if (content.find("\r\n") != std::string::npos)
 	{
-		res = content.substr(content.find("\r\n"), content.length());
+		res = content.substr(content.find("\r\n") + 4, content.length());
 		return (res);
 	}
 	return (content);
 }
 
+std::string	Cgi::getType(std::string ct)
+{
+	std::string	res;
+
+	res = "";
+	if (ct.find("=") != std::string::npos)	
+		res = ct.substr(ct.find("="), ct.length());
+	if (res.find(".") != std::string::npos)
+		res = res.substr(res.find("."), res.length());
+	res = Cl.getConfig().get_mime(res);
+	return (res);	
+}
+
 void	Cgi::MyExec2(int &fd, int fdc)
 {
-	std::string p;
+	std::string	p;
 	std::string	st;
-	
+
+	Cl.getPoll()->add_new_fd(fd);
 	p = utils.getData(fd);
-	st = getStatus(p); 
-	close(fd);
-	std::cout << "P: {" << p << "}" << std::endl; 
+	st = getStatus(p);
+	Cl.getPoll()->erase_fd(fd);
 	if (st != "")
 		IfNotFound(st, fdc);
 	else
@@ -125,7 +141,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 		close(fd2[0]);
 		close(fd2[1]);
 		close(fd[1]);
-		waitpid(pid, NULL, 0);
 		MyExec2(fd[0], fdc);
+		waitpid(pid, NULL, 0);
 	}
 }

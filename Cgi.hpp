@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:25:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/09 10:22:04 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:15:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,25 +30,23 @@ class Client;
 class Cgi
 {
     private:
-		ExecUtils					utils;
-		char						**envp;
-		char						**argv;
-		char						*CgiName;
-		Pollfd						*pl;
-		int							lv;
-		std::map<std::string, int>	dataFd;
-		
-		Cgi					&operator=(Cgi const & cpy);
-							Cgi(Cgi const & cpy);
-		std::string			getStatus(std::string p);
-		void				IfNotFound(std::string p, int fdc);
-		void				IfFound(std::string p, int fdc);
-		void				MyExec2(int &fd, int fdc);
-		std::string			ParseCgi(std::string content);
-
+		ExecUtils	utils;
+		char		**envp;
+		char		**argv;
+		char		*CgiName;
+		int			lv;
+		Client		&Cl;
+		Cgi			&operator=(Cgi const & cpy);
+					Cgi(Cgi const & cpy);
+		std::string	getStatus(std::string p);
+		void		IfNotFound(std::string p, int fdc);
+		void		IfFound(std::string p, int fdc);
+		void		MyExec2(int &fd, int fdc);
+		std::string	ParseCgi(std::string content);
+		std::string	getType(std::string ct);
 	public:
-				~Cgi();	
-				Cgi(char **Envp, int length, Client cl);
+				~Cgi();
+				Cgi(char **Envp, int length, Client &cl);
 		void	MyExec(int fdc, std::string body);
 };
 

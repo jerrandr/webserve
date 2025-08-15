@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/09 10:20:27 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/13 08:29:29 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "ExecUtils.hpp"
 #include "Cgi.hpp"
 #include <cstdio>
-// #include "Client.hpp"
+#include "Client.hpp"
 
 class Pollfd;
 class Cgi;
@@ -35,8 +35,7 @@ class Requette
 		std::string							ctType;
 		char								**envp;
 		int									lv;
-		std::map<std::string, int>			dataFd;
-		Client								*Cl;
+		Client								&Cl;
 		
 		void				initEnvp(std::string rt, std::string st, std::string bd);
 							Requette(Requette const &cpy);
@@ -54,7 +53,7 @@ class Requette
 		int					IfDelete(int socket);
 
 	public:
-		Requette(std::map<std::string, std::string> config, Client cl);
+		Requette(std::map<std::string, std::string> config, Client  &cl);
 		void rp(int socket);
 		~Requette();
 };

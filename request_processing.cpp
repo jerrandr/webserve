@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request_processing.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 13:25:08 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/15 14:55:27 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,9 +209,16 @@ void Client::parse_requette()
 		return;
 	// config["uri"] = this->config.get_real_path(config["uri"],this->config.get_location_match(config["uri"]));
 	std::cout << "tsy dir listing" << std::endl;
-	Requette a(config, *this);
-
-	a.rp(socket);
+	try
+	{
+		Requette a(config, *this);
+		a.rp(socket);
+	}
+	catch(const NotReady& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 	if (fd_wait.size() == 0)
 	{
 		requette = "";

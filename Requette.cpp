@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/09 13:32:34 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/15 14:42:59 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 Requette::~Requette() {}
 
-Requette::Requette(std::map<std::string, std::string> config, Client cl)
+Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl)
 {
 	ctType = "";
 	for (std::map<std::string, std::string>::iterator i = config.begin(); i != config.end(); i++)
@@ -28,19 +28,17 @@ Requette::Requette(std::map<std::string, std::string> config, Client cl)
 			break ;
 		}
 	}
-	Cl = &cl;
     rq = config;
     lv = cl.get_len_real_body();
     pl = cl.getPoll();
     this->lc = cl.getConfig().get_locs();
 	body = cl.getBody();
-	dataFd = cl.getFdWait();
 	// BodyUpload bd(body);
 
 	// bd.ParseBody();
 }
 
-//+++++++++++++++++++++++++FIND LOCATION+++++++++++++++++++++++++
+//+++++++++++++++++++++++++FIND LOCATION+++++++++++++++++++++++++ 	
 int	Requette::findLoc2(std::vector<std::string> UriLoc, std::vector<std::string> toFind)
 {
 	int nb;
@@ -165,6 +163,7 @@ std::string	Requette::redir_rp2(std::string redir)
 				rp = "HTTP/1.1 301 Moved Permanently\r\n";
 				break;
 		}
+		rp += "Location: " + data[1] + "\r\n\r\n"; 
 	}
 	return (rp);
 }
@@ -174,7 +173,6 @@ void	Requette::redir_rp(std::string redir, int socket)
 {
 	std::string	rp;
 
-	std::cout << RED << "REDIR\n" << R;
 	rp = redir_rp2(redir);
 	if (rp != "")
 	{
@@ -196,7 +194,7 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 		rt = rq["uri"];
 	std::cout << "BD: " << bd << std::endl;
 	initEnvp(rt, Loc.get_script_cgi(), bd);
-	Cgi cgi(envp, lv, *Cl);
+	Cgi cgi(envp, lv, Cl);
 	cgi.MyExec(socket, body);
 	return ;
 }
@@ -210,7 +208,7 @@ void	Requette::rp3(int socket)
 		BodyUpload bd(body);
 		bd.ParseBody();
 	}
-	rp = utils.getError("error/405.html", pl, dataFd);
+	rp = utils.getError("error/405.html", pl, Cl.getFdWait());
 	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 		send(socket, rp.c_str(), rp.size(), 0);
 }
@@ -218,6 +216,8 @@ void	Requette::rp3(int socket)
 
 void	Requette::rp2(int socket)
 {
+	std::string	ext;
+
 	std::cout << RED << "NORMALE\n" << R;
 	if (body == "")
 	{
@@ -231,13 +231,19 @@ void	Requette::rp2(int socket)
 		rt = "/";
 		if (rq["uri"].size() > 1)
 			rt = rq["uri"].substr(1, rq["uri"].length());
-		data << utils.getData(rt, pl, dataFd);
 		std::cout << RED << "FILE: " << rt << R << std::endl;
-		nbr = utils.ToString(data.str().size());
 		if (stat(rt.c_str(), &file) == -1)
-			rp = utils.getError("error/404.html", pl, dataFd);
+		{
+			rp = utils.getError("error/404.html", pl, Cl.getFdWait());
+			std::cout << "RP: {" << rp << "}\n";
+		}
 		else
-			rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + data.str();
+		{
+			ext = utils.getExt(rt);
+			data << utils.getData(rt, pl, Cl.getFdWait());
+			nbr = utils.ToString(data.str().size());
+			rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
+		}
 		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 			send(socket, rp.c_str(), rp.size(), 0);
 	}
@@ -260,9 +266,9 @@ int	Requette::IfDelete(int socket)
 		if (rq["uri"].size() > 1)
 			rt = rq["uri"].substr(1, rq["uri"].length());
 		if (stat(rt.c_str(), &st) == -1 && rp == "")
-			rp = utils.getData("error/404.html", pl, dataFd);
+			rp = utils.getData("error/404.html", pl, Cl.getFdWait());
 		if (access(rt.c_str(), O_RDWR) != 0 && rp == "")
-			rp = utils.getData("error/403.html",  pl, dataFd);
+			rp = utils.getData("error/403.html",  pl, Cl.getFdWait());
 		if (rp == "")
 		{
 			std::remove(rt.c_str());
@@ -286,7 +292,7 @@ void    Requette::rp(int socket)
 	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
-		rp = utils.getError("error/405.html", pl, dataFd);
+		rp = utils.getError("error/405.html", pl, Cl.getFdWait());
 		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 			send(socket, rp.c_str(), rp.size(), 0);
 		return ;

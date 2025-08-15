@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/08 14:41:15 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/15 14:50:47 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 #include <map>
 #include <algorithm>
 #include "Pollfd.hpp"
+#include "utils.h"
+#include "NotReady.hpp"
 
 class ExecUtils
 {
@@ -37,6 +39,9 @@ class ExecUtils
 		std::string			getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait);
 		std::string			getError(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait);
 		std::string			getData(int fd);
+		// std::vector<unsigned char>	getData(int fd);
+		// std::stringstream	Uni(std::vector<unsigned char> test);
+		std::string			getExt(std::string filename);
 							ExecUtils();
 							~ExecUtils();
 };
