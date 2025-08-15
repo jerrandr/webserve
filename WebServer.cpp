@@ -56,9 +56,12 @@ void WebServer::start_webserver(int fd)
 {
 
     polls = new Pollfd();
-    Config  cfg;
+    std::vector<Config> cfg;
+    std::vector<Config>::iterator it_cfg;
+
     /*initialisation de tous les socket selon le fichier de config venant du fd*/
     config_parsing(fd, cfg);
+    it_cfg = cfg.begin();
     int size = 1;
 
     for(int i = 0; i < size; i++)
@@ -92,7 +95,7 @@ void WebServer::start_webserver(int fd)
         }
     
         /*raha misy directive error page ao amn fichier de config de atao otranio location*/
-        Server sev(cfg, polls,struct_addr);
+        Server sev(*it_cfg, polls,struct_addr);
         servs.push_back(sev);
     }
 

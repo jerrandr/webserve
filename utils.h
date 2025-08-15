@@ -46,7 +46,7 @@ void  fd_closed(int fd,Pollfd *polls, std::map<std::string, int> &fd_wait,std::s
 
 bool is_directory(std::string path);
 std::string decode_str(std::string d);
-void    config_parsing(int fd, Config &cfg);
+void    config_parsing(int fd, std::vector<Config> &cfg);
 int     address_check(std::string add, Config &cfg);
 int     port_check(std::string port, Config &cfg);
 int     error_page_set(std::string path, ErrorPage &err_page, std::vector<std::string> &err_vect);

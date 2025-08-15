@@ -14,7 +14,16 @@
 #include "../utils.h"
 static int      body_size_checking(std::string value, Config &cfg)
 {
-    std::cout << "body_size-> " << value << std::endl;
+    std::stringstream   tmp;
+    double              nbr_value;
+    std::string         last;
+
+    tmp << value;
+    tmp >> nbr_value;
+    tmp >> last;
+    if (!last.empty() && last != "G" && last != "M" && last != "T")
+        std::cout << "Invalid body_size unity" << std::endl;
+    std::cout << "body_size-> " << nbr_value << "last-> " << last << std::endl;
     cfg.set_max_allowed_size(value);
     return (1);
 };
@@ -45,15 +54,16 @@ std::string file_set_line(std::string line)
 static int      keys_error_handling(std::string line)
 {
     std::vector<std::string> all_keys;
-    all_keys.push_back("server");
     all_keys.push_back("host");
     all_keys.push_back("listen");
     all_keys.push_back("error_page");
     all_keys.push_back("client_max_body_size");
     all_keys.push_back("location");
     all_keys.push_back("{");       
-    all_keys.push_back("}");       
-    all_keys.push_back("#");
+    all_keys.push_back("}");
+    std::cout << "line->[" << line << "]" << std::endl;
+    if (line.empty())
+        return (1);       
     std::vector<std::string>::iterator it = find(all_keys.begin(), all_keys.end(), line);
     if (it != all_keys.end())
         return (1);
@@ -77,7 +87,7 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
     std::string     key_w;
     std::string     new_line;
     std::string     new_values;
-    
+
 
     i = 0;
     while (isspace(line[i]))
@@ -86,7 +96,10 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
     last = new_line.find(" ");
     key_w = new_line.substr(0, last);
     if (!keys_error_handling(key_w))
+    {
+        std::cout << "keys_error_handling " << std::endl;
         return (0);
+    }
     new_values = new_line.substr(last + 1, new_line.size() - last);
     if (key_w == "host")
        address_check(new_values, cfg);
@@ -98,7 +111,7 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
     return (1);    
 };
 
-static void     get_all_line(std::string input, Config &cfg)
+static Config     get_all_line(std::string input)
 {
     int                                 len;
     size_t                              pos;
@@ -107,6 +120,7 @@ static void     get_all_line(std::string input, Config &cfg)
     std::vector<std::string>            key_vect;
     ErrorPage                           err_page;
     std::vector<std::string>            err_vector;
+    Config                              config;
 
     pos = 0;
     new_input = input;
@@ -114,7 +128,7 @@ static void     get_all_line(std::string input, Config &cfg)
     {
         line = file_set_line(new_input);
         len = line.size();
-        if (!line_parsing(line, cfg, err_page, err_vector))
+        if (!line_parsing(line, config, err_page, err_vector))
         {
             std::cout << "Error of configuration file content !!!" << std::endl;
             break;
@@ -128,17 +142,19 @@ static void     get_all_line(std::string input, Config &cfg)
             new_input = input.substr(pos -1 , input.size() - (pos - 1));
     };
     error_page_occurences(err_vector);
-    cfg.set_errors(err_page);
+    config.set_errors(err_page);
+    return(config);
 };
 
-void    config_parsing(int fd, Config &cfg)
+void    config_parsing(int fd, std::vector<Config> &cfg)
 {
-    std::string         all_string;
-    size_t              length;
-    char                buffer[100];
-    ErrorPage           err_p;
+    std::string                 all_string;
+    size_t                      length;
+    char                        buffer[100];
+    ErrorPage                   err_p;
+    std::vector<std::string>    string_array;
+    Config                      config;
 
-    (void) cfg;
     length = 100;
     all_string = "";
     std::memset(buffer, 0, 100);
@@ -147,5 +163,13 @@ void    config_parsing(int fd, Config &cfg)
         all_string +=  buffer;
         std::memset(buffer, 0, 100);
     };
-    get_all_line(all_string, cfg);
+    string_array = split(all_string, "server");
+    std::vector<std::string>::iterator it = string_array.begin();
+    while (it != string_array.end())
+    {
+        config = get_all_line(*it);
+        cfg.push_back(config);
+        std::cout << "all_string->" << *it << std::endl;
+        it ++;
+    }
 };

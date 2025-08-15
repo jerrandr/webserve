@@ -39,7 +39,7 @@ Server::Server(Config c, Pollfd *p,std::vector<struct addrinfo *> &struct_addr)
     ports = split(c.get_port()," ");
     hosts = split(c.get_host()," ");
     if (hosts.size() != ports.size())
-        throw std::logic_error("configuration error");
+        throw std::logic_error("configuration error1");
     size = ports.size();
     // config = -1;
     fds = p;
