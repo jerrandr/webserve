@@ -55,8 +55,6 @@ int     address_check(std::string   host, Config &cfg)
             std::cout << "Ip address not valid" << std::endl;\
             return (0);
         }
-        else
-            std::cout << "Ip address valid" << std::endl;
         nbr ++;
         if (len == -1)
             break;

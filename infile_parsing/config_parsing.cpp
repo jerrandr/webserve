@@ -12,6 +12,22 @@
 
 #include "../Server.hpp"
 #include "../utils.h"
+
+static int      check_one_bloc(std::string bloc)
+{
+    size_t      i;
+
+    i = bloc.size() - 1;
+    while (isspace(bloc[i]))
+        i --;
+    if (bloc[i] != '}')
+    {
+        std::cout << "Server bloc syntax error" << std::endl;
+        return (0);
+    }
+    return (1);
+};
+
 static int      body_size_checking(std::string value, Config &cfg)
 {
     std::stringstream   tmp;
@@ -21,7 +37,7 @@ static int      body_size_checking(std::string value, Config &cfg)
     tmp << value;
     tmp >> nbr_value;
     tmp >> last;
-    if (!last.empty() && last != "G" && last != "M" && last != "T")
+    if (!last.empty() && last != "G" && last != "M" && last != "K")
         std::cout << "Invalid body_size unity" << std::endl;
     std::cout << "body_size-> " << nbr_value << "last-> " << last << std::endl;
     cfg.set_max_allowed_size(value);
@@ -61,7 +77,6 @@ static int      keys_error_handling(std::string line)
     all_keys.push_back("location");
     all_keys.push_back("{");       
     all_keys.push_back("}");
-    std::cout << "line->[" << line << "]" << std::endl;
     if (line.empty())
         return (1);       
     std::vector<std::string>::iterator it = find(all_keys.begin(), all_keys.end(), line);
@@ -163,13 +178,13 @@ void    config_parsing(int fd, std::vector<Config> &cfg)
         all_string +=  buffer;
         std::memset(buffer, 0, 100);
     };
-    string_array = split(all_string, "server");
+    string_array = split(all_string, "server {");
     std::vector<std::string>::iterator it = string_array.begin();
     while (it != string_array.end())
     {
+        check_one_bloc(*it);
         config = get_all_line(*it);
         cfg.push_back(config);
-        std::cout << "all_string->" << *it << std::endl;
         it ++;
     }
 };

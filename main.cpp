@@ -16,7 +16,6 @@ static int      open_file(std::string   input, int arg)
 {
     int     fd;
 
-    std::cout << "infile-> " << input << std::endl;
     if (arg)
         fd = open(input.c_str(), O_RDONLY);
     else
