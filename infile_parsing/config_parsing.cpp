@@ -37,9 +37,9 @@ static int      body_size_checking(std::string value, Config &cfg)
     tmp << value;
     tmp >> nbr_value;
     tmp >> last;
-    if (!last.empty() && last != "G" && last != "M" && last != "K")
+    if (!last.empty() && last != "G" && last != "M" && last != "K" && 
+        last != "g" && last != "m" && last != "k")
         std::cout << "Invalid body_size unity" << std::endl;
-    std::cout << "body_size-> " << nbr_value << "last-> " << last << std::endl;
     cfg.set_max_allowed_size(value);
     return (1);
 };
@@ -184,6 +184,7 @@ void    config_parsing(int fd, std::vector<Config> &cfg)
     {
         check_one_bloc(*it);
         config = get_all_line(*it);
+        check_port_and_host(config);
         cfg.push_back(config);
         it ++;
     }

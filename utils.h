@@ -61,6 +61,7 @@ int     cgi_check(std::string value);
 int     redirect_check(std::string value);
 int     cgi_path_check(std::string value);
 int     cgi_script_check(std::string value);
+int     check_port_and_host(Config &cfg);
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 

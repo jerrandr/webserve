@@ -16,12 +16,21 @@ static int  check_one_add(std::string add)
 {
     std::stringstream   content;
     int                 nbr;
-    int                 inc;
+    size_t              inc;
     char                pt;
 
     if (add == "localhost")
         return (1);
+    std::vector<std::string> add_arr = split(add, ".");
+    if (add_arr.size() != 4)
+        return (0);
     inc = 0;
+    while (inc < add.size())
+    {
+        if (!isdigit(add[inc]) && add[inc] != '.')
+            return (0);
+        inc ++;
+    }
     content << add;
     while (!content.fail())
     {
@@ -52,7 +61,7 @@ int     address_check(std::string   host, Config &cfg)
         one_add = host.substr(pos, len);
         if (!check_one_add(one_add))
         {
-            std::cout << "Ip address not valid" << std::endl;\
+            std::cout << one_add << ": Ip address not valid" << std::endl;
             return (0);
         }
         nbr ++;
