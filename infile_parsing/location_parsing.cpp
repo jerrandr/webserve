@@ -109,6 +109,7 @@ int     get_principal_uri(std::string value, Config &cfg)
     line_pos = value.find("\n") + 1;
     last_line = value.substr(line_pos, value.size() - line_pos);
     other_uri_value(last_line, locs, found_key);
+    multiple_key_check(found_key);
     cfg.set_locs(locs);
     return (1);
 };
