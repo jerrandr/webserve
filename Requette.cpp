@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/15 14:42:59 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/18 07:46:16 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,6 +297,7 @@ void    Requette::rp(int socket)
 			send(socket, rp.c_str(), rp.size(), 0);
 		return ;
 	}
+	std::cout << "path: " << Loc.get_path_cgi() << std::endl;
 	if (IfDelete(socket) == 1)
 		return ;
 	if (Loc.get_redir() != "")

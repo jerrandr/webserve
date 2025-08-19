@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/14 13:41:43 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/18 07:32:25 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Cgi::Cgi(char **Envp, int length, Client &cl): Cl(cl)
 
 	envp = Envp;
 	lv = length;
-	CgiName = const_cast<char*>("/usr/bin/php-cgi");
+	CgiName = const_cast<char*>("/usr/bin/bash");
 	argv[0] = CgiName;
 	argv[1] = NULL;
 }

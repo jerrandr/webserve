@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:14:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/15 15:08:49 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/18 07:34:17 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void WebServer::start_webserver(int fd)
         loc.set_enabled(true);
         loc.set_index("");
         /*path*/
-        loc.set_path_cgi("");
+        loc.set_path_cgi("/usr/bin/bash");
         // loc.set_path_cgi("/usr/bin/php-cgi");
         // loc.set_script("test/test.php");
 
