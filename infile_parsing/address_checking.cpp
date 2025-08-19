@@ -43,7 +43,7 @@ static int  check_one_add(std::string add)
     return (1);
 };
 
-int     address_check(std::string   host, Config &cfg)
+int     address_check(std::string   host, Config &cfg, std::vector<std::string> &key_vect)
 {
     std::string     one_add;
     std::string     last_host;
@@ -51,7 +51,7 @@ int     address_check(std::string   host, Config &cfg)
     int             len;
     int             nbr;
 
-    (void) cfg;
+    key_vect.push_back("host");
     pos = 0;
     nbr = 0;
     last_host = host;

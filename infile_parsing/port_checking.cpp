@@ -57,7 +57,7 @@ static int      check_port_host(Config cfg)
     return (1);
 };
 
-int     port_check(std::string port, Config &cfg)
+int     port_check(std::string port, Config &cfg, std::vector<std::string> &key_vect)
 {
     std::string one_port;
     std::string last_port;
@@ -65,7 +65,7 @@ int     port_check(std::string port, Config &cfg)
     int         len;
     int         nbr;
 
-    (void) cfg;
+    key_vect.push_back("listen");
     nbr = 0;
     pos = 0;
     last_port = port;

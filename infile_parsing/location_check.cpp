@@ -12,12 +12,13 @@
 
 #include "../Server.hpp"
 
-int     method_check(std::string value)
+int     method_check(std::string value, std::vector<std::string> &found_key)
 {
     std::vector<std::string>  splited = split(value, " ");
     std::vector<std::string>::iterator it = splited.begin();
     int         count = 0;
 
+    found_key.push_back("method");
     if (value.empty())
         return (0);
     while (it != splited.end())
@@ -38,8 +39,9 @@ int     method_check(std::string value)
     return (1);
 };
 
-int     root_check(std::string value)
+int     root_check(std::string value, std::vector<std::string> &found_key)
 {
+    found_key.push_back("root");
     if (value.empty())
         return (0);
     if (value[value.size() - 1] != '/')
@@ -50,8 +52,9 @@ int     root_check(std::string value)
     return (1);
 };
 
-void     autoindex_check(std::string value, Location &lcs)
+void     autoindex_check(std::string value, Location &lcs, std::vector<std::string> &found_key)
 {
+    found_key.push_back("autoindex");
     if (value == "YES" || value == "yes")
         lcs.set_enabled(1);
     else if (value == "NO" || value == "no")
@@ -59,15 +62,17 @@ void     autoindex_check(std::string value, Location &lcs)
     else
         std::cout << "autoindex value not accepted !!!" << std::endl;
 }
-int     index_check(std::string value)
+int     index_check(std::string value, std::vector<std::string> &found_key)
 {
+    found_key.push_back("index");
     if (value.empty())
         return (0);
     return (1);
 };
 
-int     upload_check(std::string value)
+int     upload_check(std::string value, std::vector<std::string> &found_key)
 {
+    found_key.push_back("upload");
     if (value.empty())
         return (0);
     if (value != "yes" && value != "YES" && value != "no" && value != "NO")
@@ -78,28 +83,32 @@ int     upload_check(std::string value)
     return (1);
 };
 
-int     cgi_check(std::string value)
+int     cgi_check(std::string value, std::vector<std::string> &found_key)
 {
+    found_key.push_back("cgi");
     if (value.empty())
         return (0);
     return (1);
 }
 
-int     redirect_check(std::string value)
+int     redirect_check(std::string value, std::vector<std::string> &found_key)
 {
+    found_key.push_back("redirect");
     if (value.empty())
         return (0);
     return (1);
 };
 
-int     cgi_path_check(std::string value)
+int     cgi_path_check(std::string value, std::vector<std::string> &found_key)
 {
+    found_key.push_back("cgi_path");
     if (value.empty())
         return (0);
     return (1);
 }
-int     cgi_script_check(std::string value)
+int     cgi_script_check(std::string value, std::vector<std::string> &found_key)
 {
+    found_key.push_back("cgi_script");
     if (value.empty())
         return (0);
     return (1);

@@ -47,21 +47,23 @@ void  fd_closed(int fd,Pollfd *polls, std::map<std::string, int> &fd_wait,std::s
 bool is_directory(std::string path);
 std::string decode_str(std::string d);
 void    config_parsing(int fd, std::vector<Config> &cfg);
-int     address_check(std::string add, Config &cfg);
-int     port_check(std::string port, Config &cfg);
+int     address_check(std::string add, Config &cfg, std::vector<std::string> &key_vect);
+int     port_check(std::string port, Config &cfg, std::vector<std::string> &key_vect);
 int     error_page_set(std::string path, ErrorPage &err_page, std::vector<std::string> &err_vect);
 int     error_page_occurences(std::vector<std::string> &error_vect);
 int     get_principal_uri(std::string value, Config &cfg);
-int     method_check(std::string value);
-int     root_check(std::string value);
-void    autoindex_check(std::string value, Location &lcs);
-int     index_check(std::string value);
-int     upload_check(std::string value);
-int     cgi_check(std::string value);
-int     redirect_check(std::string value);
-int     cgi_path_check(std::string value);
-int     cgi_script_check(std::string value);
+int     method_check(std::string value, std::vector<std::string> &found_key);
+int     root_check(std::string value, std::vector<std::string> &found_key);
+void    autoindex_check(std::string value, Location &lcs, std::vector<std::string> &found_key);
+int     index_check(std::string value, std::vector<std::string> &found_key);
+int     upload_check(std::string value, std::vector<std::string> &found_key);
+int     cgi_check(std::string value, std::vector<std::string> &found_key);
+int     redirect_check(std::string value, std::vector<std::string> &found_key);
+int     cgi_path_check(std::string value, std::vector<std::string> &found_key);
+int     cgi_script_check(std::string value, std::vector<std::string> &found_key);
 int     check_port_and_host(Config &cfg);
+int     multiple_key_check(std::vector<std::string> &found_key);
+
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 

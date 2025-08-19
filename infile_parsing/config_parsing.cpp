@@ -28,12 +28,13 @@ static int      check_one_bloc(std::string bloc)
     return (1);
 };
 
-static int      body_size_checking(std::string value, Config &cfg)
+static int      body_size_checking(std::string value, Config &cfg, std::vector<std::string> &key_vect)
 {
     std::stringstream   tmp;
     double              nbr_value;
     std::string         last;
 
+    key_vect.push_back("max_body_size");
     tmp << value;
     tmp >> nbr_value;
     tmp >> last;
@@ -85,17 +86,18 @@ static int      keys_error_handling(std::string line)
     return (0);
 };
 
-static int     other_checking(std::string key_w, std::string value, Config &cfg)
+static int     other_checking(std::string key_w, std::string value, Config &cfg,
+    std::vector<std::string> &key_vect)
 {
     if (key_w == "client_max_body_size")
-        body_size_checking(value, cfg);
+        body_size_checking(value, cfg, key_vect);
     if (key_w == "location")
         get_principal_uri(value, cfg);
     return (1);
 };
 
 static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
-     std::vector<std::string> &err_vector)
+     std::vector<std::string> &err_vector, std::vector<std::string> &key_vect)
 {
     int             last;
     size_t          i;
@@ -117,12 +119,12 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
     }
     new_values = new_line.substr(last + 1, new_line.size() - last);
     if (key_w == "host")
-       address_check(new_values, cfg);
+       address_check(new_values, cfg, key_vect);
     if (key_w == "listen")
-        port_check(new_values, cfg);
+        port_check(new_values, cfg, key_vect);
     if (key_w == "error_page")
         error_page_set(new_values, err_page, err_vector);
-    other_checking(key_w, new_values, cfg);
+    other_checking(key_w, new_values, cfg, key_vect);
     return (1);    
 };
 
@@ -135,6 +137,7 @@ static Config     get_all_line(std::string input)
     std::vector<std::string>            key_vect;
     ErrorPage                           err_page;
     std::vector<std::string>            err_vector;
+    std::vector<std::string>            found_key;
     Config                              config;
 
     pos = 0;
@@ -143,7 +146,7 @@ static Config     get_all_line(std::string input)
     {
         line = file_set_line(new_input);
         len = line.size();
-        if (!line_parsing(line, config, err_page, err_vector))
+        if (!line_parsing(line, config, err_page, err_vector, found_key))
         {
             std::cout << "Error of configuration file content !!!" << std::endl;
             break;
@@ -156,6 +159,7 @@ static Config     get_all_line(std::string input)
         else
             new_input = input.substr(pos -1 , input.size() - (pos - 1));
     };
+    multiple_key_check(found_key);
     error_page_occurences(err_vector);
     config.set_errors(err_page);
     return(config);
