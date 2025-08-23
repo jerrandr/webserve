@@ -12,19 +12,6 @@
 
 #include "../Server.hpp"
 
-static int  page_path_checking(std::string path)
-{
-    int     fd;
-
-    fd = open(path.c_str(), O_RDONLY);
-    if (fd == -1)
-    {
-        std::cout << "Error page " << path << " not found !!!!" << std::endl;
-        return (0);
-    }
-    return (1);
-};
-
 static void     path_set(int page_ind, ErrorPage &err_page, std::string err_path)
 {
     switch (page_ind)
@@ -91,15 +78,14 @@ static void     path_set(int page_ind, ErrorPage &err_page, std::string err_path
 
 int  error_page_occurences(std::vector<std::string> &error_vect)
 {
+    if (error_vect.size() == 0)
+        return (0);
     for (size_t i = 0; i < error_vect.size() - 1; i ++)
     {
         for (size_t j = i +1; j < error_vect.size(); j ++)
         {
             if (error_vect[i] == error_vect[j])
-            {
-                std::cout << "Multiple definition of " << error_vect[i] << "_error_page path" << std::endl; 
                 return (0);
-            }
         }
     }
     return (1);
@@ -115,7 +101,11 @@ int error_page_set(std::string path, ErrorPage &err_page, std::vector<std::strin
     page_name = path.substr(0, last);
     err_vect.push_back(page_name);
     page_path = path.substr(last + 1, path.size() - (last + 1));
-    page_path_checking(page_path);
+    if (access(page_path.c_str(), F_OK || R_OK) == -1)
+    {
+        std::cout << page_name << ": error page not found !!!" ;
+        return (0);
+    }   
     err_set = std::atoi(page_name.c_str());
     path_set(err_set, err_page, page_path);
     return (1);

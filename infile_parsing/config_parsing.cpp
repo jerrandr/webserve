@@ -128,22 +128,23 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
     last = new_line.find(" ");
     key_w = new_line.substr(0, last);
     if (!keys_error_handling(key_w))
-    {
-        std::cout << "keys_error_handling " << std::endl;
         return (0);
-    }
     new_values = new_line.substr(last + 1, new_line.size() - last);
     if (key_w == "host")
        address_check(new_values, cfg, key_vect);
     if (key_w == "listen")
         port_check(new_values, cfg, key_vect);
     if (key_w == "error_page")
-        error_page_set(new_values, err_page, err_vector);
+    {
+
+        if (!error_page_set(new_values, err_page, err_vector))
+            return (0);
+    };  
     other_checking(key_w, new_values, cfg, key_vect);
     return (1);    
 };
 
-static Config     get_all_line(std::string input)
+static Config     get_all_line(std::string input, int fd)
 {
     int                                 len;
     size_t                              pos;
@@ -163,9 +164,9 @@ static Config     get_all_line(std::string input)
         len = line.size();
         if (!line_parsing(line, config, err_page, err_vector, found_key))
         {
-            std::cout << "Error of configuration file content !!!" << std::endl;
-            break;
-        }
+            close (fd);
+            throw std::logic_error("Error of configuration file content !!!");
+        };
         if (len == -1)
             break ;
         pos += len + 1;
@@ -174,8 +175,12 @@ static Config     get_all_line(std::string input)
         else
             new_input = input.substr(pos -1 , input.size() - (pos - 1));
     };
-    multiple_key_check(found_key);
-    error_page_occurences(err_vector);
+
+    if (!multiple_key_check(found_key) ||  !error_page_occurences(err_vector))
+    {
+        close (fd);
+        throw std::logic_error("Multiple definition of keyword!!!");
+    };
     config.set_errors(err_page);
     return(config);
 };
@@ -202,12 +207,18 @@ void    config_parsing(int fd, std::vector<Config> &cfg)
     while (it != string_array.end())
     {
         if (!check_one_bloc(*it))
-            break;
-        config = get_all_line(*it);
-        check_port_and_host(config);
+        {
+            close(fd);
+            throw std::logic_error("Error in the server bloc !!!");
+        }
+        config = get_all_line(*it, fd);
+        if (!check_port_and_host(config))
+        {
+            close(fd);
+            throw std::logic_error("Port and host error !!!");
+        }
         cfg.push_back(config);
         it ++;
     }
     close(fd);
-    std::cout << "=====END OF CONFIGURATION PARSING=====" << std::endl;
 };

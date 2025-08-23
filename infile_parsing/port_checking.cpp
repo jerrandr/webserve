@@ -45,11 +45,7 @@ static int      check_port_host(Config cfg)
         {
             tmp1 = host_array[j] + port_array[j];
             if (tmp == tmp1)
-            {
-                std::cout << host_array[i] << "-" << port_array[i] << "==" << host_array[j] << 
-                "-" << port_array[j] << ": Duplication of addresse and port" << std::endl;
                 return (0);
-            }
             j++;
         };
         i ++;
@@ -113,10 +109,7 @@ int         check_port_and_host(Config &cfg)
         port_count ++;
     };
     if (listen_count < port_count)
-    {
-        std::cout << "Number of host less than port" << std::endl;
         return (0);
-    }
     if (listen_count > port_count)
         default_port_adding(cfg, listen_count - port_count);
     if (!check_port_host(cfg))
