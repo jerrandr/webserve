@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 12:56:28 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/22 08:26:04 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_
     {
         fd = open(path.c_str(), O_RDWR);
         if (fd < 1)
-            throw std::logic_error("error open");
+            throw std::bad_alloc();
         (void)e;
         polls->add_new_fd(fd);
         fd_wait[path] = fd;

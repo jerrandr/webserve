@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/25 14:03:54 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/22 09:37:33 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void    Pollfd::start_poll()
 {
     if(fds.size() <= 0)
         return ;
-    if (poll(&(fds[0]),(int)fds.size(),300) == -1)
+    if (poll(&(fds[0]),(int)fds.size(),-1) == -1)
     {
         return;
     }
