@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/15 14:50:47 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/21 17:53:03 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@
 #include <vector>
 #include <map>
 #include <algorithm>
-#include "Pollfd.hpp"
-#include "utils.h"
-#include "NotReady.hpp"
+#include "../Pollfd.hpp"
+#include "../utils.h"
+#include "../NotReady.hpp"
 
 class ExecUtils
 {

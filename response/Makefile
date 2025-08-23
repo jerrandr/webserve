@@ -1,0 +1,28 @@
+
+NAME = libresponse.a
+
+SRC = BodyUpload.cpp Requette.cpp ExecUtils.cpp Cgi.cpp
+
+OBJ = ${SRC:.cpp=.o}
+
+cc = c++
+
+FLAG = -Wall -Wextra -Werror -std=c++98 -g
+
+.cpp.o:
+	${cc} ${FLAG} -c $< -o ${<:.cpp=.o}
+
+all : ${NAME}
+
+${NAME} : ${OBJ}
+	ar rcs ${NAME} $^
+
+clean :
+		rm -f ${OBJ}
+
+fclean : clean
+		rm -f ${NAME}
+
+re : fclean all
+	
+.PHONY : all clean fclean re

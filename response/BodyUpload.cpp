@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/13 14:28:48 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/19 10:45:51 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,6 @@ std::string	BodyUpload::ParseHeader(std::string header)
 		res = res.substr(start + 1, res.length());
 		end = res.find("\"");
 		res = res.substr(0, end);
-		// start = 0;
-		// if (res.find(".") != std::string::npos)
-		// {
-		// 	for (size_t i = res.length(); i > 0; i--)
-		// 	{
-		// 		if (res[i] == '.' && start == 0)
-		// 			start = i;
-		// 	}
-		// 	res = res.substr(start, res.length() - 1);
-		// }
-		// else
-		// 	res = "";
 	}
 	return (res);
 }
@@ -73,7 +61,7 @@ void BodyUpload::ParseBody()
 			ct = ct.substr(0, ct.find("------WebKit"));
 			Bdy = Bdy.substr(Bdy.find(ct) + ct.length(), Bdy.length());
 		}
-		if (header.find("filename") != std::string::npos)
+		if (header.find("DataUploaded/filename") != std::string::npos)
 			header = ParseHeader(header);
 		else
 			continue ;

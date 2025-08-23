@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/18 07:32:25 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/20 09:54:09 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ std::string	Cgi::getType(std::string ct)
 		res = ct.substr(ct.find("="), ct.length());
 	if (res.find(".") != std::string::npos)
 		res = res.substr(res.find("."), res.length());
+	if (res == ".php")
+		res = ".html";
 	res = Cl.getConfig().get_mime(res);
 	return (res);	
 }
@@ -106,6 +108,7 @@ void	Cgi::MyExec2(int &fd, int fdc)
 
 	Cl.getPoll()->add_new_fd(fd);
 	p = utils.getData(fd);
+	std::cout << RED << "P: {" << p << "}\n" << R;
 	st = getStatus(p);
 	Cl.getPoll()->erase_fd(fd);
 	if (st != "")

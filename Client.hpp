@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/14 09:45:42 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/23 10:15:01 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 #include "Socket.hpp"
-#include "Cgi.hpp"
-#include "Requette.hpp"
+#include "response/Cgi.hpp"
+#include "response/Requette.hpp"
 
 class Client
 {

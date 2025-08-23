@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:25:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/13 18:15:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/21 17:54:01 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,19 @@
 #define CGI_HPP
 
 #include "ExecUtils.hpp"
-#include "Client.hpp"
-#include "Socket.hpp"
-#include "Server.hpp"
+#include "../Client.hpp"
+#include "../Socket.hpp"
+#include "../Server.hpp"
 #include <sys/wait.h>
-#include "Pollfd.hpp"
+#include "../Pollfd.hpp"
 #include <iostream>
 #include <sys/stat.h>
-#include "Client.hpp"
+#include "../Client.hpp"
 
 #define RED "\033[31m"
 #define R "\033[0m"
 class Client;
+class ExecUtils;
 class Cgi
 {
     private:

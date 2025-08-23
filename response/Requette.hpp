@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/13 08:29:29 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/21 17:56:42 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "ExecUtils.hpp"
 #include "Cgi.hpp"
 #include <cstdio>
-#include "Client.hpp"
+#include "../Client.hpp"
 
 class Pollfd;
 class Cgi;
@@ -51,6 +51,7 @@ class Requette
 		std::stringstream	getData(std::string filename);
 		std::string			ToString(int nbr);
 		int					IfDelete(int socket);
+        int	                IfDirList(Location lt);
 
 	public:
 		Requette(std::map<std::string, std::string> config, Client  &cl);

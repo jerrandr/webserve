@@ -6,13 +6,12 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/18 07:46:16 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/20 12:51:56 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "Requette.hpp"
-#include "Client.hpp"
 //+++++++++++++++++++++++++CONSTRUCTO && DESTRUCTOR+++++++++++++++++++++++++
 
 Requette::~Requette() {}
@@ -64,10 +63,12 @@ Location Requette::findLoc()
 	int max = 0;
 
 	toFind = split(rq["uri"], "/");
+	std::cout << "lc_size: " << lc.size() << "\n";
 	for (std::vector<Location>::iterator i = lc.begin(); i < lc.end(); i++)
 	{
 		std::vector<std::string> tmp;
 		tmp = split((*i).get_uri(), "/");
+		std::cout << "Location: {" << (*i).get_uri() << "} URI: {" << rq["uri"] << "}" << std::endl;
 		if (tmp.size() <= toFind.size())
 			nb = findLoc2(tmp, toFind);
 		if (max < nb)
@@ -281,15 +282,37 @@ int	Requette::IfDelete(int socket)
 	return (-1);
 }
 
+int	Requette::IfDirList(Location lt)
+{
+	struct stat st;
+
+	std::cout << "uri: {" << rq["uri"] << "}\n";
+	if (stat(Cl.getConfig().get_real_path(rq["uri"], lt).c_str(), &st) == -1)
+		perror("stat Error");
+	else
+	{
+		if (S_ISDIR(st.st_mode) && lt.get_directory_listing())
+		{
+			std::cout << "ETOOO\n";
+			Cl.exec_dir_listing(rq["uri"]);
+			return (1);
+		}
+	}
+	return (0);
+}
+
 void    Requette::rp(int socket)
 {
 	Location	Loc;
 	std::string rp;
 
 	Loc = findLoc();
+	
 	if (rq["uri"].find("favicon") != std::string::npos)
 		return ;
 	std::cout << "METHOD: " << rq["method"] << std::endl;
+	if (IfDirList(Loc) == 1)
+		return ;
 	if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
 		rp = utils.getError("error/405.html", pl, Cl.getFdWait());
@@ -300,7 +323,8 @@ void    Requette::rp(int socket)
 	std::cout << "path: " << Loc.get_path_cgi() << std::endl;
 	if (IfDelete(socket) == 1)
 		return ;
-	if (Loc.get_redir() != "")
+	std::cout << "redir: {" << Loc.get_redir() << "}\n";
+	if (Loc.get_redir() != "/")
 		redir_rp(Loc.get_redir(), socket);
 	else if (Loc.get_path_cgi() != "")
 		ifCgi(Loc, socket, ctType);
