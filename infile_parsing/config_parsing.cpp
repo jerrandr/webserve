@@ -15,14 +15,29 @@
 
 static int      check_one_bloc(std::string bloc)
 {
-    size_t      i;
+    size_t i = 0;
+    std::string new_bloc;
 
-    i = bloc.size() - 1;
-    while (isspace(bloc[i]))
-        i --;
-    if (bloc[i] != '}')
+    if (bloc[0] == '\n' && bloc[1] != '{')
+    {
+        std::cout << "Some error in the configuration." << std::endl;
+        return (0);
+    };
+    while (isspace(bloc[i]) || bloc[i] == '\n')
+        i ++;
+    new_bloc = bloc.substr(i, bloc.size() - i);
+    if (new_bloc.empty() || new_bloc[0] != '{')
     {
         std::cout << "Server bloc syntax error" << std::endl;
+        return (0);
+    }
+    i = 0;
+    while (isspace(bloc[i]) || bloc[i] == '{' || bloc[i] == '}')
+        i ++;
+    new_bloc = bloc.substr(i, bloc.size() - i);
+    if (new_bloc.empty())
+    {
+        std::cout << "Empty content in one bloc." << std::endl;
         return (0);
     }
     return (1);
@@ -182,14 +197,17 @@ void    config_parsing(int fd, std::vector<Config> &cfg)
         all_string +=  buffer;
         std::memset(buffer, 0, 100);
     };
-    string_array = split(all_string, "server {");
+    string_array = split(all_string, "server");
     std::vector<std::string>::iterator it = string_array.begin();
     while (it != string_array.end())
     {
-        check_one_bloc(*it);
+        if (!check_one_bloc(*it))
+            break;
         config = get_all_line(*it);
         check_port_and_host(config);
         cfg.push_back(config);
         it ++;
     }
+    close(fd);
+    std::cout << "=====END OF CONFIGURATION PARSING=====" << std::endl;
 };

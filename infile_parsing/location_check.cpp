@@ -44,11 +44,6 @@ int     root_check(std::string value, std::vector<std::string> &found_key)
     found_key.push_back("root");
     if (value.empty())
         return (0);
-    if (value[value.size() - 1] != '/')
-    {
-        std::cout << value << ": root_path not valid" << std::endl;
-        return (0);
-    }
     return (1);
 };
 

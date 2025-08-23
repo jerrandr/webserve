@@ -14,7 +14,14 @@
 
 static int  page_path_checking(std::string path)
 {
-    std::cout << "mbola tsy vita -> " << path << std::endl;
+    int     fd;
+
+    fd = open(path.c_str(), O_RDONLY);
+    if (fd == -1)
+    {
+        std::cout << "Error page " << path << " not found !!!!" << std::endl;
+        return (0);
+    }
     return (1);
 };
 

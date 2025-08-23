@@ -12,6 +12,19 @@
 
 #include "../Server.hpp"
 
+static void     root_check_path(Location &locs)
+{
+    std::string     str;
+
+    str = locs.get_root();
+    if (str.empty())
+        return ;
+    if (str[str.size() - 1] != '/')
+    {
+        str += "/";
+        locs.set_root(str);
+    }
+};
 static int      insert_value(std::string key_w, std::string value, Location &lcs,
  std::vector<std::string> &found_key)
 {
@@ -110,6 +123,7 @@ int     get_principal_uri(std::string value, Config &cfg)
     last_line = value.substr(line_pos, value.size() - line_pos);
     other_uri_value(last_line, locs, found_key);
     multiple_key_check(found_key);
+    root_check_path(locs);
     cfg.set_locs(locs);
     return (1);
 };
