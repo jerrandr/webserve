@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 15:12:37 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 17:53:31 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,39 +62,57 @@ void	Requette::rp3(int socket)
 		send(socket, rp.c_str(), rp.size(), 0);
 }
 
-
-void	Requette::rp2(int socket, Location Loc)
+std::string	Requette::rp4(std::string	rp)
 {
-	std::string	ext;
+	std::string	res;
 
+	res = "";
+	if (access(rp.c_str(), F_OK) == -1)
+		res = utils.getError("error/404.html", pl, Cl.getFdWait());
+	else if (access(rp.c_str(), R_OK) == -1)
+		res = utils.getError("error/403.html", pl, Cl.getFdWait());
+	return (res);	
+}
+
+std::string	Requette::rp5(std::string	rt)
+{
+	int					fl;
+	std::stringstream	data;
+	std::string			ext;
+	std::string			nbr;
+	std::string			rp;
+
+	fl = 0;
+	data << utils.getData(rt, pl, Cl.getFdWait(), fl);
+	if (fl == -1)
+		ext = ".html";
+	else
+		ext = utils.getExt(rt);
+	nbr = utils.ToString(data.str().size());
+	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
+	return (rp);
+}
+
+void	Requette::rp2(int socket, Location &Loc)
+{
 	std::cout << RED << "NORMALE\n" << R;
+	std::string	rt;
+	std::string	rp;
+	
 	if (body == "")
 	{
-		std::string			rt;
-		std::stringstream	data;
-		struct stat			file;
-		std::string			nbr;
-		std::string			rp;
-		int					fl;
-
-		fl = 0;
-		memset(&file, 0, sizeof(file));
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 		std::cout << RED << "FILE: " << rt << R << std::endl;
-		if (stat(rt.c_str(), &file) == -1)
+		rp = rp4(rt);
+		std::cout << "RP {" << rp << "}\n";
+
+		if (rp == "" && is_directory(rt) && Loc.get_index() != "")
 		{
-			rp = utils.getError("error/404.html", pl, Cl.getFdWait());
-			fl = -1;
-		}
-		else if (is_directory(rt) && Loc.get_index() != "")
 			rt = Cl.getConfig().get_real_path("/" + Loc.get_index(), Loc);
-		data << utils.getData(rt, pl, Cl.getFdWait(), fl);
-		if (fl == -1)
-			ext = ".html";
-		else
-			ext = utils.getExt(rt);
-		nbr = utils.ToString(data.str().size());
-		rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
+			rp = rp5(rt);
+		}
+		else if (rp == "")
+			rp = rp5(rt);
 		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 		{
 			std::cout << "RP: {" << rp << "}\n";
