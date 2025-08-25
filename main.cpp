@@ -16,6 +16,8 @@ static int      open_file(std::string   input, int arg)
 {
     int     fd;
 
+    if (input != "none" && is_directory(input))
+        throw std::logic_error("The input is a directory");
     if (arg)
         fd = open(input.c_str(), O_RDONLY);
     else
