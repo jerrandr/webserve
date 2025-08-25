@@ -55,7 +55,7 @@ static int      body_size_checking(std::string value, Config &cfg, std::vector<s
     tmp >> last;
     if (!last.empty() && last != "G" && last != "M" && last != "K" && 
         last != "g" && last != "m" && last != "k")
-        std::cout << "Invalid body_size unity" << std::endl;
+        return (0);
     cfg.set_max_allowed_size(value);
     return (1);
 };
@@ -105,9 +105,15 @@ static int     other_checking(std::string key_w, std::string value, Config &cfg,
     std::vector<std::string> &key_vect)
 {
     if (key_w == "client_max_body_size")
-        body_size_checking(value, cfg, key_vect);
+    {
+        if (!body_size_checking(value, cfg, key_vect))
+            return(0); 
+    };
     if (key_w == "location")
-        get_principal_uri(value, cfg);
+    {
+        if (!get_principal_uri(value, cfg))
+            return (0);
+    };
     return (1);
 };
 
@@ -140,7 +146,8 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
         if (!error_page_set(new_values, err_page, err_vector))
             return (0);
     };  
-    other_checking(key_w, new_values, cfg, key_vect);
+    if (!other_checking(key_w, new_values, cfg, key_vect))
+        return (0);
     return (1);    
 };
 

@@ -54,7 +54,7 @@ int     error_page_occurences(std::vector<std::string> &error_vect);
 int     get_principal_uri(std::string value, Config &cfg);
 int     method_check(std::string value, std::vector<std::string> &found_key);
 int     root_check(std::string value, std::vector<std::string> &found_key);
-void    autoindex_check(std::string value, Location &lcs, std::vector<std::string> &found_key);
+int     autoindex_check(std::string value, Location &lcs, std::vector<std::string> &found_key);
 int     index_check(std::string value, std::vector<std::string> &found_key);
 int     upload_check(std::string value, std::vector<std::string> &found_key);
 int     cgi_check(std::string value, std::vector<std::string> &found_key);

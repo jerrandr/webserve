@@ -47,16 +47,22 @@ int     root_check(std::string value, std::vector<std::string> &found_key)
     return (1);
 };
 
-void     autoindex_check(std::string value, Location &lcs, std::vector<std::string> &found_key)
+int     autoindex_check(std::string value, Location &lcs, std::vector<std::string> &found_key)
 {
     found_key.push_back("autoindex");
     if (value == "YES" || value == "yes")
+    {
         lcs.set_enabled(1);
+        return (1);
+    }
     else if (value == "NO" || value == "no")
+    {
         lcs.set_enabled(0);
-    else
-        std::cout << "autoindex value not accepted !!!" << std::endl;
-}
+        return (1);
+    }
+    return (0);
+};
+
 int     index_check(std::string value, std::vector<std::string> &found_key)
 {
     found_key.push_back("index");

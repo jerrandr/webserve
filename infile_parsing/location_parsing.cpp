@@ -28,24 +28,67 @@ static void     root_check_path(Location &locs)
 static int      insert_value(std::string key_w, std::string value, Location &lcs,
  std::vector<std::string> &found_key)
 {
-    if (key_w == "method" && method_check(value, found_key))
-        lcs.set_meth(value);
-    if (key_w == "root" && root_check(value, found_key))
-        lcs.set_root(value);
+    if (key_w == "method")
+    {
+        if (method_check(value, found_key))
+            lcs.set_meth(value);
+        else
+            return (0);
+    };
+    if (key_w == "root")
+    {
+        if (root_check(value, found_key))    
+            lcs.set_root(value);
+        else 
+            return (0);
+    };
     if (key_w == "autoindex")
-        autoindex_check(value, lcs, found_key);
-    if (key_w == "index" && index_check(value, found_key))
-        lcs.set_index(value);
-    if (key_w == "upload" && upload_check(value, found_key))
-        lcs.set_path_upload(value);
-    if (key_w == "cgi" && cgi_check(value, found_key))
-        lcs.set_extension_cgi(value);
-    if (key_w == "cgi_path" && cgi_path_check(value, found_key))
-        lcs.set_path_cgi(value);
-    if (key_w == "cgi_script" && cgi_script_check(value, found_key))
-        lcs.set_script(value);
-    if (key_w == "redirect" && redirect_check(value, found_key))
-        lcs.set_redir(value);
+    {
+        if (!autoindex_check(value, lcs, found_key))
+            return (0);
+    };
+    if (key_w == "index")
+    {
+        if (index_check(value, found_key))
+            lcs.set_index(value);
+        else
+            return (0);
+    };
+    if (key_w == "upload")
+    {
+        if (upload_check(value, found_key))
+            lcs.set_path_upload(value);
+        else
+            return (0);
+    };  
+    if (key_w == "cgi")
+    {
+        if (cgi_check(value, found_key))
+            lcs.set_extension_cgi(value);
+        else
+            return (0);
+    }
+    if (key_w == "cgi_path")
+    {
+        if (cgi_path_check(value, found_key))
+            lcs.set_path_cgi(value);
+        else
+            return (0);
+    }
+    if (key_w == "cgi_script")
+    {
+        if (cgi_script_check(value, found_key))
+            lcs.set_script(value);
+        else 
+            return (0);
+    }
+    if (key_w == "redirect")
+    {
+        if (redirect_check(value, found_key))
+            lcs.set_redir(value);
+        else
+            return (0);
+    }
     return (1);
 };
 
@@ -78,15 +121,15 @@ static int      location_check(std::string line, Location &locs, std::vector<std
     std::vector<std::string>::iterator it = find(locs_keys.begin(), locs_keys.end(), key_locs);
     if (it != locs_keys.end())
     {
-        insert_value(key_locs, line_value, locs, found_key);
-        return (1);
-    }
-    (void) locs;
-    std::cout << key_locs << ": invalid key_word !!!!!!" << std::endl;
+        if (insert_value(key_locs, line_value, locs, found_key))
+            return (1);
+        else
+            return (0);
+    };
     return (0);
 };
 
-static void     other_uri_value(std::string line, Location &locs, std::vector<std::string> &found_key)
+static int     other_uri_value(std::string line, Location &locs, std::vector<std::string> &found_key)
 {
     size_t     pos;
     int        len;
@@ -99,12 +142,14 @@ static void     other_uri_value(std::string line, Location &locs, std::vector<st
     {
         len = other_line.find("\n");
         one_line = other_line.substr(0, len);
-        location_check(one_line, locs, found_key);
+        if (!location_check(one_line, locs, found_key))
+            return (0);
         if (len == -1)
         break;
         pos += len + 1;
         other_line = line.substr(pos, line.size() - pos);
     };
+    return (1);
 };
 
 int     get_principal_uri(std::string value, Config &cfg)
@@ -121,8 +166,10 @@ int     get_principal_uri(std::string value, Config &cfg)
     locs.set_uri(uri_value);
     line_pos = value.find("\n") + 1;
     last_line = value.substr(line_pos, value.size() - line_pos);
-    other_uri_value(last_line, locs, found_key);
-    multiple_key_check(found_key);
+    if (!other_uri_value(last_line, locs, found_key))
+        return (0);
+    if (!multiple_key_check(found_key))
+        return (0);
     root_check_path(locs);
     cfg.set_locs(locs);
     return (1);
