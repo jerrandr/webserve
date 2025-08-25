@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 15:01:10 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:01:02 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,4 +106,16 @@ int	Requette::IfDirList(Location lt)
 		}
 	}
 	return (0);
+}
+
+void	Requette::ifCgi(Location Loc, int socket, std::string bd)
+{
+	std::cout << RED << "CGI\n" << R;
+	std::string rt;
+	
+	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
+	initEnvp(rt, Loc.get_script_cgi(), bd);
+	Cgi cgi(envp, lv, Cl);
+	cgi.MyExec(socket, body);
+	return ;
 }

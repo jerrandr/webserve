@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 17:53:31 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 18:01:15 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,6 @@ Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl
 }	
 
 //+++++++++++++++++++++++++REPONSE+++++++++++++++++++++++++
-
-void	Requette::ifCgi(Location Loc, int socket, std::string bd)
-{
-	std::cout << RED << "CGI\n" << R;
-	std::string rt;
-	
-	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
-	initEnvp(rt, Loc.get_script_cgi(), bd);
-	Cgi cgi(envp, lv, Cl);
-	cgi.MyExec(socket, body);
-	return ;
-}
 
 void	Requette::rp3(int socket)
 {
@@ -129,9 +117,7 @@ void    Requette::rp(int socket)
 	std::string rp;
 
 	Loc = findLoc();
-	
-	if (rq["uri"].find("favicon") != std::string::npos)
-		return ;
+
 	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
