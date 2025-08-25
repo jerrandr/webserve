@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/21 17:53:03 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 11:03:58 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,13 @@ class ExecUtils
 	private:
 		std::string	getErrorUtils(std::string st,  Pollfd *polls, std::map<std::string, int> &fd_wait);	
 		std::string	getStatus(std::string fl);
-		std::map<std::string, std::string> Er;		
+		std::map<std::string, std::string> Er;
+		std::string	Erro;
 	public:
 		ExecUtils &operator=(ExecUtils const & cpy) {(void)cpy;return(*this);};
 		ExecUtils(ExecUtils const & cpy) {(void)cpy;};
 		std::string			ToString(int nbr);
-		std::string			getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait);
+		std::string			getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait, int &fl);
 		std::string			getError(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait);
 		std::string			getData(int fd);
 		// std::vector<unsigned char>	getData(int fd);

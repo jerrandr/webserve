@@ -31,12 +31,12 @@ ${NAME} : ${OBJ}
 		make -C response
 		${cc} -Lresponse ${FLAG} ${OBJ} -o ${NAME} -lresponse
 clean :
-		rm -f ${OBJ}
 		make -C response clean
+		rm -f ${OBJ}
 
 fclean : clean
-		rm -f ${NAME}
 		make -C response fclean
+		rm -f ${NAME}
 
 re : fclean all
 

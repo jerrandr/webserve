@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/15 14:51:27 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 14:46:54 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ ExecUtils::ExecUtils()
 	Er.insert(std::pair<std::string, std::string>("503", "service unavailable"));
 	Er.insert(std::pair<std::string, std::string>("504", "Gateway timeout"));
 	Er.insert(std::pair<std::string, std::string>("505", "http version not supported"));
+	Erro = "<!DOCTYPE html><html lang=\"en\"><head>    <meta charset=\"UTF-8\">    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">    <title>Document</title></head><body>    <center><h1>500 Internal Server Error</h1></center></body></html>";
 }
 
 ExecUtils::~ExecUtils() {}
@@ -62,8 +63,12 @@ std::string		ExecUtils::getErrorUtils(std::string st,  Pollfd *polls, std::map<s
 	std::string	status;
 	std::string	ct;
 	std::string	nbr;
-	
-	ct = getData(st, polls, fd_wait);
+	int			fl;
+
+	fl = 0;
+	ct = getData(st, polls, fd_wait, fl);
+	if (fl == -1)
+		ct = Erro;
 	nbr = ToString(ct.size());
 	status = getStatus(st);
 	res = "HTTP/1.1 " + status + Er[status] + "\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + ct;
@@ -93,7 +98,7 @@ std::string	ExecUtils::getError(std::string filename, Pollfd *polls, std::map<st
 	return (rp);
 }
 
-std::string ExecUtils::getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait)
+std::string ExecUtils::getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait, int &fl)
 {
 	std::string			data;
 	struct stat			st;
@@ -102,11 +107,19 @@ std::string ExecUtils::getData(std::string filename, Pollfd *polls, std::map<std
 	std::cout << "FILENAME: " << filename << std::endl;
 	data = "";
 	if (stat(filename.c_str(), &st) == -1)
-		data = getData("error/404.html", polls, fd_wait);
+	{
+		std::cout << "+++++++++++++++++++++++++++++++++++\n";
+		fl = -1;
+		data = getData("error/404.html", polls, fd_wait, fl);
+	}
 	else if (access(filename.c_str(), O_RDWR) != 0)
-		data = getData("error/403.html", polls, fd_wait);
+	{
+		fl = -1;
+		data = getData("error/403.html", polls, fd_wait, fl);
+	}
 	else
 	{
+
 		fd = fd_is_ready(filename, polls, fd_wait);
 		if (fd == -1)
 			throw NotReady("TSY METYYYYYYYYYYYYYYYYYY");

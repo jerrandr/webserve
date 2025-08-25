@@ -1,0 +1,63 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirect.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/25 14:56:34 by jerrandr          #+#    #+#             */
+/*   Updated: 2025/08/25 14:57:20 by jerrandr         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "Requette.hpp"
+
+std::string	Requette::redir_rp2(std::string redir)
+{
+	std::vector<std::string> data;
+	std::stringstream		convert;
+	std::string				rp = "";
+	int status = 0;
+
+	data = split(redir, " ");
+	convert << data[0];
+	convert >> status;
+	
+	if (data.size() == 2)
+	{
+		switch (status)
+		{
+			case 301:
+				rp = "HTTP/1.1 301 Moved Permanently\r\n";
+				break;
+			case 302:
+				rp = "HTTP/1.1 302 Found\r\n";
+				break;
+			case 307:
+				rp = "HTTP/1.1 307 Temporary Redirect\r\n";
+				break;
+			case 308:
+				rp = "HTTP/1.1 308 Permanent Redirect\r\n";
+				break;
+			default:
+				rp = "HTTP/1.1 301 Moved Permanently\r\n";
+				break;
+		}
+		rp += "Location: " + data[1] + "\r\n\r\n"; 
+	}
+	return (rp);
+}
+
+
+void	Requette::redir_rp(std::string redir, int socket)
+{
+	std::string	rp;
+
+	rp = redir_rp2(redir);
+	if (rp != "")
+	{
+		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
+			send(socket, rp.c_str(), rp.size(), 0);
+		return ;
+	}
+}

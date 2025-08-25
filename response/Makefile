@@ -1,7 +1,8 @@
 
 NAME = libresponse.a
 
-SRC = BodyUpload.cpp Requette.cpp ExecUtils.cpp Cgi.cpp
+SRC = BodyUpload.cpp Requette.cpp ExecUtils.cpp Cgi.cpp \
+		responseUtils.cpp redirect.cpp findLoc.cpp
 
 OBJ = ${SRC:.cpp=.o}
 

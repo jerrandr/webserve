@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/21 17:56:42 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 14:50:45 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,8 @@ class Requette
 		void				redir_rp(std::string redir, int socket);
 		std::string			redir_rp2(std::string redir);
 		void				ifCgi(Location Loc, int socket, std::string bd);
-		void				rp2(int socket);
+		void				rp2(int socket, Location Loc);
 		void				rp3(int socket);
-		std::stringstream	getData(std::string filename);
-		std::string			ToString(int nbr);
 		int					IfDelete(int socket);
         int	                IfDirList(Location lt);
 
