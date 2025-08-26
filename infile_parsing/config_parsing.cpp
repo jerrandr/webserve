@@ -242,5 +242,6 @@ void    config_parsing(int fd, std::vector<Config> &cfg)
         cfg.push_back(config);
         it ++;
     }
+    check_minimum_value(cfg, fd);
     close(fd);
 };

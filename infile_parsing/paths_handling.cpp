@@ -79,7 +79,7 @@ static void     path_set(int page_ind, ErrorPage &err_page, std::string err_path
 int  error_page_occurences(std::vector<std::string> &error_vect)
 {
     if (error_vect.size() == 0)
-        return (0);
+        return (1);
     for (size_t i = 0; i < error_vect.size() - 1; i ++)
     {
         for (size_t j = i +1; j < error_vect.size(); j ++)

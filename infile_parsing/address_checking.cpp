@@ -73,3 +73,24 @@ int     address_check(std::string   host, Config &cfg, std::vector<std::string> 
     cfg.set_host(host);
     return (nbr);
 };
+
+static int  check_location(std::vector<Location> locs)
+{
+    if (locs.size() == 1)
+    {
+        if (locs[0].get_uri() != "/")
+            return (0);
+    };
+    return (1);
+};
+void    check_minimum_value(std::vector<Config> &cfg, int fd)
+{
+    for (size_t i = 0; i < cfg.size(); i ++)
+    {
+        if (cfg[i].get_host().empty() || !check_location(cfg[0].get_locs()))
+        {
+            close(fd);
+            throw std::logic_error ("Error of configuration file");
+        };
+    };
+};
