@@ -76,18 +76,32 @@ int     address_check(std::string   host, Config &cfg, std::vector<std::string> 
 
 static int  check_location(std::vector<Location> locs)
 {
-    int flag = 0;
+    int uri_flag = 0;
+    int root_flag = 1;
     std::vector<Location>::iterator it = locs.begin();
 
     while (it != locs.end())
     {
         if ((*it).get_uri() == "/")
-            flag = 1;
+            uri_flag = 1;
+        if ((*it).get_root().empty())
+            root_flag = 0;
         it ++;
     }
-    if (flag == 1)
-        return (1);
-    return (0);
+    if (!uri_flag || !root_flag)
+        return (0);
+    if (locs.size() > 1)
+    {
+        for (size_t i = 0; i < locs.size() - 1; i ++)
+        {
+            for (size_t j = i + 1; j < locs.size(); j ++)
+            {
+                if (locs[i].get_uri() == locs[j].get_uri())
+                    return (0);
+            };
+        };
+    };
+    return (1);
 };
 void    check_minimum_value(std::vector<Config> &cfg, int fd)
 {

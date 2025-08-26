@@ -24,18 +24,12 @@ int     method_check(std::string value, std::vector<std::string> &found_key)
     while (it != splited.end())
     {
         if (*it != "GET" && *it != "POST" && *it != "DELETE")
-        {
-            std::cout << *it << ": methode value not accepted." << std::endl;
             return (0);
-        }
         it ++;
         count ++;
     }
     if (count > 3)
-    {
-        std::cout << "too many arguments of method" << std::endl;
         return (0);
-    }
     return (1);
 };
 
@@ -77,10 +71,7 @@ int     upload_check(std::string value, std::vector<std::string> &found_key)
     if (value.empty())
         return (0);
     if (value != "yes" && value != "YES" && value != "no" && value != "NO")
-    {
-        std::cout << "invalid value of upload" << std::endl;
         return (0);
-    }
     return (1);
 };
 
