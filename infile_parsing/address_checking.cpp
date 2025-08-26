@@ -76,21 +76,27 @@ int     address_check(std::string   host, Config &cfg, std::vector<std::string> 
 
 static int  check_location(std::vector<Location> locs)
 {
-    if (locs.size() == 1)
+    int flag = 0;
+    std::vector<Location>::iterator it = locs.begin();
+
+    while (it != locs.end())
     {
-        if (locs[0].get_uri() != "/")
-            return (0);
-    };
-    return (1);
+        if ((*it).get_uri() == "/")
+            flag = 1;
+        it ++;
+    }
+    if (flag == 1)
+        return (1);
+    return (0);
 };
 void    check_minimum_value(std::vector<Config> &cfg, int fd)
 {
     for (size_t i = 0; i < cfg.size(); i ++)
     {
-        if (cfg[i].get_host().empty() || !check_location(cfg[0].get_locs()))
+        if (cfg[i].get_host().empty() || !check_location(cfg[i].get_locs()))
         {
             close(fd);
-            throw std::logic_error ("Error of configuration file");
+            throw std::logic_error ("Error of configuration file !!!");
         };
     };
 };
