@@ -102,6 +102,7 @@ Socket::Socket(Pollfd *tmp, Config c,std::vector<struct addrinfo *> &struct_addr
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
     if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
     {
+        close(fd);
         free_addrinfo(struct_addr);
         throw std::logic_error("Error bind()");
     }
