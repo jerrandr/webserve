@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/23 10:15:01 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 09:58:28 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ class Client
         void    exec_request_timeout();
         void    read_timeout();
 
+        /*pour 505*/
+        void exec_http_not_supported();
         /*pour 500*/
         void    exec_error_server();
         void    error_serv();

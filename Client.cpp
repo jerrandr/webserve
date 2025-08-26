@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/15 14:16:33 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 09:22:56 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,7 +319,7 @@ void Client::receve_message()
 	tmp.append(buffer, status);
 	// std::cout << u << std::endl;
 	// if (u == 2494804)
-	// std::cout << buffer << std::endl;
+	std::cout << buffer << std::endl;
 	body += get_body(tmp, size,this->requette);
 	size_body += status - size;
 	// std::cout << "{" << body << "}" << std::endl;

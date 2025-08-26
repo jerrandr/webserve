@@ -6,13 +6,14 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:57:28 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/31 10:12:31 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/23 11:05:39 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 #define SERVER_HPP
 #include "utils.h"
+#include <climits>
 struct pollfd;
 class Socket;
 class Server

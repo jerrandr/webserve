@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:05:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/23 10:32:26 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/23 11:05:13 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void    Server::listen_all_socket()
 {
     for(size_t i = 0; i < serv.size();i++)
     {
-        listen(serv[i],1000);
+        listen(serv[i],INT_MAX);
     }       
 }
 

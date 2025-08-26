@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request_processing.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/15 14:55:27 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/25 10:36:57 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,39 @@ int Client::is_dir_listing(std::string uri)
 	}
 	return (0);
 }
+static bool   http_not_supported(std::string v)
+{
+	if (v != "HTTP/1.1" && v != "HTTP/1.0")
+		return (true);
+	return false;
+}
+void Client::exec_http_not_supported()
+{
+	std::string head;
+	int fd;
+    std::stringstream ss;
+	std::string exec;
 
-
+	fd =0;
+	head = "";
+	if (access(config.get_errors().get_path_505().c_str(),F_OK | R_OK) < 0)
+	{
+		head = "<center><h1>505 Http version not supported</h1></center>";
+	}
+	else
+	{
+		fd = fd_is_ready(config.get_errors().get_path_505(),polls,fd_wait);
+    	std::cout << config.get_errors().get_path_505() << "===" <<fd<< std::endl;
+		if (fd == -1)
+        	throw NotReady("505");
+    	head = get_html_page(fd);
+		fd_closed(fd,polls,fd_wait,config.get_errors().get_path_505());
+	}
+	ss << head.size();
+	exec = "HTTP/1.1 505 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
+	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
+        send(socket, exec.c_str(), exec.size(), 0);
+}
 bool    Client::other_traitment(std::map<std::string, std::string> config)
 {
 	if (this->config.get_max_allowed_size() < this->get_len_real_body())
@@ -94,6 +125,24 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		{
 			requette = "";
 			body = "";
+		}
+		return true;
+	}
+	else if (http_not_supported(config["http_version"]))
+	{
+		std::cout << "HTTP NOT SUPPORTED" << std::endl;
+		try
+		{
+			exec_http_not_supported();
+			if (fd_wait.size() == 0)
+			{
+				requette = "";
+				body = "";
+			}
+		}
+		catch (NotReady &e)
+		{
+			(void)e;
 		}
 		return true;
 	}
@@ -122,11 +171,12 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 void Client::parse_requette()
 {
 	std::map<std::string, std::string> config;
-	std::string temp1;
-	std::string temp2;
+	std::string tmp;
+	std::size_t start;
+	std::size_t end;
+	std::vector<std::string> f;
 
-	temp1 = "";
-	temp2 = "";
+
 	// std::cout <<"{"<<requette<<"}"<< std::endl;
 	if (is_bad_request())
 	{
@@ -149,50 +199,33 @@ void Client::parse_requette()
 		std::cout << "bad request" << std::endl;
 		return;
 	}
-	for (size_t i = 0; i < requette.size(); i++)
+	tmp = "";
+	start = 0;
+	end = 0;
+	
+	while(start < requette.size())
 	{
-		if (requette[i] == ' ' && ((temp1 == "GET") || (temp1 == "HEAD") || (temp1 == "OPTIONS") || (temp1 == "TRACE") || (temp1 == "PUT") || (temp1 == "DELETE") || (temp1 == "POST") || (temp1 == "PATCH") || (temp1 == "CONNECT")))
+		end = requette.find("\r\n",start);
+		tmp = requette.substr(start, end-start);
+		if (start == 0)
 		{
-			config["method"] = temp1;
-			temp1 = "";
-			i += 1;
+			f = split(tmp," ");
+			config["method"] = f[0];
+			config["uri"] = f[1];
+			config["http_version"] = f[2];
 		}
-		else if (requette[i] == ' ' && (temp1.find("/") != std::string::npos && temp1 != "HTTP/1.1"))
+		else
 		{
-			config["uri"] = temp1;
-			temp1 = "";
-			i += 1;
-		}
-		else if (temp1.find("HTTP/1.1") != std::string::npos)
-		{
-			config["http_version"] = temp1;
-			temp1 = "";
-			i += 2;
-		}
-		else if (requette[i] == ':' && i + 1 < requette.size() && requette[i + 1] == ' ')
-		{
-			i += 2;
-			for (size_t j = i; j < requette.size(); j++)
+			f = split_sep(tmp,": ");
+			if (f.size() >= 2)
 			{
-				if (j + 1 < requette.size() && requette[j] == '\r' && requette[j + 1] == '\n')
-				{
-					i += 2;
-					break;
-				}
-				temp2 += requette[j];
+				config[f[0]] = f[1];
 			}
-			i += temp2.size();
-			if (temp1 != " " && temp2 != " ")
-			{
-				// std::cout <<"{"<<temp1 <<"}{"<< temp2 <<"}"<<std::endl;
-				config[temp1] = temp2;
-				temp2 = "";
-			}
-			temp1 = "";
-			if (i >= requette.size())
-				return;
 		}
-		temp1 += requette[i];
+		f.clear();
+		tmp = "";
+		start = end + 2;
+		end = 0;
 	}
 	// std::cout << requette << std::endl;
 	// std::cout <<"{Methode}" << "{" << config["method"] <<"}"<<std::endl;
