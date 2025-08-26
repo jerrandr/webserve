@@ -17,7 +17,17 @@ static int      check_one_bloc(std::string bloc)
 {
     size_t i = 0;
     std::string new_bloc;
+    int     a = 0;
 
+    for (size_t i= 0; i < bloc.size(); i++)
+    {
+        if (bloc[i] == '{')
+            a ++;
+        if (bloc[i] == '}')
+            a --;
+    };
+    if (a != 0)
+        return (0);
     if (bloc[0] == '\n' && bloc[1] != '{')
     {
         std::cout << "Some error in the configuration." << std::endl;
