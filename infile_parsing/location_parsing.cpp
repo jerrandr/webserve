@@ -115,7 +115,8 @@ static int      location_check(std::string line, Location &locs, std::vector<std
     locs_keys.push_back("cgi_path");
     locs_keys.push_back("redirect");
     new_line = split(line, " ");
-    key_locs = new_line[0];
+    if (new_line.size() > 0)
+        key_locs = new_line[0];
     size_t i = 1;
     while (i < new_line.size())
     {
@@ -123,12 +124,14 @@ static int      location_check(std::string line, Location &locs, std::vector<std
         line_value += " ";
         i ++;
     };
+    i = line_value.size();
+    std::string new_value = line_value.substr(0, line_value.size() - 1);
     if (key_locs == "")
         return (1);
     std::vector<std::string>::iterator it = find(locs_keys.begin(), locs_keys.end(), key_locs);
     if (it != locs_keys.end())
     {
-        if (insert_value(key_locs, line_value, locs, found_key))
+        if (insert_value(key_locs, new_value, locs, found_key))
             return (1);
         else
             return (0);
