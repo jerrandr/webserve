@@ -75,13 +75,6 @@ static int      insert_value(std::string key_w, std::string value, Location &lcs
         else
             return (0);
     }
-    if (key_w == "cgi_script")
-    {
-        if (cgi_script_check(value, found_key))
-            lcs.set_script(value);
-        else 
-            return (0);
-    }
     if (key_w == "redirect")
     {
         if (redirect_check(value, found_key))
@@ -107,7 +100,6 @@ static int      location_check(std::string line, Location &locs, std::vector<std
     locs_keys.push_back("upload");
     locs_keys.push_back("cgi");
     locs_keys.push_back("cgi_path");
-    locs_keys.push_back("cgi_script");
     locs_keys.push_back("redirect");
     i = 0;
     while (isspace(line[i]))

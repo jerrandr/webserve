@@ -70,8 +70,6 @@ int     upload_check(std::string value, std::vector<std::string> &found_key)
     found_key.push_back("upload");
     if (value.empty())
         return (0);
-    if (value != "yes" && value != "YES" && value != "no" && value != "NO")
-        return (0);
     return (1);
 };
 
@@ -98,10 +96,3 @@ int     cgi_path_check(std::string value, std::vector<std::string> &found_key)
         return (0);
     return (1);
 }
-int     cgi_script_check(std::string value, std::vector<std::string> &found_key)
-{
-    found_key.push_back("cgi_script");
-    if (value.empty())
-        return (0);
-    return (1);
-};

@@ -27,7 +27,6 @@ class Location
         /*PATH*/
         std::string CGI;
         /*script cgi*/
-        std::string script_cgi;
 
         /*le zavatra adino*/
         /*liste extenstion anaovana anle cgi separer par des espaces*/
@@ -48,7 +47,6 @@ class Location
         const std::string get_index() const;
         const std::string get_path_cgi() const;
         bool    get_directory_listing() const;
-        const std::string get_script_cgi() const;
         const std::string get_extension_cgi() const;
         const std::string get_path_upload() const;
 
@@ -60,7 +58,6 @@ class Location
         void    set_enabled(const bool &enabled);
         void    set_index(const std::string &i);
         void    set_path_cgi(const std::string &path);
-        void    set_script(const std::string &src);
         void    set_extension_cgi(const std::string &src);
         void    set_path_upload(const std::string &src);
 

@@ -21,7 +21,6 @@ Location::Location()
     enable_director_listing = false;
     index = "";
     CGI = "";
-    script_cgi = "";
     extension_cgi = "";
     path_upload = "";
 }
@@ -42,7 +41,6 @@ Location &Location::operator=(const Location &other)
     enable_director_listing = other.enable_director_listing;
     index = other.index;
     CGI = other.CGI;
-    script_cgi = other.script_cgi;
     extension_cgi = other.extension_cgi;
     path_upload = other.path_upload;
     return *this;
@@ -115,14 +113,6 @@ void    Location::set_index(const std::string &i)
 void    Location::set_path_cgi(const std::string &path)
 {
     CGI = path;
-}
-const std::string Location::get_script_cgi() const
-{
-    return script_cgi;
-}
-void    Location::set_script(const std::string &src)
-{
-    script_cgi = src;
 }
 
 void     Location::set_extension_cgi(const std::string &src)
