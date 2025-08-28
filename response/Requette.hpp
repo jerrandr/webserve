@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 18:07:47 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/28 10:15:21 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class Requette
 		int									lv;
 		Client								&Cl;
 		
-		void				initEnvp(std::string rt, std::string st, std::string bd);
+		void				initEnvp(std::string rt, std::string bd);
 							Requette(Requette const &cpy);
 		Requette			&operator=(Requette const &cpy);
 		int					findLoc2(std::vector<std::string> UriLoc, std::vector<std::string> toFind);

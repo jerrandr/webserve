@@ -6,13 +6,13 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 18:01:02 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/28 10:15:25 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Requette.hpp"
 
-void	Requette::initEnvp(std::string rt, std::string st, std::string bd)
+void	Requette::initEnvp(std::string rt, std::string bd)
 {
 	std::string 		cl;
 	std::string 		query;
@@ -29,24 +29,15 @@ void	Requette::initEnvp(std::string rt, std::string st, std::string bd)
 	tmp[2] = "SERVER_PROTOCOL=HTTP/1.1";
     tmp[3] = "REDIRECT_STATUS=200";
 	tmp[4] = "CONTENT_TYPE=" + bd;
+	tmp[5] = "SCRIPT_FILENAME=" + rt;
 	
 	std::cout << "Rt: " << rt << std::endl;
 	if (rq["method"] == "GET")
-	{
-		tmp[5] = "SCRIPT_FILENAME=" + rt;
 		tmp[6] = "QUERY_STRING=" + query;
-	}
 	else if (rq["method"] == "POST")
-	{
-		std::cout << "++++++++++++++++\n";
-		tmp[5] = "SCRIPT_FILENAME=" + st;
 		tmp[6] = "CONTENT_LENGTH=" + cl;
-	}
 	else
-	{
-		tmp[5] = "";
 		tmp[6] = "";
-	}
 	std::cout << "TMP{4} : " << tmp[4] << std::endl;
 	for (size_t i = 0; i < 7; i++)
 	{
@@ -114,7 +105,7 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	std::string rt;
 	
 	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
-	initEnvp(rt, Loc.get_script_cgi(), bd);
+	initEnvp(rt, bd);
 	Cgi cgi(envp, lv, Cl);
 	cgi.MyExec(socket, body);
 	return ;

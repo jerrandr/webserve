@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 18:01:15 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/28 09:20:42 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void    Requette::rp(int socket)
 
 	Loc = findLoc();
 
+	std::cout << "ext {" << Loc.get_extension_cgi() << "}\n";
 	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
