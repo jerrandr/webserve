@@ -136,7 +136,6 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
     std::string     new_line;
     std::string     new_values;
 
-
     i = 0;
     while (isspace(line[i]))
         i ++;
@@ -147,9 +146,9 @@ static int     line_parsing(std::string line, Config &cfg, ErrorPage &err_page,
         return (0);
     new_values = new_line.substr(last + 1, new_line.size() - last);
     if (key_w == "host")
-       address_check(new_values, cfg, key_vect);
+       address_check(reform_value(new_values), cfg, key_vect);
     if (key_w == "listen")
-        port_check(new_values, cfg, key_vect);
+        port_check(reform_value(new_values), cfg, key_vect);
     if (key_w == "error_page")
     {
 

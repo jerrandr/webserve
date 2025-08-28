@@ -39,11 +39,10 @@ static void     root_check_path(Location &locs)
         locs.set_path_upload(upl_str);
     }
 };
-static int      insert_value(std::string key_w, std::string value, Location &lcs,
+static int      insert_value(std::string key_w, std::string val, Location &lcs,
  std::vector<std::string> &found_key)
 {
-    if (space_only(value))
-        return (0);
+    std::string value = reform_value(val);
     if (key_w == "method")
     {
         if (method_check(value, found_key))

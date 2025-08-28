@@ -47,15 +47,20 @@ int check_all_error_path(Config &cfg)
     return (1); 
 };
 
-int     space_only(std::string  str)
+std::string     reform_value(std::string  str)
 {
-    size_t  i = 0;
+    std::vector<std::string> spl = split(str, " ");
+    std::string new_str = "";
+    size_t i = 0;
 
-    if (str.empty())
-        return (1);
-    while (isspace(str[i]))
+    if (spl.size() == 0)
+        return (new_str);
+    while (i < spl.size() - 1)
+    {
+        new_str += spl[i];
+        new_str += " ";
         i ++;
-    if (i == str.size())
-        return (1);
-    return (0);
+    }
+    new_str += spl[i];
+    return (new_str);
 };
