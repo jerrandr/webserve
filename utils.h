@@ -63,8 +63,7 @@ int     cgi_path_check(std::string value, std::vector<std::string> &found_key);
 int     check_port_and_host(Config &cfg);
 int     multiple_key_check(std::vector<std::string> &found_key);
 void    check_minimum_value(std::vector<Config> &cfg, int fd);
-
-
+int     check_all_error_path(Config &cfg);
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 

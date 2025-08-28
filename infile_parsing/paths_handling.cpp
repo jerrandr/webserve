@@ -12,7 +12,7 @@
 
 #include "../Server.hpp"
 
-static void     path_set(int page_ind, ErrorPage &err_page, std::string err_path)
+static int     path_set(int page_ind, ErrorPage &err_page, std::string err_path)
 {
     switch (page_ind)
     {
@@ -71,9 +71,9 @@ static void     path_set(int page_ind, ErrorPage &err_page, std::string err_path
         err_page.set_path_505(err_path);
         break;
     default:
-        std::cout << page_ind << ": Error page not include at the error_page" << std::endl;
-        break;
+        return (0);
     }
+    return (1);
 };
 
 int  error_page_occurences(std::vector<std::string> &error_vect)
@@ -90,6 +90,8 @@ int  error_page_occurences(std::vector<std::string> &error_vect)
     }
     return (1);
 };
+
+
 int error_page_set(std::string path, ErrorPage &err_page, std::vector<std::string> &err_vect)
 {
     std::string     page_name;
@@ -102,11 +104,9 @@ int error_page_set(std::string path, ErrorPage &err_page, std::vector<std::strin
     err_vect.push_back(page_name);
     page_path = path.substr(last + 1, path.size() - (last + 1));
     if (access(page_path.c_str(), F_OK || R_OK) == -1)
-    {
-        std::cout << page_name << ": error page not found !!!" ;
         return (0);
-    }   
     err_set = std::atoi(page_name.c_str());
-    path_set(err_set, err_page, page_path);
+    if (!path_set(err_set, err_page, page_path))
+        return (0);
     return (1);
 };

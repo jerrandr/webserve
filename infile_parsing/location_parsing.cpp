@@ -21,7 +21,7 @@ static void     root_check_path(Location &locs)
     str = locs.get_root();
     uri_str = locs.get_uri();
     upl_str = locs.get_path_upload();
-    if (str.empty() || uri_str.empty())
+    if (str.empty() || uri_str.empty() || upl_str.empty())
         return ;
     if (str[str.size() - 1] != '/')
     {
@@ -33,8 +33,7 @@ static void     root_check_path(Location &locs)
         uri_str += "/";
         locs.set_uri(uri_str);
     };
-    if (!upl_str.empty() && upl_str != "no" && upl_str != "NO" &&
-         upl_str[upl_str.size() - 1] != '/')
+    if (upl_str[upl_str.size() - 1] != '/')
     {
         upl_str += "/";
         locs.set_path_upload(upl_str);

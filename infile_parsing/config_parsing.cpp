@@ -182,7 +182,7 @@ static Config     get_all_line(std::string input, int fd)
         if (!line_parsing(line, config, err_page, err_vector, found_key))
         {
             close (fd);
-            throw std::logic_error("Error of configuration file content !!!");
+            throw std::logic_error("Error of server configuration !!!");
         };
         if (len == -1)
             break ;

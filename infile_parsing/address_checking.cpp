@@ -103,14 +103,16 @@ static int  check_location(std::vector<Location> locs)
     };
     return (1);
 };
+
 void    check_minimum_value(std::vector<Config> &cfg, int fd)
 {
     for (size_t i = 0; i < cfg.size(); i ++)
     {
-        if (cfg[i].get_host().empty() || !check_location(cfg[i].get_locs()))
+        if (cfg[i].get_host().empty() || !check_location(cfg[i].get_locs()) ||
+            !check_all_error_path(cfg[i]))
         {
             close(fd);
-            throw std::logic_error ("Error of configuration file !!!");
+            throw std::logic_error ("Error of server configuration !!!");
         };
     };
 };
