@@ -15,14 +15,29 @@
 static void     root_check_path(Location &locs)
 {
     std::string     str;
+    std::string     uri_str;
+    std::string     upl_str;
 
     str = locs.get_root();
-    if (str.empty())
+    uri_str = locs.get_uri();
+    upl_str = locs.get_path_upload();
+    if (str.empty() || uri_str.empty())
         return ;
     if (str[str.size() - 1] != '/')
     {
         str += "/";
         locs.set_root(str);
+    }
+    if (uri_str != "/" && uri_str[uri_str.size() - 1] != '/')
+    {
+        uri_str += "/";
+        locs.set_uri(uri_str);
+    };
+    if (!upl_str.empty() && upl_str != "no" && upl_str != "NO" &&
+         upl_str[upl_str.size() - 1] != '/')
+    {
+        upl_str += "/";
+        locs.set_path_upload(upl_str);
     }
 };
 static int      insert_value(std::string key_w, std::string value, Location &lcs,
