@@ -46,3 +46,16 @@ int check_all_error_path(Config &cfg)
     };
     return (1); 
 };
+
+int     space_only(std::string  str)
+{
+    size_t  i = 0;
+
+    if (str.empty())
+        return (1);
+    while (isspace(str[i]))
+        i ++;
+    if (i == str.size())
+        return (1);
+    return (0);
+};

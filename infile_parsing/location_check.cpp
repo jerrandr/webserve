@@ -68,6 +68,7 @@ int     index_check(std::string value, std::vector<std::string> &found_key)
 int     upload_check(std::string value, std::vector<std::string> &found_key)
 {
     found_key.push_back("upload");
+    std::cout << "[" << value << "]" << std::endl;
     if (value.empty())
         return (0);
     return (1);

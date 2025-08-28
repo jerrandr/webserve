@@ -42,6 +42,8 @@ static void     root_check_path(Location &locs)
 static int      insert_value(std::string key_w, std::string value, Location &lcs,
  std::vector<std::string> &found_key)
 {
+    if (space_only(value))
+        return (0);
     if (key_w == "method")
     {
         if (method_check(value, found_key))
