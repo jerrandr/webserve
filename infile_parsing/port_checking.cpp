@@ -28,7 +28,7 @@ static int      check_one_port(std::string  port)
     return (1);
 };
 
-static int      check_port_host(Config cfg)
+static int      check_port_host(Config &cfg)
 {
     std::vector<std::string> host_array = split(cfg.get_host(), " ");
     std::vector<std::string> port_array = split(cfg.get_port(), " ");
@@ -36,6 +36,7 @@ static int      check_port_host(Config cfg)
     size_t              j;
     std::string         tmp;
     std::string         tmp1;
+    std::string         seted_port;
 
     while (i < host_array.size() - 1)
     {
@@ -50,6 +51,8 @@ static int      check_port_host(Config cfg)
         };
         i ++;
     }
+    seted_port = reform_value(cfg.get_port());
+    cfg.set_port(seted_port);
     return (1);
 };
 
@@ -83,7 +86,7 @@ int     port_check(std::string port, Config &cfg, std::vector<std::string> &key_
 static void default_port_adding(Config &cfg, int to_add)
 {
     std::string new_port = cfg.get_port();
-    for (int i =0; i < to_add; i ++)
+    for (int i = 0; i < to_add; i ++)
         new_port += " 8080";
     cfg.set_port(new_port);
 };

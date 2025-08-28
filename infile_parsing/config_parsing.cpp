@@ -59,6 +59,8 @@ static int      body_size_checking(std::string value, Config &cfg, std::vector<s
     double              nbr_value;
     std::string         last;
 
+    if (value.empty())
+        return (0);
     key_vect.push_back("max_body_size");
     tmp << value;
     tmp >> nbr_value;
@@ -116,7 +118,7 @@ static int     other_checking(std::string key_w, std::string value, Config &cfg,
 {
     if (key_w == "client_max_body_size")
     {
-        if (!body_size_checking(value, cfg, key_vect))
+        if (!body_size_checking(reform_value(value), cfg, key_vect))
             return(0); 
     };
     if (key_w == "location")
