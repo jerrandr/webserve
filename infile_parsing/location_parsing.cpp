@@ -39,10 +39,9 @@ static void     root_check_path(Location &locs)
         locs.set_path_upload(upl_str);
     }
 };
-static int      insert_value(std::string key_w, std::string val, Location &lcs,
+static int      insert_value(std::string key_w, std::string value, Location &lcs,
  std::vector<std::string> &found_key)
 {
-    std::string value = reform_value(val);
     if (key_w == "method")
     {
         if (method_check(value, found_key))
@@ -103,8 +102,7 @@ static int      insert_value(std::string key_w, std::string val, Location &lcs,
 static int      location_check(std::string line, Location &locs, std::vector<std::string> &found_key)
 {
     std::vector<std::string>    locs_keys;
-    int                         i;
-    std::string                 new_line;
+    std::vector<std::string>    new_line;
     std::string                 key_locs;
     std::string                 line_value;
 
@@ -116,13 +114,15 @@ static int      location_check(std::string line, Location &locs, std::vector<std
     locs_keys.push_back("cgi");
     locs_keys.push_back("cgi_path");
     locs_keys.push_back("redirect");
-    i = 0;
-    while (isspace(line[i]))
+    new_line = split(line, " ");
+    key_locs = new_line[0];
+    size_t i = 1;
+    while (i < new_line.size())
+    {
+        line_value += new_line[i];
+        line_value += " ";
         i ++;
-    new_line = line.substr(i, line.size() - i);
-    i = new_line.find(" ");
-    key_locs = new_line.substr(0, i);
-    line_value = new_line.substr(i + 1, new_line.size() - (i + 1));
+    };
     if (key_locs == "")
         return (1);
     std::vector<std::string>::iterator it = find(locs_keys.begin(), locs_keys.end(), key_locs);
