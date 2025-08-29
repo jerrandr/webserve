@@ -204,6 +204,8 @@ int     get_principal_uri(std::string value, Config &cfg)
     uri_value = get_uri_value(value);
     if ( uri_value.empty() || uri_value == "{")
         return (0);
+    if (!check_bloc_value(value))
+        return (0);
     locs.set_uri(uri_value);
     last_line = get_other_value(value);
     if (!other_uri_value(last_line, locs, found_key))

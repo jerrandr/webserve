@@ -105,3 +105,19 @@ int incrementation(std::string line)
         inc = i;
     return (inc);
 };
+
+int check_bloc_value(std::string value)
+{
+    std::vector<std::string>    all_line = split(value, "\n");
+    std::string     new_value = "";
+
+    if (all_line.size() > 0)
+    {
+        std::vector<std::string>    one_line = split(all_line[0], " ");
+        if (one_line.size() > 3)
+            return (0);
+        if (one_line.size() == 3 && one_line[2] != "{")
+            return (0);
+    };
+    return (1);
+};

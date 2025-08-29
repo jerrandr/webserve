@@ -35,8 +35,13 @@ int     method_check(std::string value, std::vector<std::string> &found_key)
 
 int     root_check(std::string value, std::vector<std::string> &found_key)
 {
+    std::vector<std::string> spl_value;
+
     found_key.push_back("root");
     if (value.empty())
+        return (0);
+    spl_value = split(value, " ");
+    if (spl_value.size() != 1)
         return (0);
     return (1);
 };
@@ -59,16 +64,26 @@ int     autoindex_check(std::string value, Location &lcs, std::vector<std::strin
 
 int     index_check(std::string value, std::vector<std::string> &found_key)
 {
+    std::vector<std::string> spl_value;
+
     found_key.push_back("index");
     if (value.empty())
+        return (0);
+    spl_value = split(value, " ");
+    if (spl_value.size() != 1)
         return (0);
     return (1);
 };
 
 int     upload_check(std::string value, std::vector<std::string> &found_key)
 {
+    std::vector<std::string> spl_value;
+
     found_key.push_back("upload");
     if (value.empty())
+        return (0);
+    spl_value = split(value, " ");
+    if (spl_value.size() != 1)
         return (0);
     return (1);
 };
@@ -83,16 +98,26 @@ int     cgi_check(std::string value, std::vector<std::string> &found_key)
 
 int     redirect_check(std::string value, std::vector<std::string> &found_key)
 {
+    std::vector<std::string> spl_value;
+
     found_key.push_back("redirect");
     if (value.empty())
+        return (0);
+    spl_value = split(value, " ");
+    if (spl_value.size() != 1)
         return (0);
     return (1);
 };
 
 int     cgi_path_check(std::string value, std::vector<std::string> &found_key)
 {
+    std::vector<std::string> spl_value;
+
     found_key.push_back("cgi_path");
     if (value.empty())
+        return (0);
+    spl_value = split(value, " ");
+    if (spl_value.size() != 1)
         return (0);
     return (1);
 }

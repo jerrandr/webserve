@@ -66,6 +66,7 @@ void    check_minimum_value(std::vector<Config> &cfg, int fd);
 int     check_all_error_path(Config &cfg);
 int     brakes_check(std::string all_string);
 int     incrementation(std::string line);
+int     check_bloc_value(std::string value);
 std::string     reform_value(std::string  str);
 
 
