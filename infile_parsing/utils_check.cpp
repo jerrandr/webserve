@@ -64,3 +64,44 @@ std::string     reform_value(std::string  str)
     new_str += spl[i];
     return (new_str);
 };
+
+int     brakes_check(std::string all_string)
+{
+    std::vector<std::string>    spl = split(all_string, "{");
+    int                         flag;
+
+    for (size_t i = 0; i < spl.size(); i ++)
+    {
+        flag = 0;
+        for (size_t j = 0; j < spl[i].size(); j ++)
+        {
+            if (!isspace(spl[i][j]) && spl[i][j] != '}')
+                flag = 1;
+        };
+        if (!flag)
+            return (0);
+    };
+    return (1);
+};
+
+int incrementation(std::string line)
+{
+    std::string new_line;
+    std::string key_w;
+    std::string one_line;
+    int         last;
+    int         i;
+    int         inc = 0;
+
+    i = 0;
+    last = line.find("\n");
+    one_line = line.substr(0, last);
+    while (isspace(one_line[i]))
+        i ++;
+    new_line = line.substr(i, line.size() - i);  
+    last = new_line.find(" ");
+    key_w = one_line.substr(i, last);
+    if (key_w == "location")
+        inc = i;
+    return (inc);
+};

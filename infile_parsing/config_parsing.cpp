@@ -61,8 +61,11 @@ static int      body_size_checking(std::string value, Config &cfg, std::vector<s
 
     if (value.empty())
         return (0);
+    std::vector<std::string> spl_value = split(value, " ");
+    if (spl_value.size() != 1)
+        return (0);
     key_vect.push_back("max_body_size");
-    tmp << value;
+    tmp << spl_value[0];
     tmp >> nbr_value;
     tmp >> last;
     if (!last.empty() && last != "G" && last != "M" && last != "K" && 
@@ -187,7 +190,7 @@ static Config     get_all_line(std::string input, int fd)
         };
         if (len == -1)
             break ;
-        pos += len + 1;
+        pos += len + 1 + incrementation(new_input);
         if (pos < input.size())
             new_input = input.substr(pos,input.size() - pos);
         else
@@ -224,7 +227,12 @@ void    config_parsing(int fd, std::vector<Config> &cfg)
     {
         close (fd);        
         throw std::logic_error("Empty configuration file");
-    }
+    };
+    if (!brakes_check(all_string))
+    {
+        close (fd);
+        throw std::logic_error("Error of server configuration !!!");
+    };
     for (size_t i = 0; i < all_string.size(); i ++)
     {
         if (isspace(all_string[i]) && all_string[i] != '\n')

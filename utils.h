@@ -64,7 +64,10 @@ int     check_port_and_host(Config &cfg);
 int     multiple_key_check(std::vector<std::string> &found_key);
 void    check_minimum_value(std::vector<Config> &cfg, int fd);
 int     check_all_error_path(Config &cfg);
+int     brakes_check(std::string all_string);
+int     incrementation(std::string line);
 std::string     reform_value(std::string  str);
+
 
 void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 
