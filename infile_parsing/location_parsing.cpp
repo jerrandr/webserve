@@ -162,20 +162,50 @@ static int     other_uri_value(std::string line, Location &locs, std::vector<std
     return (1);
 };
 
+static std::string get_uri_value(std::string value)
+{
+    std::vector<std::string>    all_line = split(value, "\n");
+    std::string     new_value = "";
+
+    if (all_line.size() > 0)
+    {
+        std::vector<std::string>    one_line = split(all_line[0], " ");
+        if (one_line.size() > 0)
+            new_value = one_line[0];
+    };
+    return (new_value);
+};
+
+static std::string  get_other_value(std::string value)
+{
+    std::vector<std::string>    all_line = split(value, "\n");
+    std::string                 last_line = "";
+
+    if (all_line.size() > 0)
+    {
+        size_t i = 1;
+        while (i < all_line.size())
+        {
+            last_line += all_line[i];
+            last_line += "\n";
+            i ++;
+        }
+    };
+    return (last_line);
+};
+
 int     get_principal_uri(std::string value, Config &cfg)
 {
     Location                    locs;
     std::string                 uri_value;
-    int                         last;
-    int                         line_pos;
     std::string                 last_line;
     std::vector<std::string>    found_key;
 
-    last = value.find(" ");
-    uri_value = value.substr(0, last);
+    uri_value = get_uri_value(value);
+    if ( uri_value.empty() || uri_value == "{")
+        return (0);
     locs.set_uri(uri_value);
-    line_pos = value.find("\n") + 1;
-    last_line = value.substr(line_pos, value.size() - line_pos);
+    last_line = get_other_value(value);
     if (!other_uri_value(last_line, locs, found_key))
         return (0);
     if (!multiple_key_check(found_key))

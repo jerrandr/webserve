@@ -225,6 +225,11 @@ void    config_parsing(int fd, std::vector<Config> &cfg)
         close (fd);        
         throw std::logic_error("Empty configuration file");
     }
+    for (size_t i = 0; i < all_string.size(); i ++)
+    {
+        if (isspace(all_string[i]) && all_string[i] != '\n')
+            all_string[i] = ' ';
+    };
     string_array = split(all_string, "server");
     std::vector<std::string>::iterator it = string_array.begin();
     while (it != string_array.end())
