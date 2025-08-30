@@ -69,6 +69,7 @@ int     brakes_check(std::string all_string)
 {
     std::vector<std::string>    spl = split(all_string, "{");
     int                         flag;
+    size_t                      j;
 
     for (size_t i = 0; i < spl.size(); i ++)
     {
@@ -81,6 +82,12 @@ int     brakes_check(std::string all_string)
         if (!flag)
             return (0);
     };
+
+    j = all_string.size() - 1;
+    while (isspace(all_string[j]))
+        j --;
+    if (all_string[j] != '}')
+        return (0);
     return (1);
 };
 
@@ -109,14 +116,15 @@ int incrementation(std::string line)
 int check_bloc_value(std::string value)
 {
     std::vector<std::string>    all_line = split(value, "\n");
-    std::string     new_value = "";
 
     if (all_line.size() > 0)
     {
         std::vector<std::string>    one_line = split(all_line[0], " ");
-        if (one_line.size() > 3)
+        if (one_line.size() == 1)
             return (0);
-        if (one_line.size() == 3 && one_line[2] != "{")
+        if (one_line.size() > 2)
+            return (0);
+        if (one_line.size() == 2 && one_line[1] != "{")
             return (0);
     };
     return (1);

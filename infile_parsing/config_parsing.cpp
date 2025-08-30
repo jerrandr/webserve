@@ -37,10 +37,7 @@ static int      check_one_bloc(std::string bloc)
         i ++;
     new_bloc = bloc.substr(i, bloc.size() - i);
     if (new_bloc.empty() || new_bloc[0] != '{')
-    {
-        std::cout << "Server bloc syntax error" << std::endl;
         return (0);
-    }
     i = 0;
     while (isspace(bloc[i]) || bloc[i] == '{' || bloc[i] == '}')
         i ++;
@@ -245,7 +242,7 @@ void    config_parsing(int fd, std::vector<Config> &cfg)
         if (!check_one_bloc(*it))
         {
             close(fd);
-            throw std::logic_error("Error in the server bloc !!!");
+            throw std::logic_error("Error of server configuration !!!");
         }
         config = get_all_line(*it, fd);
         if (!check_port_and_host(config))
