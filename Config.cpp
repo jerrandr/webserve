@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:04:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 07:56:26 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/30 10:44:24 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,7 +160,7 @@ std::string Config::get_mime(const std::string &type)
         s = mime.at(type);
         return s;
     }
-    catch(const std::exception &e)
+    catch(const std::out_of_range &e)
     {
         (void)e;
         s = "text/plain";

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/22 08:26:04 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/08 07:33:48 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_
         if ((polls->get_status(fd) & POLLIN))
             return fd;
     }
-    catch(const std::exception &e)
+    catch(const std::out_of_range &e)
     {
         fd = open(path.c_str(), O_RDWR);
         if (fd < 1)
@@ -212,7 +212,7 @@ std::string get_mime_type(std::string type)
         s = mime.at(type);
         return s;
     }
-    catch(const std::exception &e)
+    catch(const std::out_of_range &e)
     {
         (void)e;
         s = "text/plain";

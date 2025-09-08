@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/22 09:37:33 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/30 10:45:24 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ short   Pollfd::get_status(int fd)
         (void)tab_fds.at(fd);
         return tab_fds.at(fd);
     }
-    catch(std::exception &e)
+    catch(std::out_of_range &e)
     {
         (void)e;
         return -1;
@@ -89,7 +89,7 @@ void    Pollfd::erase_fd(int fd)
         }
         tab_fds.erase(fd);
     }
-    catch(std::exception &e)
+    catch(std::out_of_range &e)
     {
         (void)e;
     }
