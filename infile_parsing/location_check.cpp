@@ -104,7 +104,7 @@ int     redirect_check(std::string value, std::vector<std::string> &found_key)
     if (value.empty())
         return (0);
     spl_value = split(value, " ");
-    if (spl_value.size() != 1)
+    if (spl_value.size() != 2)
         return (0);
     return (1);
 };

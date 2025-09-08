@@ -175,7 +175,6 @@ void    Config::set_port(const std::string &port)
 void    Config::set_host(const std::string &h)
 {
     host = h;
-    std::cout << "set_host" << h  << "--" << this->host<< std::endl;
 }
 
 void    Config::set_max_allowed_size(const std::string &max)
