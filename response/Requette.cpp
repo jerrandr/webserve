@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/08 09:06:20 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/08 10:30:36 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,17 @@ Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl
 
 void	Requette::rp3(int socket, Location Loc)
 {
+	std::string	filename;
 	std::string	rp;
-	BodyUpload	bd(body, Loc.get_path_upload());
 
-	std::cout << "meth = " << rq["method"] << " || upload = " << Loc.get_path_upload() << std::endl; 
+	BodyUpload	bd(body, Loc.get_path_upload());
 	if (rq["method"] == "POST" && Loc.get_path_upload() != "")
 	{
-		bd.ParseBody();
+		bd.ParseBody(Cl);
+		filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
+		rp = rp5(filename);
+		std::cout << "rp = {" << rp << "}\n";
 	}
-	rp = utils.getError("error/405.html", pl, Cl.getFdWait());
 	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 		send(socket, rp.c_str(), rp.size(), 0);
 }

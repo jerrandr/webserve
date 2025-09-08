@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/29 07:38:37 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/08 10:37:33 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,15 @@ std::string	BodyUpload::ParseHeader(std::string header)
 	return (res);
 }
 
-void BodyUpload::ParseBody()
+void BodyUpload::ParseBody(Client &cl)
 {
 	std::string		header;
 	std::string		ct;
 	std::string		filename;
-	std::ofstream	file;
-
+	int				fd;
+	// std::ofstream	file;
 	ct = "";
+	fd = 0;
 	while (Bdy.find("\r\n\r\n") != std::string::npos)
 	{
 		header = Bdy.substr(0, Bdy.find("\r\n\r\n"));
@@ -62,13 +63,18 @@ void BodyUpload::ParseBody()
 			Bdy = Bdy.substr(Bdy.find(ct) + ct.length(), Bdy.length());
 		}
 		if (header == "")
-			break ; 
-		filename = (Rt + header + "(Upload)");
-		std::cout << "FILENAME: {" << filename << "}\n";
-		file.open(filename.c_str());
-		if (file.fail())
 			break ;
-		file << ct;
-		file.close();
+		header = ParseHeader(header);
+		filename = (Rt + header);
+		std::cout << RED << "FILENAME: {" << filename << "}\n" << R;
+		fd = fd_is_ready(filename, cl.getPoll(), cl.getFdWait());
+		if (fd == -1)
+			break ;
+		write(fd, ct.c_str(), ct.size());
+		// file.open(filename.c_str());
+		// if (file.fail())
+		// 	break ;
+		// file << ct;
+		// file.close();
 	}
 }

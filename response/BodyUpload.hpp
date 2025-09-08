@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:37:58 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/28 17:37:55 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/08 10:30:27 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 
 #include "../utils.h"
 #include "ExecUtils.hpp"
+#include "../Client.hpp"
+
+class Client;
 
 class BodyUpload
 {
@@ -30,7 +33,7 @@ class BodyUpload
 	public:
 					BodyUpload(std::string body, std::string rt);
 					~BodyUpload();
-		void		ParseBody();
+		void		ParseBody(Client &cl);
 };
 
 #endif
