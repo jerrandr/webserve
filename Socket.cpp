@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/14 09:50:25 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/08 11:17:20 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,6 +227,11 @@ void    Socket::listen_port()
                     {
                         clients[j].exec_request_timeout();
                     }
+                }
+                else if( time(NULL) - clients[j].get_timeout_client() >= 60 && !(re & POLLIN))
+                {
+                    std::cout << "ato" << std::endl;
+                    clients[j].set_status_client(-1);
                 }
             }
             catch(std::bad_alloc &e)

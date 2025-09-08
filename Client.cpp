@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/25 09:22:56 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/08 11:09:18 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ Client::Client()
 	stat = 0;
 	real_body = 0;
 	request_time = 0;
+	client_timeout = time(NULL);
 }
 
 Client::~Client() {}
@@ -44,6 +45,7 @@ Client &Client::operator=(const Client &other)
 	config = other.config;
 	polls = other.polls;
 	request_time = other.request_time;
+	client_timeout = other.client_timeout;
 	return (*this);
 }
 
@@ -61,6 +63,7 @@ Client::Client(int s, Pollfd *poll, Config &conf)
 	config = conf;
 	polls = poll;
 	request_time = 0;
+	client_timeout = time(NULL);
 }
 std::string Client::get_requette() const
 {
@@ -433,4 +436,13 @@ ssize_t Client::get_timeout()
 void    Client::set_timeout(ssize_t t)
 {
 	request_time = t;
+}
+ssize_t Client::get_timeout_client()
+{
+	return client_timeout;
+}
+
+void    Client::set_status_client(int s)
+{
+	stat = s;
 }

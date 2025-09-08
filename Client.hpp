@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/25 09:58:28 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/08 10:45:21 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class Client
         int stat;
         std::map<std::string, int> fd_wait;
         ssize_t request_time;
+        ssize_t client_timeout;
         Client();
     public:
         ~Client();
@@ -82,6 +83,8 @@ class Client
         void    exec_request_timeout();
         void    read_timeout();
 
+        /*pour timeout client*/
+        ssize_t get_timeout_client();
         /*pour 505*/
         void exec_http_not_supported();
         /*pour 500*/
@@ -94,5 +97,7 @@ class Client
         std::string	getBody() const;
         void    parse_requette();
         void    body_unchunked();
+
+        void    set_status_client(int s);
 };
 #endif
