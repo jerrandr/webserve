@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 18:06:30 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/29 09:04:57 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ ExecUtils::ExecUtils()
 	Er.insert(std::pair<std::string, std::string>("411", "length required"));
 	Er.insert(std::pair<std::string, std::string>("413", "playload too large"));
 	Er.insert(std::pair<std::string, std::string>("414", "uri too long"));
-	Er.insert(std::pair<std::string, std::string>("415", " unsupported media type"));
+	Er.insert(std::pair<std::string, std::string>("415", "unsupported media type"));
 	Er.insert(std::pair<std::string, std::string>("417", "expectation failed"));
 	Er.insert(std::pair<std::string, std::string>("500", "internal server error"));
 	Er.insert(std::pair<std::string, std::string>("501", "method not implemented"));

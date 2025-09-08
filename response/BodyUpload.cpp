@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/19 10:45:51 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/29 07:38:37 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 BodyUpload::~BodyUpload() {}
 
-BodyUpload::BodyUpload(std::string body) : Bdy(body) {}
+BodyUpload::BodyUpload(std::string body, std::string rt) : Bdy(body), Rt(rt) {}
 
 std::string	BodyUpload::ParseHeader(std::string header)
 {
@@ -27,7 +27,7 @@ std::string	BodyUpload::ParseHeader(std::string header)
 	start = 0;
 	end = 0;
 	res = "";
-	std::cout << "HEADER: {" << header << "}" << std::endl;
+	// std::cout << "HEADER: {" << header << "}" << std::endl;
 	if (header.find("filename") != std::string::npos)
 	{
 		res = header.substr(header.find("filename"), header.find("\r\n"));
@@ -61,13 +61,10 @@ void BodyUpload::ParseBody()
 			ct = ct.substr(0, ct.find("------WebKit"));
 			Bdy = Bdy.substr(Bdy.find(ct) + ct.length(), Bdy.length());
 		}
-		if (header.find("DataUploaded/filename") != std::string::npos)
-			header = ParseHeader(header);
-		else
-			continue ;
 		if (header == "")
 			break ; 
-		filename = (header + "(Upload)");
+		filename = (Rt + header + "(Upload)");
+		std::cout << "FILENAME: {" << filename << "}\n";
 		file.open(filename.c_str());
 		if (file.fail())
 			break ;

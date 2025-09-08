@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/28 09:20:42 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/08 09:06:20 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl
 
 //+++++++++++++++++++++++++REPONSE+++++++++++++++++++++++++
 
-void	Requette::rp3(int socket)
+void	Requette::rp3(int socket, Location Loc)
 {
 	std::string	rp;
+	BodyUpload	bd(body, Loc.get_path_upload());
 
-	if (body.find("filename") != std::string::npos)
+	std::cout << "meth = " << rq["method"] << " || upload = " << Loc.get_path_upload() << std::endl; 
+	if (rq["method"] == "POST" && Loc.get_path_upload() != "")
 	{
-		BodyUpload bd(body);
 		bd.ParseBody();
 	}
 	rp = utils.getError("error/405.html", pl, Cl.getFdWait());
@@ -87,7 +88,7 @@ void	Requette::rp2(int socket, Location &Loc)
 	std::string	rt;
 	std::string	rp;
 	
-	if (body == "")
+	if (rq["method"] == "GET")
 	{
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 		std::cout << RED << "FILE: " << rt << R << std::endl;
@@ -102,13 +103,10 @@ void	Requette::rp2(int socket, Location &Loc)
 		else if (rp == "")
 			rp = rp5(rt);
 		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
-		{
-			std::cout << "RP: {" << rp << "}\n";
 			send(socket, rp.c_str(), rp.size(), 0);
-		}
 	}
 	else
-		rp3(socket);
+		rp3(socket, Loc);
 }
 
 void    Requette::rp(int socket)
@@ -118,22 +116,20 @@ void    Requette::rp(int socket)
 
 	Loc = findLoc();
 
-	std::cout << "ext {" << Loc.get_extension_cgi() << "}\n";
+	std::cout << RED << "LOC : {" << Loc.get_uri() << "}\n" << R;
 	std::cout << "METHOD: " << rq["method"] << std::endl;
-	if (Loc.get_meth().find(rq["method"]) == std::string::npos)
+	if (Loc.get_redir() != "")
+		redir_rp(Loc.get_redir(), socket);
+	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
 		rp = utils.getError("error/405.html", pl, Cl.getFdWait());
 		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 			send(socket, rp.c_str(), rp.size(), 0);
 		return ;
 	}
-	std::cout << "path: " << Loc.get_path_cgi() << std::endl;
-	if (IfDelete(socket) == 1)
+	else if (IfDelete(socket) == 1)
 		return ;
-	std::cout << "redir: {" << Loc.get_redir() << "}\n";
-	if (Loc.get_redir() != "/")
-		redir_rp(Loc.get_redir(), socket);
-	else if (Loc.get_path_cgi() != "")
+	else if (ifCgi2(Loc))
 		ifCgi(Loc, socket, ctType);
 	else
 		rp2(socket, Loc);

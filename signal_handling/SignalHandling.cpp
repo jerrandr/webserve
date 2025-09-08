@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   SignalHandling.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 08:22:22 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/15 09:43:15 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/08/29 08:43:12 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@ SignalHandling &SignalHandling::operator=(const SignalHandling &other)
     (void)other;
     return (*this);
 }
-
-
-
 
 SignalHandling::ExceptSTop::ExceptSTop()
 {

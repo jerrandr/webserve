@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:37:58 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/21 17:52:55 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/28 17:37:55 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,13 @@ class BodyUpload
 		ExecUtils					utils;
 		std::vector<std::string>	Data;
 		std::string					Bdy;
+		std::string					Rt;
 					BodyUpload(BodyUpload const & cpy);
 					BodyUpload();
 		BodyUpload	&operator=(BodyUpload const & cpy);
 		std::string	ParseHeader(std::string header);
 	public:
-					BodyUpload(std::string body);
+					BodyUpload(std::string body, std::string rt);
 					~BodyUpload();
 		void		ParseBody();
 };

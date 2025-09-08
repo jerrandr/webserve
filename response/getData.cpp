@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 18:04:38 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 18:06:35 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/08 08:55:07 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ std::string	ExecUtils::getData(int fd)
 	n = 4;
 	res = "";
 	while ((n = read(fd, buff, sizeof(buff))) > 0)
-			res.append(buff, n);				
+			res.append(buff, n);		
 	return (res);
 }
 

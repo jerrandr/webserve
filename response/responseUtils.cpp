@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/28 10:15:25 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/08/28 10:53:10 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,37 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	std::cout << RED << "CGI\n" << R;
 	std::string rt;
 	
+	if (Loc.get_path_cgi() == "")
+	{
+		rt = utils.getError("error/502.html", pl, Cl.getFdWait());
+		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
+		{
+			std::cout << "RP: {" << rt << "}\n";
+			send(socket, rt.c_str(), rt.size(), 0);
+		}
+		return ;
+	}
 	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 	initEnvp(rt, bd);
 	Cgi cgi(envp, lv, Cl);
 	cgi.MyExec(socket, body);
 	return ;
+}
+
+bool	Requette::ifCgi2(Location Loc)
+{
+	std::string					rlp;
+	Config						cfg;
+	std::string					uriExt;
+	std::vector<std::string>	ext;
+
+	cfg = Cl.getConfig();
+	rlp = cfg.get_real_path(rq["uri"], Loc);
+	ext = split(Loc.get_extension_cgi(), " ");
+	uriExt = utils.getExt(rlp);
+	if (is_directory(rlp))
+		return (false);
+	if (std::find(ext.begin(), ext.end(), uriExt) == ext.end())
+		return (false);
+	return (true);
 }
