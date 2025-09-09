@@ -14,21 +14,8 @@
 
 int     method_check(std::string value, std::vector<std::string> &found_key)
 {
-    std::vector<std::string>  splited = split(value, " ");
-    std::vector<std::string>::iterator it = splited.begin();
-    int         count = 0;
-
     found_key.push_back("method");
     if (value.empty())
-        return (0);
-    while (it != splited.end())
-    {
-        if (*it != "GET" && *it != "POST" && *it != "DELETE")
-            return (0);
-        it ++;
-        count ++;
-    }
-    if (count > 3)
         return (0);
     return (1);
 };
