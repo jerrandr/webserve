@@ -33,7 +33,7 @@ int     multiple_key_check(std::vector<std::string> &found_key)
     {
         if (found_key[k] == "redirect")
             redir_count = 1;
-        if (found_key[k] == "root" || found_key[k] == "autoindex" || found_key[k] == "index" ||
+        if (found_key[k] == "method" || found_key[k] == "root" || found_key[k] == "autoindex" || found_key[k] == "index" ||
             found_key[k] == "upload" || found_key[k] == "cgi" || found_key[k] == "cgi_path")
             count = 1;
     };
