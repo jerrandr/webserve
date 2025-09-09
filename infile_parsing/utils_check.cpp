@@ -14,6 +14,9 @@
 
 int     multiple_key_check(std::vector<std::string> &found_key)
 {
+    int     count;
+    int     redir_count;
+
     if (found_key.size() == 0)
         return (1);
     for (size_t i = 0; i < found_key.size() - 1; i ++)
@@ -24,6 +27,18 @@ int     multiple_key_check(std::vector<std::string> &found_key)
                 return (0);
         };
     };
+    count = 0;
+    redir_count = 0;
+    for (size_t k = 0; k < found_key.size(); k ++)
+    {
+        if (found_key[k] == "redirect")
+            redir_count = 1;
+        if (found_key[k] == "root" || found_key[k] == "autoindex" || found_key[k] == "index" ||
+            found_key[k] == "upload" || found_key[k] == "cgi" || found_key[k] == "cgi_path")
+            count = 1;
+    };
+    if (redir_count && count)
+        return (0);
     return (1);
 };
 
@@ -141,3 +156,4 @@ int check_bloc_value(std::string value)
     };
     return (1);
 };
+

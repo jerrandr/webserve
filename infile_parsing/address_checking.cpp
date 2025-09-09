@@ -84,7 +84,9 @@ static int  check_location(std::vector<Location> locs)
     {
         if ((*it).get_uri() == "/")
             uri_flag = 1;
-        if ((*it).get_root().empty())
+        if ((*it).get_root().empty() && (*it).get_redir().empty())
+            root_flag = 0;
+        if (!(*it).get_root().empty() && !(*it).get_redir().empty())
             root_flag = 0;
         it ++;
     }

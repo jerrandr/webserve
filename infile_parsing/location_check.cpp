@@ -106,6 +106,11 @@ int     redirect_check(std::string value, std::vector<std::string> &found_key)
     spl_value = split(value, " ");
     if (spl_value.size() != 2)
         return (0);
+    for (size_t i = 0; i < spl_value[0].size(); i ++)
+    {
+        if (!isdigit(spl_value[0][i]))
+            return (0);
+    };
     return (1);
 };
 

@@ -39,6 +39,7 @@ static void     root_check_path(Location &locs)
         locs.set_path_upload(upl_str);
     }
 };
+
 static int      insert_value(std::string key_w, std::string value, Location &lcs,
  std::vector<std::string> &found_key)
 {
