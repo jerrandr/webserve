@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/25 10:36:57 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/09 12:35:08 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,52 @@ void Client::exec_http_not_supported()
 	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
         send(socket, exec.c_str(), exec.size(), 0);
 }
+
+bool    Client::is_not_implemented(std::map<std::string, std::string> cf)
+{
+	Location loc;
+	std::vector<std::string> list_im;
+
+	loc = this->config.get_location_match(cf["uri"]);
+	if (loc.get_meth() == "")
+		return false;
+	list_im = split(loc.get_meth()," ");
+	for(std::size_t i = 0; i < list_im.size();i++)
+	{
+		if (cf["method"] == list_im[i] && cf["method"] != "GET" && cf["method"] != "POST" && cf["method"] != "DELETE")
+			return true;
+	}
+	return false;
+}
+
+void    Client::exec_not_implemented()
+{
+	std::string head;
+	int fd;
+    std::stringstream ss;
+	std::string exec;
+
+	fd =0;
+	head = "";
+	if (access(config.get_errors().get_path_501().c_str(),F_OK | R_OK) < 0)
+	{
+		head = "<center><h1>501 Method not implemented</h1></center>";
+	}
+	else
+	{
+		fd = fd_is_ready(config.get_errors().get_path_501(),polls,fd_wait);
+    	std::cout << config.get_errors().get_path_501() << "===" <<fd<< std::endl;
+		if (fd == -1)
+        	throw NotReady("501");
+    	head = get_html_page(fd);
+		fd_closed(fd,polls,fd_wait,config.get_errors().get_path_501());
+	}
+	ss << head.size();
+	exec = "HTTP/1.1 501 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
+	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
+        send(socket, exec.c_str(), exec.size(), 0);
+
+}
 bool    Client::other_traitment(std::map<std::string, std::string> config)
 {
 	if (this->config.get_max_allowed_size() < this->get_len_real_body())
@@ -152,6 +198,24 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		try
 		{
 			exec_dir_listing(config["uri"]);
+			if (fd_wait.size() == 0)
+			{
+				requette = "";
+				body = "";
+			}
+		}
+		catch (NotReady &e)
+		{
+			(void)e;
+		}
+		return true;
+	}
+	else if (is_not_implemented(config))
+	{
+		std::cout << "not implemented " << std::endl;
+		try
+		{
+			exec_not_implemented();
 			if (fd_wait.size() == 0)
 			{
 				requette = "";
