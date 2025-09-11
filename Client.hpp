@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/09 12:32:11 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/10 13:34:57 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ class Client
 
         /*dir list*/
         int is_dir_listing(std::string uri);
-        std::string    directory_listing(std::string name);
+        std::string    directory_listing(std::string name, std::string uri);
         void    exec_dir_listing(std::string uri);
         
         /*bad request*/

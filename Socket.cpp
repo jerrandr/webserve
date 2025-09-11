@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/08 13:31:57 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/11 08:59:56 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -217,8 +217,8 @@ void    Socket::listen_port()
                 }
                 else if (clients[j].get_status_requette() == 1 && clients[j].size_fd_wait() == 0 && clients[j].get_requette() != "")
                 {
-                    clients[j].parse_requette();
                     std::cout << "wait" << std::endl;
+                    clients[j].parse_requette();
                 }
                 else if (clients[j].get_status_requette() != 1 && clients[j].get_requette() != "")
                 {

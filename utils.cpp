@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/08 07:33:48 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/10 13:52:04 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,4 +257,20 @@ int body_chunked(int len1, std::string body)
 		}
 	}
 	return (1);
+}
+
+std::string detranslate_uri(Location loc, std::string uri)
+{
+    std::string nw;
+    std::size_t pos;
+
+    nw = "";
+    pos = 0;
+    pos = uri.find(loc.get_uri());
+    if (pos == std::string::npos)
+        return uri;
+    nw = uri.substr(pos,uri.size());
+    if (nw[nw.size()-1] != '/')
+        nw += "/";
+    return nw;
 }

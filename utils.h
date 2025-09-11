@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:35 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 13:54:23 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/10 13:45:47 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,4 +75,6 @@ void    free_addrinfo(std::vector<struct addrinfo *> &struct_addr);
 std::string get_mime_type(std::string type);
 int body_chunked(int len1, std::string body);
 std::vector<std::string> split_sep(std::string input, std::string sep);
+
+std::string detranslate_uri(Location loc, std::string uri);
 #endif

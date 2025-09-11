@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/09 12:35:08 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/11 09:05:16 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void Client::exec_dir_listing(std::string uri)
 
 	loc = config.get_location_match(uri);
 	path = config.get_real_path(uri, loc);
-	directory_listing(path);
+	directory_listing(path,uri);
 }
 int Client::is_dir_listing(std::string uri)
 {
@@ -74,7 +74,7 @@ int Client::is_dir_listing(std::string uri)
 
 	loc = config.get_location_match(uri);
 	path = config.get_real_path(uri, loc);
-	std::cout << "path = " << path << std::endl;
+	// std::cout << "path = " << path << std::endl;
 	if (is_directory(path))
 	{
 		if (loc.get_directory_listing() && loc.get_index() == "")
@@ -104,7 +104,7 @@ void Client::exec_http_not_supported()
 	else
 	{
 		fd = fd_is_ready(config.get_errors().get_path_505(),polls,fd_wait);
-    	std::cout << config.get_errors().get_path_505() << "===" <<fd<< std::endl;
+    	// std::cout << config.get_errors().get_path_505() << "===" <<fd<< std::endl;
 		if (fd == -1)
         	throw NotReady("505");
     	head = get_html_page(fd);
@@ -149,7 +149,7 @@ void    Client::exec_not_implemented()
 	else
 	{
 		fd = fd_is_ready(config.get_errors().get_path_501(),polls,fd_wait);
-    	std::cout << config.get_errors().get_path_501() << "===" <<fd<< std::endl;
+    	// std::cout << config.get_eerrors().get_path_501() << "===" <<fd<< std::endl;
 		if (fd == -1)
         	throw NotReady("501");
     	head = get_html_page(fd);
@@ -295,12 +295,15 @@ void Client::parse_requette()
 	// std::cout <<"{Methode}" << "{" << config["method"] <<"}"<<std::endl;
 	// std::cout <<"{uri}" << "{" << config["uri"] <<"}"<<std::endl;
 	// std::cout <<"{http_version}" << "{" << config["http_version"] <<"}"<<std::endl;
-	// if(config["method"] == "POST")
-	// {
-	//         std::ofstream fd("test.out");
-	//         std::cout << body << std::endl;
-	//         fd << body;
-	// }
+	if(config["method"] == "POST")
+	{
+		// std::cout << "------------------message--------------------" << std::endl;
+		// std::cout  << body <<std::endl;
+		// std::cout << "---------------------------------------------" << std::endl;
+	        std::ofstream fd("test.out");
+	        // std::cout <<"{"<<body <<"}"<<std::endl;
+	        fd << body;
+	}
 	std::cout << "link = " << config["uri"] << std::endl;
 	if (other_traitment(config))
 		return;

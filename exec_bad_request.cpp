@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:42:08 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 12:55:16 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/11 07:56:14 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void    Client::exec_bad_request()
 	else
 	{
 		fd = fd_is_ready(config.get_errors().get_path_400(),polls,fd_wait);
-    	std::cout << config.get_errors().get_path_400() << "===" <<fd<< std::endl;
+    	// std::cout << config.get_errors().get_path_400() << "===" <<fd<< std::endl;
 		if (fd == -1)
         	throw NotReady("400");
     	head = get_html_page(fd);

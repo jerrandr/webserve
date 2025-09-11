@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:11:57 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 13:38:23 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/10 13:49:34 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static std::string build_html_page(std::vector<std::string> files,std::string pa
     std::string head;
     std::string rest;
     std::vector<std::string> tmp;
+    std::string path_c;
 
     rest = "";
     head = "<!DOCTYPE html>\n   <html lang=\"en\">\n      <head>\n  <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>Document</title>\n";
@@ -45,7 +46,11 @@ static std::string build_html_page(std::vector<std::string> files,std::string pa
         rest+="<div class=\"container\">\n";
         if (tmp.size()> 0)
         {
-            rest += "<div class =\"content\"><a href=\""+name[i]+"\">"+tmp[0]+"</a></div>";
+            path_c =path + name[i];
+            // std::cout << name[i] << "]" << RED << std::endl;
+            // if (name[i].find(path) == std::string::npos)
+            //     path_c = path + path_c;
+            rest += "<div class =\"content\"><a href=\""+path_c+"\">"+tmp[0]+"</a></div>";
             for(std::size_t j = 1; j < tmp.size(); j++)
             {
                 rest += "<div class =\"content\">"+tmp[j]+"</div>";
@@ -191,7 +196,7 @@ static  void    do_files(std::vector<std::string> &test, std::vector<std::string
     }
     file_name.push_back(dir);
 }
-std::string    Client::directory_listing(std::string name)
+std::string    Client::directory_listing(std::string name, std::string uri)
 {
     DIR *dirp;
     struct dirent *direct;
@@ -221,7 +226,8 @@ std::string    Client::directory_listing(std::string name)
             direct = readdir(dirp);
         }
         dir = "";
-        dir = build_html_page(test,name,file_name);
+        Location locs = this->config.get_location_match(uri);
+        dir = build_html_page(test,detranslate_uri(locs,uri),file_name);
     }
     if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
         send(socket, dir.c_str(), dir.size(), 0);
