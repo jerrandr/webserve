@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/28 10:53:10 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:26:54 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,16 +104,16 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	std::cout << RED << "CGI\n" << R;
 	std::string rt;
 	
-	if (Loc.get_path_cgi() == "")
-	{
-		rt = utils.getError("error/502.html", pl, Cl.getFdWait());
-		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
-		{
-			std::cout << "RP: {" << rt << "}\n";
-			send(socket, rt.c_str(), rt.size(), 0);
-		}
-		return ;
-	}
+	// if (Loc.get_path_cgi() == "")
+	// {
+	// 	rt = utils.getError("error/502.html", pl, Cl.getFdWait());
+	// 	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
+	// 	{
+	// 		std::cout << "RP: {" << rt << "}\n";
+	// 		send(socket, rt.c_str(), rt.size(), 0);
+	// 	}
+	// 	return ;
+	// }
 	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 	initEnvp(rt, bd);
 	Cgi cgi(envp, lv, Cl);

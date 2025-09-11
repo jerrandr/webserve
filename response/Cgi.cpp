@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/29 14:37:57 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:41:08 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,47 +119,46 @@ void	Cgi::MyExec2(int &fd, int fdc)
 
 void    Cgi::MyExec(int fdc, std::string body)
 {
-	int fd[2];
-	int fd2[2];
-	int pid;
+	int		fd[2];
+	int		fd2[2];
+	int		pid;
+	time_t	bg;
 
-	signal(SIGALRM, handling);
-	try
+	bg = time(NULL);
+	if (pipe(fd) < 0 || pipe(fd2) < 0)
+		exit(0);
+	pid = fork();
+	if (pid == 0)
 	{
-		alarm(5);
-		if (pipe(fd) < 0 || pipe(fd2) < 0)
-			exit(0);
-		pid = fork();
-		if (pid == 0)
+		dup2(fd2[0], STDIN_FILENO);
+		dup2(fd[1], STDOUT_FILENO);
+		execve("/usr/bin/php-cgi", argv, envp);
+		exit(0);
+	}
+	else
+	{
+		if (body != "")
 		{
-			dup2(fd2[0], STDIN_FILENO);
-			dup2(fd[1], STDOUT_FILENO);
-			execve("/usr/bin/php-cgi", argv, envp);
-			exit(0);
+			std::cout << "BODY: {" << body << "}" << std::endl;
+			write(fd2[1], body.c_str(), body.size());
 		}
-		else
+		close(fd2[0]);
+		close(fd2[1]);
+		close(fd[1]);
+		while (true)
 		{
-			if (body != "")
+			if (waitpid(pid, NULL, WNOHANG) == pid)
 			{
-				std::cout << "BODY: {" << body << "}" << std::endl;
-				write(fd2[1], body.c_str(), body.size());
+				MyExec2(fd[0], fdc);
+				break;
 			}
-			close(fd2[0]);
-			close(fd2[1]);
-			close(fd[1]);
-			waitpid(pid, NULL, 0);
-			alarm(0);
-			MyExec2(fd[0], fdc);
+			if (utils.checkTimeOut(bg, time(NULL)))
+			{
+				std::cout << RED << "TIMEOUT" << R << std::endl;
+				kill(pid, SIGINT);
+				IfNotFound("504", fdc);
+				break;
+			}
 		}
 	}
-	catch(const timeoutHandling& e)
-	{
-		std::string	rp;
-		Pollfd		*pl = Cl.getPoll();
-		std::cout << RED<<"except alarm" << std::endl;
-		std::cout << "[" << e.what() << "]\n";
-		rp = utils.getError("error/504.html", Cl.getPoll(), Cl.getFdWait());
-		if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
-			send(fdc, rp.c_str(), rp.size(), 0);		
-	}	
 }

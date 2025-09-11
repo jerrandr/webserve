@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/08 10:37:33 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/11 14:59:54 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 BodyUpload::~BodyUpload() {}
 
-BodyUpload::BodyUpload(std::string body, std::string rt) : Bdy(body), Rt(rt) {}
+BodyUpload::BodyUpload(std::string rt) : Rt(rt) {}
 
 std::string	BodyUpload::ParseHeader(std::string header)
 {
@@ -39,42 +39,76 @@ std::string	BodyUpload::ParseHeader(std::string header)
 	return (res);
 }
 
+std::string	BodyUpload::getSep(std::string bd)
+{
+	std::string	res;
+
+	res = bd.substr(0, bd.find("\r\n"));
+	return (res);
+}
+
+int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string, int> &fd_wait)
+{
+    int fd;
+
+    fd = -1;
+    try
+    {
+        fd = fd_wait.at(path);
+        if ((polls->get_status(fd) & POLLIN))
+            return fd;
+    }
+    catch(const std::out_of_range &e)
+    {
+		fd = open(path.c_str(), O_CREAT | O_WRONLY, 0644);
+        if (fd < 0)
+            throw std::bad_alloc();
+        (void)e;
+        polls->add_new_fd(fd);
+        fd_wait[path] = fd;
+    }
+    return -1;
+}
+
 void BodyUpload::ParseBody(Client &cl)
 {
 	std::string		header;
 	std::string		ct;
 	std::string		filename;
-	int				fd;
-	// std::ofstream	file;
-	ct = "";
-	fd = 0;
-	while (Bdy.find("\r\n\r\n") != std::string::npos)
+	std::string		sep;
+	std::string		Bdy;
+	
+	Bdy = cl.getBody();
+	sep = getSep(Bdy);
+	while (true)
 	{
+		if (Bdy.find("\r\n\r\n") == std::string::npos)
+			break;
 		header = Bdy.substr(0, Bdy.find("\r\n\r\n"));
-		ct = Bdy.substr(Bdy.find("\r\n\r\n") + 4, Bdy.length());
-		if (ct.find("------WebKit") == 0)
-		{
-			Bdy = ct;
-			ct = "";
-		}
-		else
-		{
-			ct = ct.substr(0, ct.find("------WebKit"));
-			Bdy = Bdy.substr(Bdy.find(ct) + ct.length(), Bdy.length());
-		}
-		if (header == "")
-			break ;
+		Bdy = Bdy.substr(header.length() + 4, Bdy.length());
+		ct = Bdy.substr(0, (Bdy.find(sep) - 3));
 		header = ParseHeader(header);
-		filename = (Rt + header);
-		std::cout << RED << "FILENAME: {" << filename << "}\n" << R;
-		fd = fd_is_ready(filename, cl.getPoll(), cl.getFdWait());
-		if (fd == -1)
-			break ;
-		write(fd, ct.c_str(), ct.size());
-		// file.open(filename.c_str());
-		// if (file.fail())
-		// 	break ;
-		// file << ct;
-		// file.close();
-	}
+		filename = Rt + header;
+		Bdy = Bdy.substr(ct.size() + 4, Bdy.length());
+		
+		fd_create(filename, cl.getPoll(), cl.getFdWait());
+		vl.insert(std::pair<std::string, std::string>(filename, ct));
+		std::cout << RED << "content = {" << ct << "}\n" << R;
+		std::cout << RED << "filename = {" << filename << "}\n" << R;
+		std::cout << "+++++++++++++++++++++\n";
+	}	
+}
+
+void	BodyUpload::UploadHandler(Client &cl)
+{
+	int	fd;
+
+	fd = 0;
+	for (std::map<std::string, std::string>::iterator i = vl.begin(); i != vl.end(); i++)
+	{
+		if ((fd = fd_create((*i).first, cl.getPoll(), cl.getFdWait())) != -1)
+		{
+			write(fd, (*i).second.c_str(), (*i).second.size());
+		}
+	}	
 }

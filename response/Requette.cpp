@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/08 10:30:36 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/11 13:50:13 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	Requette::rp3(int socket, Location Loc)
 	std::string	filename;
 	std::string	rp;
 
-	BodyUpload	bd(body, Loc.get_path_upload());
+	BodyUpload	bd(Loc.get_root() + Loc.get_path_upload());
 	if (rq["method"] == "POST" && Loc.get_path_upload() != "")
 	{
 		bd.ParseBody(Cl);
@@ -95,8 +95,6 @@ void	Requette::rp2(int socket, Location &Loc)
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 		std::cout << RED << "FILE: " << rt << R << std::endl;
 		rp = rp4(rt);
-		std::cout << "RP {" << rp << "}\n";
-
 		if (rp == "" && is_directory(rt) && Loc.get_index() != "")
 		{
 			rt = Cl.getConfig().get_real_path("/" + Loc.get_index(), Loc);

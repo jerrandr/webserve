@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/28 17:31:49 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/11 08:28:11 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ class Requette
 		int					IfDelete(int socket);
         int	                IfDirList(Location lt);
 		bool				ifCgi2(Location Loc);
-
 	public:
 		Requette(std::map<std::string, std::string> config, Client  &cl);
 		void rp(int socket);

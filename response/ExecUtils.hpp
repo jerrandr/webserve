@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 11:03:58 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/11 08:33:50 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ class ExecUtils
 		std::string			getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait, int &fl);
 		std::string			getError(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait);
 		std::string			getData(int fd);
+		bool				checkTimeOut(time_t begin, time_t end);		
 		// std::vector<unsigned char>	getData(int fd);
 		// std::stringstream	Uni(std::vector<unsigned char> test);
 		std::string			getExt(std::string filename);
