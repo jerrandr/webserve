@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/10 13:34:57 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/11 14:00:49 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,5 +104,7 @@ class Client
         /*pour 501*/
         bool    is_not_implemented(std::map<std::string, std::string> cf);
         void    exec_not_implemented();
+
+        void    exec_500();
 };
 #endif

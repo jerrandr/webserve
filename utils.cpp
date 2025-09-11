@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/10 13:52:04 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/11 13:50:58 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_
     catch(const std::out_of_range &e)
     {
         fd = open(path.c_str(), O_RDWR);
-        if (fd < 1)
+        std::perror("error ");
+        if (fd < 0)
             throw std::bad_alloc();
         (void)e;
         polls->add_new_fd(fd);

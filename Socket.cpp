@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/11 08:59:56 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/11 14:42:33 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ void    Socket::add_new_fd()
     int socket_client;
 
     socket_client = accept(fd,NULL,NULL);
+    std::perror("accept ");
     if(socket_client == -1)
         throw std::logic_error("Error accept()");
     Client cl(socket_client,this->polls,this->config);
@@ -237,12 +238,29 @@ void    Socket::listen_port()
             catch(std::bad_alloc &e)
             {
                 (void)e;
-                clients[j].exec_error_server();
+                try
+                {
+                    clients[j].exec_error_server();
+                }
+                catch(std::bad_alloc& e)
+                {
+                   (void)e;
+                   clients[j].exec_500();
+                }
+                
             }
             catch (std::out_of_range &e)
             {
                 (void)e;
-                clients[j].exec_error_server();
+                try
+                {
+                    clients[j].exec_error_server();
+                }
+                catch(std::out_of_range& e)
+                {
+                   (void)e;
+                   clients[j].exec_500();
+                }
             }
             
         }

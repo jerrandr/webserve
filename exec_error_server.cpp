@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 13:19:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 13:22:23 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/11 14:39:48 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,19 @@ void    Client::error_serv()
         send(socket, exec.c_str(), exec.size(), 0);
 }
 
+void    Client::exec_500()
+{
+	std::string head;
+    std::stringstream ss;
+	std::string exec;
+
+	head = "";
+	head = "<center><h1>500 internal server error</h1></center>";
+	ss << head.size();
+	exec = "HTTP/1.1 500 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
+	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
+        send(socket, exec.c_str(), exec.size(), 0);
+}
 void    Client::exec_error_server()
 {
      try
