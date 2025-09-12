@@ -44,7 +44,7 @@ void	Requette::rp3(int socket, Location Loc)
 	BodyUpload	bd(Loc.get_root() + Loc.get_path_upload());
 	if (rq["method"] == "POST" && Loc.get_path_upload() != "")
 	{
-		bd.ParseBody(Cl);
+		bd.UploadHandler(Cl);
 		filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
 		rp = rp5(filename);
 		std::cout << "rp = {" << rp << "}\n";

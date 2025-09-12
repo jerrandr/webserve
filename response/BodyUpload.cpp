@@ -80,22 +80,19 @@ void BodyUpload::ParseBody(Client &cl)
 	
 	Bdy = cl.getBody();
 	sep = getSep(Bdy);
+
 	while (true)
 	{
 		if (Bdy.find("\r\n\r\n") == std::string::npos)
 			break;
 		header = Bdy.substr(0, Bdy.find("\r\n\r\n"));
 		Bdy = Bdy.substr(header.length() + 4, Bdy.length());
-		ct = Bdy.substr(0, (Bdy.find(sep) - 3));
+		ct = Bdy.substr(0, (Bdy.find(sep) - 1));
 		header = ParseHeader(header);
 		filename = Rt + header;
 		Bdy = Bdy.substr(ct.size() + 4, Bdy.length());
-		
 		fd_create(filename, cl.getPoll(), cl.getFdWait());
 		vl.insert(std::pair<std::string, std::string>(filename, ct));
-		std::cout << RED << "content = {" << ct << "}\n" << R;
-		std::cout << RED << "filename = {" << filename << "}\n" << R;
-		std::cout << "+++++++++++++++++++++\n";
 	}	
 }
 
@@ -104,11 +101,13 @@ void	BodyUpload::UploadHandler(Client &cl)
 	int	fd;
 
 	fd = 0;
+	ParseBody(cl);
 	for (std::map<std::string, std::string>::iterator i = vl.begin(); i != vl.end(); i++)
 	{
 		if ((fd = fd_create((*i).first, cl.getPoll(), cl.getFdWait())) != -1)
 		{
-			write(fd, (*i).second.c_str(), (*i).second.size());
+			write(fd, (*i).second.data(), (*i).second.size());
+			fd_closed(fd, cl.getPoll(), cl.getFdWait(), (*i).first);
 		}
 	}	
 }

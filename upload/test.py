@@ -1,7 +1,3 @@
-------WebKitFormBoundary8fr7uO4BNUtDm0CJ
-Content-Disposition: form-data; name="file"; filename="test.py"
-Content-Type: text/x-python
-
 import socket
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(("localhost", 8080))
@@ -34,5 +30,4 @@ request = (
 s.sendall(request.encode())
 response = s.recv(4096)
 print(response.decode(errors="ignore"))
-s.close()
-------WebKitFormBoundary8fr7uO4BNUtDm0CJ--
+s.close()
