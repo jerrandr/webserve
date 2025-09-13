@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:37:58 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/11 14:26:31 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/13 10:14:48 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,9 @@
 #include "ExecUtils.hpp"
 #include "../Client.hpp"
 
-class Client;
-
 class BodyUpload
 {
 	private:
-		ExecUtils							utils;
 		std::vector<std::string>			Data;
 		std::string							Rt;
 		std::map<std::string, std::string>	vl;

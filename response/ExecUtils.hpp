@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/11 08:33:50 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/13 13:58:29 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,32 @@
 #include "../Pollfd.hpp"
 #include "../utils.h"
 #include "../NotReady.hpp"
+#include "../Client.hpp"
 
+class Client;
 class ExecUtils
 {
 	private:
-		std::string	getErrorUtils(std::string st,  Pollfd *polls, std::map<std::string, int> &fd_wait);	
+		std::string				getErrorUtils(std::string st,  Client & cl);
+		// std::string	getErrorUtils(std::string st,  Pollfd *polls, std::map<std::string, int> &fd_wait);	
 		std::string	getStatus(std::string fl);
 		std::map<std::string, std::string> Er;
 		std::string	Erro;
 	public:
+		ExecUtils();
+		~ExecUtils();
 		ExecUtils &operator=(ExecUtils const & cpy) {(void)cpy;return(*this);};
 		ExecUtils(ExecUtils const & cpy) {(void)cpy;};
 		std::string			ToString(int nbr);
-		std::string			getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait, int &fl);
-		std::string			getError(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait);
+		std::string 		getData(std::string filename, Client & cl, int &fl);
+		// std::string			getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait, int &fl);
+		// std::string			getError(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait);
+		std::string			getError(std::string filename, Client &cl);
 		std::string			getData(int fd);
-		bool				checkTimeOut(time_t begin, time_t end);		
-		// std::vector<unsigned char>	getData(int fd);
-		// std::stringstream	Uni(std::vector<unsigned char> test);
+		bool				checkTimeOut(time_t begin, time_t end);
 		std::string			getExt(std::string filename);
-							ExecUtils();
-							~ExecUtils();
+		std::string			CheckError(std::string	rp, Client &Cl);
 };
+							
 
 #endif

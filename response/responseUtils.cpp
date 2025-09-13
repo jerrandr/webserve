@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/11 13:26:54 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/13 14:02:25 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	Requette::initEnvp(std::string rt, std::string bd)
 	std::string			*tmp;
 	
 	envp = new char*[9];
-	cl = utils.ToString(lv);
+	cl = utils->ToString(lv);
 	query = "";
 	tmp = new std::string[8]();
 	if (rq["uri"].find("?") != std::string::npos)
@@ -65,9 +65,9 @@ int	Requette::IfDelete(int socket)
 		if (rq["uri"].size() > 1)
 			rt = rq["uri"].substr(1, rq["uri"].length());
 		if (stat(rt.c_str(), &st) == -1 && rp == "")
-			rp = utils.getData("error/404.html", pl, Cl.getFdWait(), fl);
+			rp = utils->getData("error/404.html", Cl, fl);
 		if (access(rt.c_str(), O_RDWR) != 0 && rp == "")
-			rp = utils.getData("error/403.html",  pl, Cl.getFdWait(), fl);
+			rp = utils->getData("error/403.html", Cl, fl);
 		if (rp == "")
 		{
 			std::remove(rt.c_str());
@@ -106,7 +106,7 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	
 	// if (Loc.get_path_cgi() == "")
 	// {
-	// 	rt = utils.getError("error/502.html", pl, Cl.getFdWait());
+	// 	rt = utils->getError("error/502.html", pl, Cl.getFdWait());
 	// 	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 	// 	{
 	// 		std::cout << "RP: {" << rt << "}\n";
@@ -131,7 +131,7 @@ bool	Requette::ifCgi2(Location Loc)
 	cfg = Cl.getConfig();
 	rlp = cfg.get_real_path(rq["uri"], Loc);
 	ext = split(Loc.get_extension_cgi(), " ");
-	uriExt = utils.getExt(rlp);
+	uriExt = utils->getExt(rlp);
 	if (is_directory(rlp))
 		return (false);
 	if (std::find(ext.begin(), ext.end(), uriExt) == ext.end())

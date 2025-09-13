@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/11 13:50:13 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/13 14:01:16 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,14 @@
 #include "Requette.hpp"
 //+++++++++++++++++++++++++CONSTRUCTO && DESTRUCTOR+++++++++++++++++++++++++
 
-Requette::~Requette() {}
+Requette::~Requette()
+{
+	delete utils;
+}
 
 Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl)
 {
+	utils = new ExecUtils();
 	ctType = "";
 	for (std::map<std::string, std::string>::iterator i = config.begin(); i != config.end(); i++)
 	{
@@ -40,29 +44,23 @@ void	Requette::rp3(int socket, Location Loc)
 {
 	std::string	filename;
 	std::string	rp;
+	std::string	path;
 
-	BodyUpload	bd(Loc.get_root() + Loc.get_path_upload());
+	path = Loc.get_root() + Loc.get_path_upload();
+	BodyUpload	bd(path);
 	if (rq["method"] == "POST" && Loc.get_path_upload() != "")
 	{
-		bd.UploadHandler(Cl);
-		filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
-		rp = rp5(filename);
-		std::cout << "rp = {" << rp << "}\n";
+		rp = utils->CheckError(path, Cl);
+		if (rp == "" && is_directory(path))
+		{
+			bd.UploadHandler(Cl);
+			filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
+			rp = rp5(filename);
+			std::cout << "rp = {" << rp << "}\n";
+		}
 	}
 	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 		send(socket, rp.c_str(), rp.size(), 0);
-}
-
-std::string	Requette::rp4(std::string	rp)
-{
-	std::string	res;
-
-	res = "";
-	if (access(rp.c_str(), F_OK) == -1)
-		res = utils.getError("error/404.html", pl, Cl.getFdWait());
-	else if (access(rp.c_str(), R_OK) == -1)
-		res = utils.getError("error/403.html", pl, Cl.getFdWait());
-	return (res);	
 }
 
 std::string	Requette::rp5(std::string	rt)
@@ -74,12 +72,12 @@ std::string	Requette::rp5(std::string	rt)
 	std::string			rp;
 
 	fl = 0;
-	data << utils.getData(rt, pl, Cl.getFdWait(), fl);
+	data << utils->getData(rt, Cl, fl);
 	if (fl == -1)
 		ext = ".html";
 	else
-		ext = utils.getExt(rt);
-	nbr = utils.ToString(data.str().size());
+		ext = utils->getExt(rt);
+	nbr = utils->ToString(data.str().size());
 	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
 	return (rp);
 }
@@ -94,7 +92,7 @@ void	Requette::rp2(int socket, Location &Loc)
 	{
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 		std::cout << RED << "FILE: " << rt << R << std::endl;
-		rp = rp4(rt);
+		rp = utils->CheckError(rt, Cl);
 		if (rp == "" && is_directory(rt) && Loc.get_index() != "")
 		{
 			rt = Cl.getConfig().get_real_path("/" + Loc.get_index(), Loc);
@@ -113,16 +111,20 @@ void    Requette::rp(int socket)
 {
 	Location	Loc;
 	std::string rp;
-
+	std::string	mth;
+	
+	mth = "GET POST DELETE";
 	Loc = findLoc();
-
 	std::cout << RED << "LOC : {" << Loc.get_uri() << "}\n" << R;
 	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (Loc.get_redir() != "")
 		redir_rp(Loc.get_redir(), socket);
 	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
-		rp = utils.getError("error/405.html", pl, Cl.getFdWait());
+		if (mth.find(rq["method"]) == std::string::npos)
+			rp = utils->getError("error/501.html", Cl);
+		else
+			rp = utils->getError("error/405.html", Cl);
 		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
 			send(socket, rp.c_str(), rp.size(), 0);
 		return ;

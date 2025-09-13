@@ -6,19 +6,22 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/11 13:41:08 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/13 14:01:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cgi.hpp"
 
-Cgi::~Cgi() {}
+Cgi::~Cgi()
+{
+	delete utils;
+}
 
 Cgi::Cgi(char **Envp, int length, Client &cl): Cl(cl)
 {
+	utils = new ExecUtils();
 	argv = new char*[2];
 	CgiName = new char;
-
 	envp = Envp;
 	lv = length;
 	CgiName = const_cast<char*>("/usr/bin/php-cgi");
@@ -45,7 +48,7 @@ void	Cgi::IfNotFound(std::string p, int fdc)
 	Pollfd		*pl = Cl.getPoll();
 
 	filename = "error/" + p + ".html";
-	p = utils.getError(filename, Cl.getPoll(), Cl.getFdWait());
+	p = utils->getError(filename, Cl);
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
 		if (send(fdc, p.c_str(), p.size(), 0) < 0)
@@ -63,7 +66,7 @@ void	Cgi::IfFound(std::string p, int fdc)
 	std::cout << "P: {" << p<< "}\n";
 	std::string	rp;
 	rp = ParseCgi(p);
-	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + utils.ToString(rp.size()) + "\r\nContent-Type: " + ext + "\r\n\r\n" + rp;
+	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + utils->ToString(rp.size()) + "\r\nContent-Type: " + ext + "\r\n\r\n" + rp;
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
 		if (send(fdc, rp.c_str(), rp.size(), 0) < 0)
@@ -107,7 +110,7 @@ void	Cgi::MyExec2(int &fd, int fdc)
 	std::string	st;
 
 	Cl.getPoll()->add_new_fd(fd);
-	p = utils.getData(fd);
+	p = utils->getData(fd);
 	std::cout << RED << "P: {" << p << "}\n" << R;
 	st = getStatus(p);
 	Cl.getPoll()->erase_fd(fd);
@@ -152,7 +155,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 				MyExec2(fd[0], fdc);
 				break;
 			}
-			if (utils.checkTimeOut(bg, time(NULL)))
+			if (utils->checkTimeOut(bg, time(NULL)))
 			{
 				std::cout << RED << "TIMEOUT" << R << std::endl;
 				kill(pid, SIGINT);

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/11 14:59:54 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/13 10:46:31 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ void BodyUpload::ParseBody(Client &cl)
 	
 	Bdy = cl.getBody();
 	sep = getSep(Bdy);
-
+	
 	while (true)
 	{
 		if (Bdy.find("\r\n\r\n") == std::string::npos)
@@ -91,8 +91,11 @@ void BodyUpload::ParseBody(Client &cl)
 		header = ParseHeader(header);
 		filename = Rt + header;
 		Bdy = Bdy.substr(ct.size() + 4, Bdy.length());
-		fd_create(filename, cl.getPoll(), cl.getFdWait());
-		vl.insert(std::pair<std::string, std::string>(filename, ct));
+		if (header != "")
+		{
+			fd_create(filename, cl.getPoll(), cl.getFdWait());
+			vl.insert(std::pair<std::string, std::string>(filename, ct));
+		}
 	}	
 }
 

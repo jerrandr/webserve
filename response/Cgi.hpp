@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:25:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/29 09:07:35 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/13 10:16:29 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@
 #include <iostream>
 #include <sys/stat.h>
 #include "../Client.hpp"
-#include "timeoutHandling.hpp"
 
 #define RED "\033[31m"
 #define R "\033[0m"
 class Client;
 class ExecUtils;
+
 class Cgi
 {
     private:
-		ExecUtils	utils;
+		ExecUtils	*utils;
 		char		**envp;
 		char		**argv;
 		char		*CgiName;

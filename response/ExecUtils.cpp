@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/11 13:39:40 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/13 14:00:23 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ std::string		ExecUtils::getStatus(std::string fl)
 	return (res);
 }
 
-std::string	ExecUtils::getError(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait)
+std::string	ExecUtils::getError(std::string filename, Client &cl)
 {
 	std::string					rp;
 	std::vector<std::string>	dt;
@@ -76,7 +76,7 @@ std::string	ExecUtils::getError(std::string filename, Pollfd *polls, std::map<st
 	dt.push_back("error/417.html");
 
 	if (std::find(dt.begin(), dt.end(), filename) != dt.end())
-		rp = getErrorUtils(filename, polls, fd_wait);
+		rp = getErrorUtils(filename, cl);
 	return (rp);
 }
 
@@ -113,4 +113,16 @@ bool	ExecUtils::checkTimeOut(time_t begin, time_t end)
 	if (tmp >= 5)
 		return (true);
 	return (false);
+}
+
+std::string	ExecUtils::CheckError(std::string	rp, Client &Cl)
+{
+	std::string	res;
+
+	res = "";
+	if (access(rp.c_str(), F_OK) == -1)
+		res = getError("error/404.html", Cl);
+	else if (access(rp.c_str(), R_OK) == -1)
+		res = getError("error/403.html", Cl);
+	return (res);	
 }
