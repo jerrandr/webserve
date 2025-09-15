@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:15:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/09 10:19:34 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/15 09:33:28 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Socket
         // struct pollfd (fd_serv)[10000];
         // int size_fd;
         int fd;
-        std::vector<Client> clients;
+        std::list<Client> clients;
         Socket();
 
     public:
@@ -39,12 +39,12 @@ class Socket
         int get_socket()const;
         // void    set_size_fd(int size);
         void    listen_port();
-        void    set_poll(std::vector <pollfd> &fds);
-        void    maj_fd_client();
+        // void    set_poll(std::vector <pollfd> &fds);
+        // void    maj_fd_client();
         
         void    add_new_fd();
 
-        std::vector<Client> &get_clients();
+        std::list<Client> &get_clients();
 
         // void    free_addrinfo();
 };

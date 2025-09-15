@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 09:11:48 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 10:16:31 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,7 +199,7 @@ void    Socket::listen_port()
     else
     {
         re = 0;
-        for(std::vector<Client>::iterator j = clients.begin(); j != clients.end(); j++)
+        for(std::list<Client>::iterator j = clients.begin(); j != clients.end(); j++)
         {
             if ((*j).get_socket_client()!= -1)
             {
@@ -239,10 +239,14 @@ void    Socket::listen_port()
                 }
                 if ((*j).get_status() < 0)
                 {
+                    std::list <Client>::iterator tmp = j;
                     polls->erase_fd((*j).get_socket_client());
                     close((*j).get_socket_client());
-                    // clients.erase(j);
                     (*j).set_socket(-1);
+                    j++;
+                    clients.erase(tmp);
+                    if (j++ == clients.end())
+                        break;
                 }
             }
             catch(std::bad_alloc &e)
@@ -299,7 +303,7 @@ void    Socket::listen_port()
     // maj_fd_client();
 }
 
-std::vector<Client> &Socket::get_clients()
+std::list<Client> &Socket::get_clients()
 {
     return this->clients;
 }
