@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/11 13:50:58 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 14:13:01 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,7 +269,11 @@ std::string detranslate_uri(Location loc, std::string uri)
     pos = 0;
     pos = uri.find(loc.get_uri());
     if (pos == std::string::npos)
+    {
+        if (uri[uri.size()-1] != '/')
+            uri += "/";
         return uri;
+    }
     nw = uri.substr(pos,uri.size());
     if (nw[nw.size()-1] != '/')
         nw += "/";
