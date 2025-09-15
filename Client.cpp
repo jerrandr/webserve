@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/11 09:02:37 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 08:56:19 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -316,7 +316,7 @@ void Client::receve_message()
 	// std::cout << "{" << body << "}" << std::endl;
 	// std::cout << "misy anle header " <<size<<std::endl;
 	set_head(size, tmp);
-	std::cout <<"{"<<buffer <<"}"<<std::endl;
+	// std::cout <<"{"<<buffer <<"}"<<std::endl;
 	if (real_body == 0)
 		real_body = get_len_real_body();
 	if (stat >= 1 || (is_chunked(tmp)))
@@ -434,4 +434,8 @@ ssize_t Client::get_timeout_client()
 void    Client::set_status_client(int s)
 {
 	stat = s;
+}
+void    Client::set_socket(int s)
+{
+	socket  = s;
 }

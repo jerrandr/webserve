@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/11 14:42:33 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 08:57:30 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,8 +148,8 @@ void    Socket::add_new_fd()
 
     socket_client = accept(fd,NULL,NULL);
     std::perror("accept ");
-    if(socket_client == -1)
-        throw std::logic_error("Error accept()");
+    // if(socket_client == -1)
+    //     throw std::logic_error("Error accept()");
     Client cl(socket_client,this->polls,this->config);
     clients.push_back(cl);
     polls->add_new_fd(socket_client);
@@ -199,40 +199,50 @@ void    Socket::listen_port()
     else
     {
         re = 0;
-        for(size_t j = 0; j < clients.size(); j++)
+        for(std::vector<Client>::iterator j = clients.begin(); j != clients.end(); j++)
         {
-            re = polls->get_status(clients[j].get_socket_client());
+            if ((*j).get_socket_client()!= -1)
+            {
+                
+            re = polls->get_status((*j).get_socket_client());
             try
             {
                 if(re)
                 {
                     if (re & POLLIN)
-                        clients[j].verify_connex(1);
+                        (*j).verify_connex(1);
             //    else if (re & POLLOUT)
             //         clients[j].verify_connex(2);
                 }
-                if (clients[j].size_fd_wait() != 0 && clients[j].get_status_requette() == 1 )
+                if ((*j).size_fd_wait() != 0 && (*j).get_status_requette() == 1 )
                 {
-                    clients[j].parse_requette(); 
+                    (*j).parse_requette(); 
                     std::cout << "size fd wait" << std::endl;
                 }
-                else if (clients[j].get_status_requette() == 1 && clients[j].size_fd_wait() == 0 && clients[j].get_requette() != "")
+                else if ((*j).get_status_requette() == 1 && (*j).size_fd_wait() == 0 && (*j).get_requette() != "")
                 {
                     std::cout << "wait" << std::endl;
-                    clients[j].parse_requette();
+                    (*j).parse_requette();
                 }
-                else if (clients[j].get_status_requette() != 1 && clients[j].get_requette() != "")
+                else if ((*j).get_status_requette() != 1 && (*j).get_requette() != "")
                 {
                 // std::cout << "ato " << time(NULL) - clients[j].get_timeout()<<std::endl;
-                    if (time(NULL) - clients[j].get_timeout() >= 60 && !(re & POLLIN))
+                    if (time(NULL) - (*j).get_timeout() >= 60 && !(re & POLLIN))
                     {
-                        clients[j].exec_request_timeout();
+                       (*j).exec_request_timeout();
                     }
                 }
-                else if( time(NULL) - clients[j].get_timeout_client() >= 60 && !(re & POLLIN))
+                else if( time(NULL) - (*j).get_timeout_client() >= 60 && !(re & POLLIN))
                 {
                     std::cout << "ato" << std::endl;
-                    clients[j].set_status_client(-1);
+                    (*j).set_status_client(-1);
+                }
+                if ((*j).get_status() < 0)
+                {
+                    polls->erase_fd((*j).get_socket_client());
+                    close((*j).get_socket_client());
+                    // clients.erase(j);
+                    (*j).set_socket(-1);
                 }
             }
             catch(std::bad_alloc &e)
@@ -240,12 +250,12 @@ void    Socket::listen_port()
                 (void)e;
                 try
                 {
-                    clients[j].exec_error_server();
+                    (*j).exec_error_server();
                 }
                 catch(std::bad_alloc& e)
                 {
                    (void)e;
-                   clients[j].exec_500();
+                   (*j).exec_500();
                 }
                 
             }
@@ -254,16 +264,17 @@ void    Socket::listen_port()
                 (void)e;
                 try
                 {
-                    clients[j].exec_error_server();
+                    (*j).exec_error_server();
                 }
                 catch(std::out_of_range& e)
                 {
                    (void)e;
-                   clients[j].exec_500();
+                   (*j).exec_500();
                 }
             }
             
         }
+    }
     }
     // for(int i = 0; i < size_fd; i++)
     // {
@@ -285,7 +296,7 @@ void    Socket::listen_port()
     //         }
     //     }
     // }
-    maj_fd_client();
+    // maj_fd_client();
 }
 
 std::vector<Client> &Socket::get_clients()
