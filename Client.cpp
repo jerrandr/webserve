@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 09:12:15 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 13:18:46 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,7 @@ static std::string get_body(std::string buffer, int &size,std::string requette)
 //         return r;
 // }
 
-static bool is_chunked(std::string buffer)
+bool Client::is_chunked(std::string buffer)
 {
 	std::size_t size;
 	std::string tmp;
@@ -319,7 +319,7 @@ void Client::receve_message()
 	// std::cout <<"{"<<buffer <<"}"<<std::endl;
 	if (real_body == 0)
 		real_body = get_len_real_body();
-	if (stat >= 1 || (is_chunked(tmp)))
+	if (stat >= 1 || (is_chunked(requette)))
 	{
 		stat = 1;
 		// std::cout << "chunked" <<std::endl;
@@ -351,6 +351,17 @@ void Client::receve_message()
 	}
 	if (requette.find("\r\n\r\n") == std::string::npos)
 		status_requette = 2;
+	if (real_body == 0 && !is_chunked(requette) && is_post() && requette.find("\r\n\r\n") != std::string::npos)
+	{
+		parse_requette();
+		if (fd_wait.size() == 0)
+		{
+			requette = "";
+			body = "";
+			real_body = 0;
+		}
+		return ;
+	}
 	if (status_requette == 1 && real_body == size_body && requette.find("\r\n\r\n") != std::string::npos)
 	{
 		request_time = 0;

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/11 09:05:16 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 12:11:27 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void Client::max_body_size_trait()
 		// {
 			t = "413 PLAYLOAD TOO LARGE";
 			ss << t.size();
-			t = "HTTP/1.1 500 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
+			t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 			if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
 				send(socket, t.c_str(), t.size(), 0);
 			return;
@@ -51,11 +51,11 @@ void Client::max_body_size_trait()
 	if (fd != -1)
 	{
 		t = get_html_page(fd);
+		fd_closed(fd, polls, fd_wait, path);
 		ss << t.size();
 		t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 		if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
 			send(socket, t.c_str(), t.size(), 0);
-		fd_closed(fd, polls, fd_wait, path);
 	}
 }
 void Client::exec_dir_listing(std::string uri)
@@ -216,6 +216,24 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		try
 		{
 			exec_not_implemented();
+			if (fd_wait.size() == 0)
+			{
+				requette = "";
+				body = "";
+			}
+		}
+		catch (NotReady &e)
+		{
+			(void)e;
+		}
+		return true;
+	}
+	else if (is_len_required())
+	{
+		std::cout << "len required" << std::endl;
+		try
+		{
+			exec_len_required();
 			if (fd_wait.size() == 0)
 			{
 				requette = "";

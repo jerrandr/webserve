@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 09:12:21 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 13:12:56 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,5 +107,12 @@ class Client
         void    exec_not_implemented();
 
         void    exec_500();
-};
+
+        bool is_chunked(std::string buffer);
+
+        /*pour 411*/
+        bool    is_post();
+        bool    is_len_required();
+        void    exec_len_required();
+    };
 #endif

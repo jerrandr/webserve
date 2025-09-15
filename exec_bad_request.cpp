@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:42:08 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/11 07:56:14 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 13:13:43 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool    Client::is_bad_request()
 	tmp = "";
 	start = 0;
 	end = 0;
-	
+	std::cout << requette <<"}"<<std::endl;
 	while(start < requette.size())
 	{
 		end = requette.find("\r\n",start);
@@ -34,19 +34,24 @@ bool    Client::is_bad_request()
 		{
 			f = split(tmp," ");
 			if (f.size() != 3)
+			{
 				return true;
+			}
 		}
 		else
 		{
 			f = split_sep(tmp,": ");
 			if (f.size() != 2 && end +2 < requette.size())
+			{
 				return true;
+			}
 		}
 		f.clear();
 		tmp = "";
 		start = end + 2;
 		end = 0;
 	}
+	std::cout << "ato" << std::endl;
 	return false;
 }
 

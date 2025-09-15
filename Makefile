@@ -11,6 +11,7 @@ SRC = main.cpp Client.cpp Server.cpp Socket.cpp utils.cpp\
 	exec_error_server.cpp\
 	directory_listing/directory_listing.cpp\
 	WebServer.cpp\
+	len_required.cpp\
 	infile_parsing/config_parsing.cpp \
 	infile_parsing/address_checking.cpp infile_parsing/port_checking.cpp \
 	infile_parsing/paths_handling.cpp infile_parsing/location_parsing.cpp \
