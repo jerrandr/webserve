@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 12:11:27 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 13:37:02 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,9 @@ bool    Client::is_not_implemented(std::map<std::string, std::string> cf)
 	for(std::size_t i = 0; i < list_im.size();i++)
 	{
 		if (cf["method"] == list_im[i] && cf["method"] != "GET" && cf["method"] != "POST" && cf["method"] != "DELETE")
+		{
 			return true;
+		}
 	}
 	return false;
 }
@@ -174,42 +176,6 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		}
 		return true;
 	}
-	else if (http_not_supported(config["http_version"]))
-	{
-		std::cout << "HTTP NOT SUPPORTED" << std::endl;
-		try
-		{
-			exec_http_not_supported();
-			if (fd_wait.size() == 0)
-			{
-				requette = "";
-				body = "";
-			}
-		}
-		catch (NotReady &e)
-		{
-			(void)e;
-		}
-		return true;
-	}
-	else if (is_dir_listing(config["uri"]))
-	{
-		std::cout << "is dir listing" << std::endl;
-		try
-		{
-			exec_dir_listing(config["uri"]);
-			if (fd_wait.size() == 0)
-			{
-				requette = "";
-				body = "";
-			}
-		}
-		catch (NotReady &e)
-		{
-			(void)e;
-		}
-		return true;
-	}
 	else if (is_not_implemented(config))
 	{
 		std::cout << "not implemented " << std::endl;
@@ -228,12 +194,48 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		}
 		return true;
 	}
+	else if (http_not_supported(config["http_version"]))
+	{
+		std::cout << "HTTP NOT SUPPORTED" << std::endl;
+		try
+		{
+			exec_http_not_supported();
+			if (fd_wait.size() == 0)
+			{
+				requette = "";
+				body = "";
+			}
+		}
+		catch (NotReady &e)
+		{
+			(void)e;
+		}
+		return true;
+	}
 	else if (is_len_required())
 	{
 		std::cout << "len required" << std::endl;
 		try
 		{
 			exec_len_required();
+			if (fd_wait.size() == 0)
+			{
+				requette = "";
+				body = "";
+			}
+		}
+		catch (NotReady &e)
+		{
+			(void)e;
+		}
+		return true;
+	}
+	else if (is_dir_listing(config["uri"]))
+	{
+		std::cout << "is dir listing" << std::endl;
+		try
+		{
+			exec_dir_listing(config["uri"]);
 			if (fd_wait.size() == 0)
 			{
 				requette = "";
