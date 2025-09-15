@@ -1,5 +1,3 @@
 <?php
-    echo "++++++BEGIN++++++\n";
-    sleep(15);
-    echo "++++++END++++++\n";
+    echo "<h1>CGI TEST</h1>";
 ?>

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:56:34 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/08 09:26:22 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:51:49 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,7 @@ void	Requette::redir_rp(std::string redir, int socket)
 	std::cout << "RP: {" << rp << "}\n";
 	if (rp != "")
 	{
-		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
-			send(socket, rp.c_str(), rp.size(), 0);
+		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
 }

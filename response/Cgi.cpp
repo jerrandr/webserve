@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/13 14:01:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:53:29 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 Cgi::~Cgi()
 {
+	delete argv;
+	delete CgiName;
 	delete utils;
 }
 
@@ -49,14 +51,7 @@ void	Cgi::IfNotFound(std::string p, int fdc)
 
 	filename = "error/" + p + ".html";
 	p = utils->getError(filename, Cl);
-	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
-	{
-		if (send(fdc, p.c_str(), p.size(), 0) < 0)
-		{
-			std::cout << "EXECVE ERROR" << std::endl;
-			exit(0);
-		}
-	}
+	utils->SendResponse(pl, p, fdc);
 }
 
 void	Cgi::IfFound(std::string p, int fdc)
@@ -67,14 +62,7 @@ void	Cgi::IfFound(std::string p, int fdc)
 	std::string	rp;
 	rp = ParseCgi(p);
 	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + utils->ToString(rp.size()) + "\r\nContent-Type: " + ext + "\r\n\r\n" + rp;
-	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
-	{
-		if (send(fdc, rp.c_str(), rp.size(), 0) < 0)
-		{
-			std::cout << "EXECVE ERROR" << std::endl;
-			exit(0);
-		}
-	}
+	utils->SendResponse(pl, rp, fdc);
 }
 
 std::string	Cgi::ParseCgi(std::string content)
@@ -126,13 +114,17 @@ void    Cgi::MyExec(int fdc, std::string body)
 	int		fd2[2];
 	int		pid;
 	time_t	bg;
+	Pollfd	*pl;
 
+	pl = Cl.getPoll();
 	bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		exit(0);
+	pl->add_new_fd(fd2[1]);
 	pid = fork();
 	if (pid == 0)
 	{
+		
 		dup2(fd2[0], STDIN_FILENO);
 		dup2(fd[1], STDOUT_FILENO);
 		execve("/usr/bin/php-cgi", argv, envp);
@@ -143,7 +135,9 @@ void    Cgi::MyExec(int fdc, std::string body)
 		if (body != "")
 		{
 			std::cout << "BODY: {" << body << "}" << std::endl;
-			write(fd2[1], body.c_str(), body.size());
+			if (pl->get_status(fd2[1]) & POLLIN)
+				write(fd2[1], body.c_str(), body.size());
+			pl->erase_fd(fd2[1]);
 		}
 		close(fd2[0]);
 		close(fd2[1]);

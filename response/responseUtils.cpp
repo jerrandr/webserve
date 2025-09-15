@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/13 14:02:25 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:54:07 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	Requette::initEnvp(std::string rt, std::string bd)
     tmp[3] = "REDIRECT_STATUS=200";
 	tmp[4] = "CONTENT_TYPE=" + bd;
 	tmp[5] = "SCRIPT_FILENAME=" + rt;
-	
+
 	std::cout << "Rt: " << rt << std::endl;
 	if (rq["method"] == "GET")
 		tmp[6] = "QUERY_STRING=" + query;
@@ -73,8 +73,7 @@ int	Requette::IfDelete(int socket)
 			std::remove(rt.c_str());
 			rp = "HTTP/1.1 204 No Content\r\nConnection: close\r\n\r\n";
 		}
-		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
-			send(socket, rp.c_str(), rp.size(), 0);
+		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return (1);
 	}
 	return (-1);
@@ -103,7 +102,9 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 {
 	std::cout << RED << "CGI\n" << R;
 	std::string rt;
-	
+	std::string	bdy;
+
+	bdy = Cl.getBody();
 	// if (Loc.get_path_cgi() == "")
 	// {
 	// 	rt = utils->getError("error/502.html", pl, Cl.getFdWait());
@@ -117,7 +118,7 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 	initEnvp(rt, bd);
 	Cgi cgi(envp, lv, Cl);
-	cgi.MyExec(socket, body);
+	cgi.MyExec(socket, bdy);
 	return ;
 }
 

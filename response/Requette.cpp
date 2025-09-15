@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/13 14:01:16 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:15:19 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl
     lv = cl.get_len_real_body();
     pl = cl.getPoll();
     this->lc = cl.getConfig().get_locs();
-	body = cl.getBody();
 }	
 
 //+++++++++++++++++++++++++REPONSE+++++++++++++++++++++++++
@@ -59,8 +58,7 @@ void	Requette::rp3(int socket, Location Loc)
 			std::cout << "rp = {" << rp << "}\n";
 		}
 	}
-	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
-		send(socket, rp.c_str(), rp.size(), 0);
+	utils->SendResponse(Cl.getPoll(), rp, socket);
 }
 
 std::string	Requette::rp5(std::string	rt)
@@ -100,8 +98,7 @@ void	Requette::rp2(int socket, Location &Loc)
 		}
 		else if (rp == "")
 			rp = rp5(rt);
-		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
-			send(socket, rp.c_str(), rp.size(), 0);
+		utils->SendResponse(Cl.getPoll(), rp, socket);
 	}
 	else
 		rp3(socket, Loc);
@@ -116,7 +113,14 @@ void    Requette::rp(int socket)
 	mth = "GET POST DELETE";
 	Loc = findLoc();
 	std::cout << RED << "LOC : {" << Loc.get_uri() << "}\n" << R;
+	std::cout << RED << "URI : {" << rq["uri"] << "}\n" << R;
 	std::cout << "METHOD: " << rq["method"] << std::endl;
+	if (rq["uri"].size() >= 2048)
+	{
+		rp = utils->getError("error/414.html", Cl);
+		utils->SendResponse(Cl.getPoll(), rp, socket);
+		return ;
+	}
 	if (Loc.get_redir() != "")
 		redir_rp(Loc.get_redir(), socket);
 	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
@@ -125,8 +129,7 @@ void    Requette::rp(int socket)
 			rp = utils->getError("error/501.html", Cl);
 		else
 			rp = utils->getError("error/405.html", Cl);
-		if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
-			send(socket, rp.c_str(), rp.size(), 0);
+		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
 	else if (IfDelete(socket) == 1)

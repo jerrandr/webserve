@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/13 10:16:47 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/15 09:35:00 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ class Requette
 		Pollfd								*pl;
 		std::map<std::string, std::string>	rq;
 		std::vector<Location>				lc;
-		std::string							body;
 		std::string							ctType;
 		char								**envp;
 		int									lv;

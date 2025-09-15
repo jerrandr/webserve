@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/13 13:58:29 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:04:09 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class ExecUtils
 		bool				checkTimeOut(time_t begin, time_t end);
 		std::string			getExt(std::string filename);
 		std::string			CheckError(std::string	rp, Client &Cl);
+		void				SendResponse(Pollfd *pl, std::string rp, int fdc);
 };
 							
 

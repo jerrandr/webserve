@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/13 14:00:23 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/15 14:11:07 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,4 +125,18 @@ std::string	ExecUtils::CheckError(std::string	rp, Client &Cl)
 	else if (access(rp.c_str(), R_OK) == -1)
 		res = getError("error/403.html", Cl);
 	return (res);	
+}
+
+void	ExecUtils::SendResponse(Pollfd *pl, std::string rp, int fdc)
+{
+	size_t	pc;
+	size_t	len;
+
+	pc = 2048;
+	for (size_t i = 0; i < rp.size(); i += pc)
+	{
+		len = std::min(pc, rp.size() - i);
+		if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
+			send(fdc, rp.c_str(), len, 0);
+	}
 }
