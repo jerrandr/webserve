@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 08:57:30 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 09:11:48 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,31 +164,31 @@ void    Socket::add_new_fd()
 //     fd_serv = fds;
 // }
 
-void    Socket::maj_fd_client()
-{
-    size_t size;
+// void    Socket::maj_fd_client()
+// {
+//     size_t size;
 
-    size = 0;
+//     size = 0;
 
-    while(true)
-    {
-        size = 0;
-        for(std::vector<Client>::iterator i= clients.begin(); i != clients.end(); i++)
-        {
-            size ++;
-            if(i->get_status() < 0)
-            {
-                polls->erase_fd(i->get_socket_client());
-                close(i->get_socket_client());
-                clients.erase(i);
-                size = 0;
-                break;
-            }
-        }
-        if(size == clients.size())
-            break;   
-    }
-}
+//     while(true)
+//     {
+//         size = 0;
+//         for(std::vector<Client>::iterator i= clients.begin(); i != clients.end(); i++)
+//         {
+//             size ++;
+//             if(i->get_status() < 0)
+//             {
+//                 polls->erase_fd(i->get_socket_client());
+//                 close(i->get_socket_client());
+//                 clients.erase(i);
+//                 size = 0;
+//                 break;
+//             }
+//         }
+//         if(size == clients.size())
+//             break;   
+//     }
+// }
 void    Socket::listen_port()
 {
     short re;

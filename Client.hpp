@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 08:55:40 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 09:12:21 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ class Client
         void    set_status_connexion( int status);
 
         void    receve_message();
-        void    send_message();
+        // void    send_message();
 
         void    verify_connex(int status);
 

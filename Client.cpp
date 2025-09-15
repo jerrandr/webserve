@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 08:56:19 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/15 09:12:15 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,51 +116,51 @@ void Client::set_status_connexion(int status)
 	status_connexion = status;
 }
 
-void Client::send_message()
-{
-	if (reponse == "")
-	{
-		std::string test;
-		std::string html;
-		std::ifstream fd("index.html");
-		std::stringstream ss;
-		int size;
+// void Client::send_message()
+// {
+// 	if (reponse == "")
+// 	{
+// 		std::string test;
+// 		std::string html;
+// 		std::ifstream fd("index.html");
+// 		std::stringstream ss;
+// 		int size;
 
-		test = "";
-		if (fd.fail())
-			std::perror("Error");
-		size = 0;
-		while (std::getline(fd, html))
-		{
-			size += html.length();
-			test += html;
-		}
-		ss << size;
-		// test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ test;
-		size = send(socket, test.c_str(), strlen(test.c_str()), 0);
-		if (size == -1)
-			std::perror("error 1");
-	}
-	else
-	{
-		std::string test;
-		int size;
-		std::stringstream ss;
+// 		test = "";
+// 		if (fd.fail())
+// 			std::perror("Error");
+// 		size = 0;
+// 		while (std::getline(fd, html))
+// 		{
+// 			size += html.length();
+// 			test += html;
+// 		}
+// 		ss << size;
+// 		// test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ test;
+// 		size = send(socket, test.c_str(), strlen(test.c_str()), 0);
+// 		if (size == -1)
+// 			std::perror("error 1");
+// 	}
+// 	else
+// 	{
+// 		std::string test;
+// 		int size;
+// 		std::stringstream ss;
 
-		size = 0;
-		size += size_body;
-		std::cout << "size body " << size_body << " " << reponse.size() << std::endl;
-		ss << size_body;
-		// test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: image/png\r\n\r\n";
-		size += test.size();
-		test.append(reponse, size_body);
-		size += size_body;
-		size = send(socket, &test[0], size, 0);
-		if (size == -1)
-			std::perror("error 1");
-	}
-	status_requette = 0;
-}
+// 		size = 0;
+// 		size += size_body;
+// 		std::cout << "size body " << size_body << " " << reponse.size() << std::endl;
+// 		ss << size_body;
+// 		// test = "HTTP/1.1 200 OK\r\nContent-Length: "+ss.str()+"\r\nContent-Type: image/png\r\n\r\n";
+// 		size += test.size();
+// 		test.append(reponse, size_body);
+// 		size += size_body;
+// 		size = send(socket, &test[0], size, 0);
+// 		if (size == -1)
+// 			std::perror("error 1");
+// 	}
+// 	status_requette = 0;
+// }
 
 int Client::get_status() const
 {
@@ -386,12 +386,12 @@ void Client::verify_connex(int status)
 	{
 		receve_message();
 	}
-	else if (status == 2 && status_requette == 1 && reponse != "" && fd_wait.size() == 0)
-	{
-		send_message();
-		size_body = 0;
-		real_body = 0;
-	}
+	// else if (status == 2 && status_requette == 1 && reponse != "" && fd_wait.size() == 0)
+	// {
+	// 	send_message();
+	// 	size_body = 0;
+	// 	real_body = 0;
+	// }
 }
 std::size_t Client::size_fd_wait()
 {
