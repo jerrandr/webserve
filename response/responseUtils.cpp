@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/16 08:56:49 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:43:45 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,39 +14,34 @@
 
 void	Requette::initEnvp(std::string rt, std::string bd)
 {
-	std::string 		cl;
-	std::string 		query;
-	std::string			*tmp;
-	
-	envp = new char*[9];
+	std::string	cl;
+	std::string	query;
+	int			nb;
+
+	nb = 0;
 	cl = utils->ToString(lv);
 	query = "";
-	tmp = new std::string[8]();
 	if (rq["uri"].find("?") != std::string::npos)
 		query = rq["uri"].substr(rq["uri"].find("?") + 1, rq["uri"].length() - 1);
-	tmp[0] = "GATEWAY_INTERFACE=CGI/1.1";
-	tmp[1] = "REQUEST_METHOD=" + rq["method"];
-	tmp[2] = "SERVER_PROTOCOL=HTTP/1.1";
-    tmp[3] = "REDIRECT_STATUS=200";
-	tmp[4] = "CONTENT_TYPE=" + bd;
-	tmp[5] = "SCRIPT_FILENAME=" + rt;
-
+	envStock.push_back("GATEWAY_INTERFACE=CGI/1.1");
+	envStock.push_back("REQUEST_METHOD=" + rq["method"]);
+	envStock.push_back("SERVER_PROTOCOL=HTTP/1.1");
+    envStock.push_back("REDIRECT_STATUS=200");
+	envStock.push_back("SCRIPT_FILENAME=" + rt);
+	if (bd != "")
+		envStock.push_back("CONTENT_TYPE=" + bd);
 	std::cout << "Rt: " << rt << std::endl;
-	if (rq["method"] == "GET")
-		tmp[6] = "QUERY_STRING=" + query;
-	else if (rq["method"] == "POST")
-		tmp[6] = "CONTENT_LENGTH=" + cl;
-	else
-		tmp[6] = "";
-	std::cout << "TMP{4} : " << tmp[4] << std::endl;
-	for (size_t i = 0; i < 7; i++)
+	if (rq["method"] == "GET" && query != "")
+		envStock.push_back("QUERY_STRING=" + query);
+	else if (rq["method"] == "POST" && cl != "")
+		envStock.push_back("CONTENT_LENGTH=" + cl);
+	envp = new char*[envStock.size() + 1];
+	for (std::vector<std::string>::iterator i = envStock.begin(); i < envStock.end(); i++)
 	{
-		if (tmp[i] != "")
-			envp[i] = const_cast<char*>(tmp[i].c_str());
-		else
-			envp[i] = NULL;
+		envp[nb] = const_cast<char*>((*i).c_str());
+		nb++;	
 	}
-	envp[7] = NULL;
+	envp[nb] = NULL;
 }
 
 int	Requette::IfDelete(int socket)
@@ -119,7 +114,6 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	initEnvp(rt, bd);
 	Cgi cgi(envp, lv, Cl);
 	cgi.MyExec(socket, bdy);
-	delete [] envp;
 	std::cout << "CGI FINISH\n";
 	return ;
 }

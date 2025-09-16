@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/16 08:50:56 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/16 17:50:43 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	Cgi::IfNotFound(std::string p, int fdc)
 void	Cgi::IfFound(std::string p, int fdc)
 {
 	Pollfd	*pl = Cl.getPoll();
-	std::string	ext = getType(envp[5]);
+	std::string	ext = getType(envp[4]);
 	std::cout << "P: {" << p<< "}\n";
 	std::string	rp;
 	rp = ParseCgi(p);
@@ -129,6 +129,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 		dup2(fd2[0], STDIN_FILENO);
 		dup2(fd[1], STDOUT_FILENO);
 		execve("/usr/bin/php-cgi", argv, envp);
+		delete [] envp;
 		exit(0);
 	}
 	else
@@ -159,4 +160,5 @@ void    Cgi::MyExec(int fdc, std::string body)
 			}
 		}
 	}
+	delete [] envp;
 }
