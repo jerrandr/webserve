@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:25:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/15 13:37:43 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/16 08:46:24 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ class Cgi
 		ExecUtils	*utils;
 		char		**envp;
 		char		**argv;
-		char		*CgiName;
+		// char		*CgiName;
 		int			lv;
 		Client		&Cl;
 		Cgi			&operator=(Cgi const & cpy);

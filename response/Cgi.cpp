@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/15 14:53:29 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/16 08:50:56 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 Cgi::~Cgi()
 {
-	delete argv;
-	delete CgiName;
+	delete [] argv;
+	// delete CgiName;
 	delete utils;
 }
 
@@ -23,11 +23,12 @@ Cgi::Cgi(char **Envp, int length, Client &cl): Cl(cl)
 {
 	utils = new ExecUtils();
 	argv = new char*[2];
-	CgiName = new char;
+	// CgiName = new char;
 	envp = Envp;
 	lv = length;
-	CgiName = const_cast<char*>("/usr/bin/php-cgi");
-	argv[0] = CgiName;
+	// CgiName = const_cast<char*>("/usr/bin/php-cgi");
+	// argv[0] = CgiName;
+	argv[0] = const_cast<char*>("/usr/bin/php-cgi");
 	argv[1] = NULL;
 }
 

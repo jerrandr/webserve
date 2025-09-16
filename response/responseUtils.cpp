@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/15 14:54:07 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/16 08:56:49 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	initEnvp(rt, bd);
 	Cgi cgi(envp, lv, Cl);
 	cgi.MyExec(socket, bdy);
+	delete [] envp;
+	std::cout << "CGI FINISH\n";
 	return ;
 }
 
