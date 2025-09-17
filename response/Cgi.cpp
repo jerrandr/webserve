@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/17 09:29:06 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/17 13:43:40 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 Cgi::~Cgi()
 {
 	delete [] argv;
-	// delete CgiName;
 	delete utils;
+	delete [] envp;
 }
 
 Cgi::Cgi(char **Envp, int length, Client &cl): Cl(cl)
 {
-	utils = new ExecUtils();
+	Config	cf;
+
+	cf = Cl.getConfig();
+	utils = new ExecUtils(cf.get_errors());
 	argv = new char*[2];
-	// CgiName = new char;
 	envp = Envp;
 	lv = length;
-	// CgiName = const_cast<char*>("/usr/bin/php-cgi");
-	// argv[0] = CgiName;
 	argv[0] = const_cast<char*>("/usr/bin/php-cgi");
 	argv[1] = NULL;
 }
@@ -52,7 +52,6 @@ void	Cgi::IfNotFound(std::string p, int fdc)
 
 	filename = "error/" + p + ".html";
 	p = utils->getError(filename, Cl);
-	
 	utils->SendResponse(pl, p, fdc);
 }
 
@@ -118,6 +117,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 	time_t	bg;
 	Pollfd	*pl;
 
+	Error504 = utils->getError("error/504.html", Cl);
 	pl = Cl.getPoll();
 	bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
@@ -130,7 +130,6 @@ void    Cgi::MyExec(int fdc, std::string body)
 		dup2(fd2[0], STDIN_FILENO);
 		dup2(fd[1], STDOUT_FILENO);
 		execve("/usr/bin/php-cgi", argv, envp);
-		delete [] envp;
 		exit(0);
 	}
 	else
@@ -157,12 +156,12 @@ void    Cgi::MyExec(int fdc, std::string body)
 			if (utils->checkTimeOut(bg, time(NULL)))
 			{
 				std::cout << RED << "TIMEOUT" << R << std::endl;
-				kill(pid, SIGINT);
-				IfNotFound("504", fdc);
+				kill(pid, SIGTERM);
+				std::cout << "ERROR {" << Error504 << "}\n";
+				utils->SendResponse(Cl.getPoll(), Error504, fdc);
 				break;
 			}
 			sleep(1);
 		}
 	}
-	delete [] envp;
 }

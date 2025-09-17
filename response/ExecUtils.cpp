@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/17 09:00:35 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/17 14:37:00 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-ExecUtils::ExecUtils()
+ExecUtils::~ExecUtils() {}
+
+ExecUtils::ExecUtils(const ErrorPage &error): ep(error)
 {
 	Er.insert(std::pair<std::string, std::string>("400", "bad request"));
 	Er.insert(std::pair<std::string, std::string>("403", "forbidden"));
@@ -36,8 +38,6 @@ ExecUtils::ExecUtils()
 	Er.insert(std::pair<std::string, std::string>("505", "http version not supported"));
 	Erro = "<!DOCTYPE html><html lang=\"en\"><head>    <meta charset=\"UTF-8\">    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">    <title>Document</title></head><body>    <center><h1>500 Internal Server Error</h1></center></body></html>";
 }
-
-ExecUtils::~ExecUtils() {}
 
 std::string	ExecUtils::ToString(int nbr)
 {
@@ -111,7 +111,7 @@ bool	ExecUtils::checkTimeOut(time_t begin, time_t end)
 
 	tmp = end - begin;
 	std::cout << "TMP {" << tmp << "}\n";
-	if (tmp >= 58)
+	if (tmp >= 15)
 		return (true);
 	return (false);
 }

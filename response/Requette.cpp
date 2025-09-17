@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/15 14:15:19 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/17 14:15:54 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@ Requette::~Requette()
 
 Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl)
 {
-	utils = new ExecUtils();
+	Config	cf;
+
+	cf = Cl.getConfig();
+	utils = new ExecUtils(cf.get_errors());
 	ctType = "";
 	for (std::map<std::string, std::string>::iterator i = config.begin(); i != config.end(); i++)
 	{
@@ -117,7 +120,7 @@ void    Requette::rp(int socket)
 	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (rq["uri"].size() >= 2048)
 	{
-		rp = utils->getError("error/414.html", Cl);
+		rp = utils->getError("error/414.html", Cl); 
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}

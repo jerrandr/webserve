@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:25:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/16 08:46:24 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/17 11:04:53 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@ class ExecUtils;
 class Cgi
 {
     private:
+		std::string	Error504;
 		ExecUtils	*utils;
 		char		**envp;
 		char		**argv;
-		// char		*CgiName;
 		int			lv;
 		Client		&Cl;
 		Cgi			&operator=(Cgi const & cpy);

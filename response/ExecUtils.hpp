@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/15 14:04:09 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/17 14:17:14 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,25 @@ class Client;
 class ExecUtils
 {
 	private:
-		std::string				getErrorUtils(std::string st,  Client & cl);
-		// std::string	getErrorUtils(std::string st,  Pollfd *polls, std::map<std::string, int> &fd_wait);	
-		std::string	getStatus(std::string fl);
-		std::map<std::string, std::string> Er;
-		std::string	Erro;
+		std::string							getErrorUtils(std::string st,  Client & cl);
+		std::string							getStatus(std::string fl);
+		std::map<std::string, std::string>	Er;
+		std::string							Erro;
+		const ErrorPage						&ep;
+											ExecUtils(ExecUtils const & cpy);
+		ExecUtils 							&operator=(ExecUtils const & cpy);
 	public:
-		ExecUtils();
-		~ExecUtils();
-		ExecUtils &operator=(ExecUtils const & cpy) {(void)cpy;return(*this);};
-		ExecUtils(ExecUtils const & cpy) {(void)cpy;};
+							ExecUtils(const ErrorPage &error);
+							~ExecUtils();
 		std::string			ToString(int nbr);
 		std::string 		getData(std::string filename, Client & cl, int &fl);
-		// std::string			getData(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait, int &fl);
-		// std::string			getError(std::string filename, Pollfd *polls, std::map<std::string, int> &fd_wait);
 		std::string			getError(std::string filename, Client &cl);
 		std::string			getData(int fd);
 		bool				checkTimeOut(time_t begin, time_t end);
 		std::string			getExt(std::string filename);
 		std::string			CheckError(std::string	rp, Client &Cl);
 		void				SendResponse(Pollfd *pl, std::string rp, int fdc);
+		const ErrorPage		getEp();
 };
 							
 
