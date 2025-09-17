@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/16 17:50:43 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/17 09:29:06 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	Cgi::IfNotFound(std::string p, int fdc)
 
 	filename = "error/" + p + ".html";
 	p = utils->getError(filename, Cl);
+	
 	utils->SendResponse(pl, p, fdc);
 }
 
@@ -138,11 +139,13 @@ void    Cgi::MyExec(int fdc, std::string body)
 		{
 			std::cout << "BODY: {" << body << "}" << std::endl;
 			if (pl->get_status(fd2[1]) & POLLIN)
+			{
 				write(fd2[1], body.c_str(), body.size());
-			pl->erase_fd(fd2[1]);
+				pl->erase_fd(fd2[1]);
+			}
 		}
 		close(fd2[0]);
-		close(fd2[1]);
+		pl->erase_fd(fd2[1]);
 		close(fd[1]);
 		while (true)
 		{
@@ -158,6 +161,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 				IfNotFound("504", fdc);
 				break;
 			}
+			sleep(1);
 		}
 	}
 	delete [] envp;

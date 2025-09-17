@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/15 14:11:07 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/17 09:00:35 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,8 @@ bool	ExecUtils::checkTimeOut(time_t begin, time_t end)
 	time_t tmp;
 
 	tmp = end - begin;
-	if (tmp >= 5)
+	std::cout << "TMP {" << tmp << "}\n";
+	if (tmp >= 58)
 		return (true);
 	return (false);
 }
@@ -133,10 +134,12 @@ void	ExecUtils::SendResponse(Pollfd *pl, std::string rp, int fdc)
 	size_t	len;
 
 	pc = 2048;
-	for (size_t i = 0; i < rp.size(); i += pc)
+	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
-		len = std::min(pc, rp.size() - i);
-		if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
-			send(fdc, rp.c_str(), len, 0);
+		for (size_t i = 0; i < rp.size(); i += pc)
+		{
+				len = std::min(pc, rp.size() - i);
+				send(fdc, rp.c_str(), len, 0);
+		}
 	}
 }
