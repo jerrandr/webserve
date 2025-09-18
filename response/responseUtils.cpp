@@ -6,13 +6,13 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/18 12:49:41 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 13:48:43 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Requette.hpp"
+#include "Response.hpp"
 
-void	Requette::initEnvp(std::string rt, std::string bd)
+void	Response::initEnvp(std::string rt, std::string bd)
 {
 	std::string	cl;
 	std::string	query;
@@ -44,7 +44,7 @@ void	Requette::initEnvp(std::string rt, std::string bd)
 	envp[nb] = NULL;
 }
 
-int	Requette::IfDelete(int socket)
+int	Response::IfDelete(int socket)
 {
 	std::string rt;
 	std::string	rp;
@@ -72,7 +72,7 @@ int	Requette::IfDelete(int socket)
 	return (-1);
 }
 
-int	Requette::IfDirList(Location lt)
+int	Response::IfDirList(Location lt)
 {
 	struct stat st;
 
@@ -90,7 +90,7 @@ int	Requette::IfDirList(Location lt)
 	return (0);
 }
 
-void	Requette::ifCgi(Location Loc, int socket, std::string bd)
+void	Response::ifCgi(Location Loc, int socket, std::string bd)
 {
 	std::cout << RED << "CGI\n" << R;
 	std::string rt;
@@ -104,7 +104,7 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	return ;
 }
 
-bool	Requette::ifCgi2(Location Loc)
+bool	Response::ifCgi2(Location Loc)
 {
 	std::string					rlp;
 	Config						cfg;

@@ -1,25 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Requette.cpp                                       :+:      :+:    :+:   */
+/*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/18 12:49:50 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 13:47:49 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#include "Requette.hpp"
+#include "Response.hpp"
 //+++++++++++++++++++++++++CONSTRUCTO && DESTRUCTOR+++++++++++++++++++++++++
 
-Requette::~Requette()
+Response::~Response()
 {
 	delete utils;
 }
 
-Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl)
+Response::Response(std::map<std::string, std::string> config, Client &cl): Cl(cl)
 {
 	Config	cf;
 	
@@ -42,7 +42,7 @@ Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl
 
 //+++++++++++++++++++++++++REPONSE+++++++++++++++++++++++++
 
-void	Requette::rp3(int socket, Location Loc)
+void	Response::rp3(int socket, Location Loc)
 {
 	std::string	filename;
 	std::string	rp;
@@ -64,7 +64,7 @@ void	Requette::rp3(int socket, Location Loc)
 	utils->SendResponse(Cl.getPoll(), rp, socket);
 }
 
-std::string	Requette::rp5(std::string	rt)
+std::string	Response::rp5(std::string	rt)
 {
 	std::string	data;
 	std::string	ext;
@@ -83,7 +83,7 @@ std::string	Requette::rp5(std::string	rt)
 	return (rp);
 }
 
-void	Requette::rp2(int socket, Location &Loc)
+void	Response::rp2(int socket, Location &Loc)
 {
 	std::cout << RED << "NORMALE\n" << R;
 	std::string	rt;
@@ -107,7 +107,7 @@ void	Requette::rp2(int socket, Location &Loc)
 		rp3(socket, Loc);
 }
 
-void    Requette::rp(int socket)
+void    Response::rp(int socket)
 {
 	Location	Loc;
 	std::string	rp;
@@ -115,8 +115,6 @@ void    Requette::rp(int socket)
 
 	mth = "GET POST DELETE";
 	Loc = findLoc();
-	std::cout << RED << "LOC : {" << Loc.get_uri() << "}\n" << R;
-	std::cout << RED << "URI : {" << rq["uri"] << "}\n" << R;
 	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (rq["uri"].size() >= 2048)
 	{
@@ -124,7 +122,7 @@ void    Requette::rp(int socket)
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
-	if (Loc.get_redir() != "")
+	if (Loc.get_redir() != "" && rq["method"] == "GET")
 		redir_rp(Loc.get_redir(), socket);
 	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
@@ -135,10 +133,10 @@ void    Requette::rp(int socket)
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
-	else if (IfDelete(socket) == 1)
-		return ;
 	else if (ifCgi2(Loc))
 		ifCgi(Loc, socket, ctType);
+	else if (IfDelete(socket) == 1)
+		return ;
 	else
 		rp2(socket, Loc);
 }

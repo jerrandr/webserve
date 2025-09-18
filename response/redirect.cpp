@@ -6,13 +6,13 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:56:34 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/16 10:34:52 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 13:49:08 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Requette.hpp"
+#include "Response.hpp"
 
-std::string	Requette::redir_rp2(std::string redir)
+std::string	Response::redir_rp2(std::string redir)
 {
 	std::vector<std::string> data;
 	std::stringstream		convert;
@@ -49,7 +49,7 @@ std::string	Requette::redir_rp2(std::string redir)
 }
 
 
-void	Requette::redir_rp(std::string redir, int socket)
+void	Response::redir_rp(std::string redir, int socket)
 {
 	std::string	rp;
 

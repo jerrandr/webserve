@@ -6,13 +6,13 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:54:45 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/08/25 14:56:53 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 13:48:56 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Requette.hpp"
+#include "Response.hpp"
 
-int	Requette::findLoc2(std::vector<std::string> UriLoc, std::vector<std::string> toFind)
+int	Response::findLoc2(std::vector<std::string> UriLoc, std::vector<std::string> toFind)
 {
 	int nb;
 
@@ -29,7 +29,7 @@ int	Requette::findLoc2(std::vector<std::string> UriLoc, std::vector<std::string>
 	return (nb);
 }
 
-Location Requette::findLoc()
+Location Response::findLoc()
 {
 	std::vector<std::string>		toFind;
 	std::vector<Location>::iterator fl = lc.end();

@@ -1,7 +1,7 @@
 
 NAME = libresponse.a
 
-SRC =  ExecUtils.cpp BodyUpload.cpp Requette.cpp Cgi.cpp \
+SRC =  ExecUtils.cpp BodyUpload.cpp Response.cpp Cgi.cpp \
 		responseUtils.cpp redirect.cpp findLoc.cpp \
 		getData.cpp 
 
