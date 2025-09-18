@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 13:37:02 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/18 12:21:44 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,5 +345,15 @@ void Client::parse_requette()
 		body = "";
 		real_body = 0;
 		size_body = 0;
+		try
+		{
+			if(config.at("Connection") == "close")
+				stat = -1;
+		}
+		catch(const std::out_of_range &e)
+    	{
+        	(void)e;
+    	}
+		
 	}
 }
