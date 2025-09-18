@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/17 13:43:40 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:48:53 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ Cgi::Cgi(char **Envp, int length, Client &cl): Cl(cl)
 	Config	cf;
 
 	cf = Cl.getConfig();
-	utils = new ExecUtils(cf.get_errors());
+	utils = new ExecUtils();
 	argv = new char*[2];
 	envp = Envp;
 	lv = length;
@@ -47,11 +47,13 @@ std::string	Cgi::getStatus(std::string p)
 
 void	Cgi::IfNotFound(std::string p, int fdc)
 {
-	std::string	filename;
-	Pollfd		*pl = Cl.getPoll();
+	Pollfd				*pl = Cl.getPoll();
+	int					status;
+	std::stringstream	fl;
 
-	filename = "error/" + p + ".html";
-	p = utils->getError(filename, Cl);
+	fl << p;
+	fl >> status;
+	p = utils->getError(Cl, status);
 	utils->SendResponse(pl, p, fdc);
 }
 
@@ -117,7 +119,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 	time_t	bg;
 	Pollfd	*pl;
 
-	Error504 = utils->getError("error/504.html", Cl);
+	Error504 = utils->getError(Cl, 504);
 	pl = Cl.getPoll();
 	bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
@@ -155,9 +157,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 			}
 			if (utils->checkTimeOut(bg, time(NULL)))
 			{
-				std::cout << RED << "TIMEOUT" << R << std::endl;
 				kill(pid, SIGTERM);
-				std::cout << "ERROR {" << Error504 << "}\n";
 				utils->SendResponse(Cl.getPoll(), Error504, fdc);
 				break;
 			}

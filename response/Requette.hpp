@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/16 17:32:24 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 08:42:14 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ class Requette
 		int									lv;
 		Client								&Cl;
 		std::vector<std::string>			envStock;
-
 
 							Requette(Requette const &cpy);
 		void				initEnvp(std::string rt, std::string bd);

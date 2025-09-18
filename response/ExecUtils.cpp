@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/17 14:37:00 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:43:44 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 ExecUtils::~ExecUtils() {}
 
-ExecUtils::ExecUtils(const ErrorPage &error): ep(error)
+ExecUtils::ExecUtils()
 {
 	Er.insert(std::pair<std::string, std::string>("400", "bad request"));
 	Er.insert(std::pair<std::string, std::string>("403", "forbidden"));
@@ -57,27 +57,88 @@ std::string		ExecUtils::getStatus(std::string fl)
 	return (res);
 }
 
-std::string	ExecUtils::getError(std::string filename, Client &cl)
+std::string	ExecUtils::getFilenameError(int st, const ErrorPage & ep)
 {
-	std::string					rp;
-	std::vector<std::string>	dt;
-	
-	rp = "";
-	for (size_t i = 3; i < 7; i++)
-		dt.push_back("error/40" + ToString(i) + ".html");
-	for (size_t i = 0; i < 6; i++)
-		dt.push_back("error/50" + ToString(i) + ".html");
-	dt.push_back("error/400.html");
-	dt.push_back("error/408.html");
-	dt.push_back("error/411.html");
-	dt.push_back("error/413.html");
-	dt.push_back("error/414.html");
-	dt.push_back("error/415.html");
-	dt.push_back("error/417.html");
+	std::string filename;
 
-	if (std::find(dt.begin(), dt.end(), filename) != dt.end())
-		rp = getErrorUtils(filename, cl);
-	return (rp);
+	switch (st)
+	{
+		case 400:
+			filename = ep.get_path_400();
+			break;
+		case 403:
+			filename = ep.get_path_403();
+			break;
+		case 404:
+			filename = ep.get_path_404();
+			break;
+		case 405:
+			filename = ep.get_path_405();
+			break;
+		case 406:
+			filename = ep.get_path_406();
+			break;
+		case 408:
+			filename = ep.get_path_408();
+			break;
+		case 410:
+			filename = ep.get_path_410();
+			break;
+		case 411:
+			filename = ep.get_path_411();
+			break;
+		case 413:
+			filename = ep.get_path_413();
+			break;		
+		case 414:
+			filename = ep.get_path_414();
+			break;
+		case 415:
+			filename = ep.get_path_415();
+			break;		
+		case 417:
+			filename = ep.get_path_417();
+			break;
+		case 500:
+			filename = ep.get_path_500();
+			break;
+		case 501:
+			filename = ep.get_path_501();
+			break;
+		case 502:
+			filename = ep.get_path_502();
+			break;
+		case 503:
+			filename = ep.get_path_503();
+			break;
+		case 504:
+			filename = ep.get_path_504();
+			break;
+		case 505:
+			filename = ep.get_path_505();
+			break;
+		default:
+			filename = ep.get_path_500();
+	}
+	return (filename);
+}
+
+std::string	ExecUtils::getError(Client &cl, int stat)
+{
+	std::string res;
+	std::string	status;
+	std::string	ct;
+	std::string	nbr;
+	std::string	filename;
+	Config		cf;
+
+	cf = cl.getConfig();
+	filename = getFilenameError(stat, cf.get_errors());
+	ct = getData(filename, cl);
+	nbr = ToString(ct.size());
+	status = ToString(stat);
+	res = "HTTP/1.1 " + status + Er[status] + "\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + ct;
+	return (res);
 }
 
 std::string	ExecUtils::getExt(std::string filename)
@@ -110,8 +171,7 @@ bool	ExecUtils::checkTimeOut(time_t begin, time_t end)
 	time_t tmp;
 
 	tmp = end - begin;
-	std::cout << "TMP {" << tmp << "}\n";
-	if (tmp >= 15)
+	if (tmp >= 60)
 		return (true);
 	return (false);
 }
@@ -122,9 +182,9 @@ std::string	ExecUtils::CheckError(std::string	rp, Client &Cl)
 
 	res = "";
 	if (access(rp.c_str(), F_OK) == -1)
-		res = getError("error/404.html", Cl);
+		res = getError(Cl, 404);
 	else if (access(rp.c_str(), R_OK) == -1)
-		res = getError("error/403.html", Cl);
+		res = getError(Cl, 403);
 	return (res);	
 }
 

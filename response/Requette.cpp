@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/17 14:15:54 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:49:50 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ Requette::~Requette()
 Requette::Requette(std::map<std::string, std::string> config, Client &cl): Cl(cl)
 {
 	Config	cf;
-
+	
 	cf = Cl.getConfig();
-	utils = new ExecUtils(cf.get_errors());
+	utils = new ExecUtils();
 	ctType = "";
 	for (std::map<std::string, std::string>::iterator i = config.begin(); i != config.end(); i++)
 	{
@@ -66,20 +66,20 @@ void	Requette::rp3(int socket, Location Loc)
 
 std::string	Requette::rp5(std::string	rt)
 {
-	int					fl;
-	std::stringstream	data;
-	std::string			ext;
-	std::string			nbr;
-	std::string			rp;
+	std::string	data;
+	std::string	ext;
+	std::string	nbr;
+	std::string	rp;
 
-	fl = 0;
-	data << utils->getData(rt, Cl, fl);
-	if (fl == -1)
-		ext = ".html";
-	else
+	ext = ".html";
+	data = utils->CheckError(rt, Cl);
+	if (data == "")
+	{
 		ext = utils->getExt(rt);
-	nbr = utils->ToString(data.str().size());
-	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
+		data = utils->getData(rt, Cl);
+	}
+	nbr = utils->ToString(data.size());
+	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data;
 	return (rp);
 }
 
@@ -110,9 +110,9 @@ void	Requette::rp2(int socket, Location &Loc)
 void    Requette::rp(int socket)
 {
 	Location	Loc;
-	std::string rp;
+	std::string	rp;
 	std::string	mth;
-	
+
 	mth = "GET POST DELETE";
 	Loc = findLoc();
 	std::cout << RED << "LOC : {" << Loc.get_uri() << "}\n" << R;
@@ -120,7 +120,7 @@ void    Requette::rp(int socket)
 	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (rq["uri"].size() >= 2048)
 	{
-		rp = utils->getError("error/414.html", Cl); 
+		rp = utils->getError(Cl, 405); 
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
@@ -129,9 +129,9 @@ void    Requette::rp(int socket)
 	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
 		if (mth.find(rq["method"]) == std::string::npos)
-			rp = utils->getError("error/501.html", Cl);
+			rp = utils->getError(Cl, 501);
 		else
-			rp = utils->getError("error/405.html", Cl);
+			rp = utils->getError(Cl, 405);
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}

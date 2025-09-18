@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/16 17:43:45 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 12:49:41 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,20 +49,18 @@ int	Requette::IfDelete(int socket)
 	std::string rt;
 	std::string	rp;
 	std::string	nbr;
-	int			fl;
 	struct stat st;
 
 	rt = "";
 	rp = "";
-	fl = 0;
 	if (rq["method"] == "DELETE")
 	{
 		if (rq["uri"].size() > 1)
 			rt = rq["uri"].substr(1, rq["uri"].length());
 		if (stat(rt.c_str(), &st) == -1 && rp == "")
-			rp = utils->getData("error/404.html", Cl, fl);
+			rp = utils->getError(Cl, 405);
 		if (access(rt.c_str(), O_RDWR) != 0 && rp == "")
-			rp = utils->getData("error/403.html", Cl, fl);
+			rp = utils->getError(Cl, 403);
 		if (rp == "")
 		{
 			std::remove(rt.c_str());
@@ -85,7 +83,6 @@ int	Requette::IfDirList(Location lt)
 	{
 		if (S_ISDIR(st.st_mode) && lt.get_directory_listing())
 		{
-			std::cout << "ETOOO\n";
 			Cl.exec_dir_listing(rq["uri"]);
 			return (1);
 		}
@@ -100,21 +97,10 @@ void	Requette::ifCgi(Location Loc, int socket, std::string bd)
 	std::string	bdy;
 
 	bdy = Cl.getBody();
-	// if (Loc.get_path_cgi() == "")
-	// {
-	// 	rt = utils->getError("error/502.html", pl, Cl.getFdWait());
-	// 	if ((pl->get_status(socket) & POLLOUT) && !(pl->get_status(socket) & POLLHUP))
-	// 	{
-	// 		std::cout << "RP: {" << rt << "}\n";
-	// 		send(socket, rt.c_str(), rt.size(), 0);
-	// 	}
-	// 	return ;
-	// }
 	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 	initEnvp(rt, bd);
 	Cgi cgi(envp, lv, Cl);
 	cgi.MyExec(socket, bdy);
-	std::cout << "CGI FINISH\n";
 	return ;
 }
 
