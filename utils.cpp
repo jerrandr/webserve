@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 14:13:01 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/20 12:29:35 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ std::vector<std::string> split(std::string str, std::string sep)
 std::string get_html_page(int fd)
 {
     std::string content;
-    char buffer[100]; // Buffer de lecture
+    char buffer[100]; 
     ssize_t len;
 
     content = "";
@@ -72,7 +72,6 @@ int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_
     catch(const std::out_of_range &e)
     {
         fd = open(path.c_str(), O_RDWR);
-        std::perror("error ");
         if (fd < 0)
             throw std::bad_alloc();
         (void)e;
