@@ -29,10 +29,7 @@ static int      check_one_bloc(std::string bloc)
     if (a != 0)
         return (0);
     if (bloc[0] == '\n' && bloc[1] != '{')
-    {
-        std::cout << "Some error in the configuration." << std::endl;
         return (0);
-    };
     while (isspace(bloc[i]) || bloc[i] == '\n')
         i ++;
     new_bloc = bloc.substr(i, bloc.size() - i);
@@ -43,10 +40,7 @@ static int      check_one_bloc(std::string bloc)
         i ++;
     new_bloc = bloc.substr(i, bloc.size() - i);
     if (new_bloc.empty())
-    {
-        std::cout << "Empty content in one bloc." << std::endl;
         return (0);
-    }
     return (1);
 };
 
