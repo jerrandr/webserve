@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:11:57 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/10 13:49:34 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:37:06 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,6 @@ static std::string build_html_page(std::vector<std::string> files,std::string pa
         if (tmp.size()> 0)
         {
             path_c =path + name[i];
-            // std::cout << name[i] << "]" << RED << std::endl;
-            // if (name[i].find(path) == std::string::npos)
-            //     path_c = path + path_c;
             rest += "<div class =\"content\"><a href=\""+path_c+"\">"+tmp[0]+"</a></div>";
             for(std::size_t j = 1; j < tmp.size(); j++)
             {
@@ -207,7 +204,6 @@ std::string    Client::directory_listing(std::string name, std::string uri)
 
     dir = "";
     dirp = NULL;
-    std::cout << "path = " << name << std::endl;
     if(access_denied(dir,name,config,polls,fd_wait) == false)
     {
         dirp = opendir(name.c_str());

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:57:28 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/23 11:05:39 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:33:58 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ class Server
         std::vector<int> serv;
         int size;
         Pollfd *fds;
-        // std::vector <pollfd> fds;
-        // struct pollfd fds[10000];
         Server();
     public:
         Server(Config c, Pollfd *p,std::vector<struct addrinfo *> &struct_addr);
@@ -40,6 +38,5 @@ class Server
         void    maj_all_socket();
 
         void    maj_size_fd_socket();
-                // void    free_all_socket_info();
 };
 #endif

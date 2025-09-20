@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 12:57:09 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:36:08 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void    Client::read_timeout()
 	else
 	{
 		fd = fd_is_ready(config.get_errors().get_path_408(),polls,fd_wait);
-    	// std::cout << config.get_errors().get_path_400() << "===" <<fd<< std::endl;
 		if (fd == -1)
         	throw NotReady("408");
     	head = get_html_page(fd);
@@ -46,9 +45,8 @@ void    Client::exec_request_timeout()
         if (fd_wait.size() == 0)
 		{
             stat = -1;
-			requette = "";
+			request = "";
 			body = "";
-			std::cout << "vita" << std::endl;
 		}
     }
     catch(NotReady &e)

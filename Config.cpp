@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:04:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/11 07:56:20 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:33:16 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,6 +259,5 @@ std::string Config::get_real_path(std::string uri, Location loc)
         real += "/";
 
     real += uri.substr(j,uri.size());
-        // std::cout << "real path " << real <<" uri "<<uri<<std::endl;
     return real;
 }

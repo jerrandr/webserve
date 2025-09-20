@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:43:23 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 08:46:04 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:33:11 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,8 @@ void Client::body_unchunked()
 			break;
 		}
 		tmp = body.substr(i, (temp - i));
-		// std::cout <<"i = "<<i<<"{"<<tmp <<"}size="<<emp<< std::endl;
 		current_size = strtol(tmp.c_str(), NULL, 16);
 		real_body += current_size;
-		// std::cout << "size = " << current_size << std::endl;
 		i = temp;
 		i += 2;
 		for (long j = 0; j < (current_size); j++)

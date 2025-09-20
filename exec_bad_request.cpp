@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:42:08 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 13:13:43 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:35:56 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,12 @@ bool    Client::is_bad_request()
 	tmp = "";
 	start = 0;
 	end = 0;
-	std::cout << requette <<"}"<<std::endl;
-	while(start < requette.size())
+	while(start < request.size())
 	{
-		end = requette.find("\r\n",start);
+		end = request.find("\r\n",start);
 		if (end == std::string::npos)
 			return true;
-		tmp = requette.substr(start, end-start);
+		tmp = request.substr(start, end-start);
 		if (start == 0)
 		{
 			f = split(tmp," ");
@@ -41,7 +40,7 @@ bool    Client::is_bad_request()
 		else
 		{
 			f = split_sep(tmp,": ");
-			if (f.size() != 2 && end +2 < requette.size())
+			if (f.size() != 2 && end +2 < request.size())
 			{
 				return true;
 			}
@@ -51,7 +50,6 @@ bool    Client::is_bad_request()
 		start = end + 2;
 		end = 0;
 	}
-	std::cout << "ato" << std::endl;
 	return false;
 }
 
@@ -71,7 +69,6 @@ void    Client::exec_bad_request()
 	else
 	{
 		fd = fd_is_ready(config.get_errors().get_path_400(),polls,fd_wait);
-    	// std::cout << config.get_errors().get_path_400() << "===" <<fd<< std::endl;
 		if (fd == -1)
         	throw NotReady("400");
     	head = get_html_page(fd);

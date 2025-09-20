@@ -1,0 +1,117 @@
+/* ---- BASE ---- */
+body {
+  margin: 0;
+  min-height: 100vh;
+    background-image: url("./f2.jpg");
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: #f0f0f0;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---- BACKGROUND ORBS ---- */
+.bg-elements .floating-orb {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(to right, #5105a8, #feb47b);
+  opacity: 0.1;
+  animation: floatOrb 15s infinite alternate ease-in-out;
+}
+
+.bg-elements .floating-orb:nth-child(2) {
+  width: 80px;
+  height: 80px;
+  top: 200px;
+  left: 50%;
+  animation-duration: 12s;
+}
+
+.bg-elements .floating-orb:nth-child(3) {
+  width: 100px;
+  height: 100px;
+  top: 400px;
+  left: 70%;
+  animation-duration: 18s;
+}
+
+@keyframes floatOrb {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-30px) translateX(20px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+
+/* ---- FORM CONTAINER ---- */
+.form-container {
+  width: 500px;
+  max-width: 90%;
+  padding: 30px;
+  border: 1px solid #5105a8c7;
+  border-radius: 12px;
+  background-color: rgba(81, 5, 168, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 0 20px rgba(81, 5, 168, 0.3);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.form-container:hover {
+  background-color: rgba(81, 5, 168, 0.2);
+  transform: scale(1.02);
+}
+
+/* ---- TITRE ---- */
+.form-container h1 {
+  margin: 0;
+  font-size: 2rem;
+  text-align: center;
+  color: #5105a8;
+}
+
+/* ---- FORM GROUP ---- */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-weight: bold;
+  color: #feb47b;
+}
+
+.form-group input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #5105a8c7;
+  background: transparent;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.form-group input::placeholder {
+  color: #ccc;
+}
+
+/* ---- BOUTON ---- */
+.submit-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #5105a8, #feb47b);
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.submit-btn:hover {
+  opacity: 0.85;
+}

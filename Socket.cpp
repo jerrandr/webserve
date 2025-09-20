@@ -6,72 +6,12 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 10:16:31 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:26:11 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Socket.hpp"
-// #include "Client.hpp"
-// Socket::Socket(std::vector <pollfd> &fds, int &size, int i)
-// {
-//     struct addrinfo hints;
-//     struct addrinfo *server;
-//     int yes;
 
-//     yes = 1;
-//     fd_serv = fds;
-//     size_fd = size;
-//     /*initialisation apartir du fichier de config*/
-//     config["listen"] = "8080";
-//     config["host"] = "localhost";
-//     config["root"] = "www/";
-//     config["index"] = "index.html";
-//     config["server_name"] = "";
-//     config["def_error_page"] = "";
-//     config["max_allowed_size"] = "";
-    
-//     /*initialisation du block location a partir du fichier de config
-//     mety bedebe le location*/
-//     location[0]["URI"] = "";
-//     /*possible liste fa separeo espace fotsiny ex = "POST GET"*/
-//     location[0]["http_method_accepted"] = "";
-//     location[0]["redirect"] ="";
-//     location[0]["root"] = "";
-//     /*valeur booleen*/
-//     location[0]["enable_director_listen"] = "";
-//     location[0]["index"]="";
-//     /*path*/
-//     location[0]["CGI"] = "";
-    
-//     memset(&hints, 0, sizeof hints);
-//     hints.ai_family=AF_INET;
-//     hints.ai_socktype=SOCK_STREAM;
-//     hints.ai_flags = AI_PASSIVE;  
-//     if(getaddrinfo(config.at("host").c_str(),config.at("listen").c_str(),&hints,&server)!=0)
-//     {
-//         std::perror("error");
-//         exit(1);
-//     }
-//     fd = socket(server->ai_family,server->ai_socktype,0);
-//     if(fd == -1)
-//     {
-//         std::perror("error 1:");
-//         exit(1);
-//     }
-//     info = server;
-//     std::cout << "Server connection ......" << std::endl;
-    // setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
-//     if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
-//     {
-//         std::perror("Bind error ");
-//         exit(1);
-//     }
-//     std::cout << "server connected" << std::endl;
-//     fd_serv[i].fd=fd;
-//     fd_serv[i].events = fds[i].events;
-//     fd_serv[i].revents = fds[i].revents;
-
-// }
 
 Socket::Socket(Pollfd *tmp, Config c,std::vector<struct addrinfo *> &struct_addr)
 {
@@ -98,7 +38,6 @@ Socket::Socket(Pollfd *tmp, Config c,std::vector<struct addrinfo *> &struct_addr
         free_addrinfo(struct_addr);
         throw std::logic_error("Error socket()");
     }
-    std::cout << "Server connection ......" << std::endl;
     setsockopt(fd, SOL_SOCKET, SO_REUSEADDR,&yes, sizeof(yes));
     if(bind(fd,server->ai_addr,server->ai_addrlen) == -1)
     {
@@ -106,9 +45,7 @@ Socket::Socket(Pollfd *tmp, Config c,std::vector<struct addrinfo *> &struct_addr
         free_addrinfo(struct_addr);
         throw std::logic_error("Error bind()");
     }
-    std::cout << "server connected" << std::endl;
     info = server;
-    // size_fd = polls->get_size();
 }
 Socket::Socket()
 {
@@ -116,7 +53,6 @@ Socket::Socket()
 }
 Socket::~Socket()
 {
-    // freeaddrinfo(info);
 }
 Socket::Socket(const Socket &other)
 {
@@ -129,11 +65,8 @@ Socket &Socket::operator=(const Socket &other)
      if (this == &other)
         return *this;
     polls = other.polls;
-    // fd_serv.clear();
-    // fd_serv = other.fd_serv;
     fd = other.fd;
     config = other.config;
-    // size_fd  = other.size_fd;
     info = other.info;
     return (*this);
 }
@@ -148,47 +81,11 @@ void    Socket::add_new_fd()
 
     socket_client = accept(fd,NULL,NULL);
     std::perror("accept ");
-    // if(socket_client == -1)
-    //     throw std::logic_error("Error accept()");
     Client cl(socket_client,this->polls,this->config);
     clients.push_back(cl);
     polls->add_new_fd(socket_client);
 }
-// void    Socket::set_size_fd(int size)
-// {
-//     this->size_fd = size;
-// }
-// void    Socket::set_poll(std::vector <pollfd> &fds)
-// {
-//     fd_serv.clear();
-//     fd_serv = fds;
-// }
 
-// void    Socket::maj_fd_client()
-// {
-//     size_t size;
-
-//     size = 0;
-
-//     while(true)
-//     {
-//         size = 0;
-//         for(std::vector<Client>::iterator i= clients.begin(); i != clients.end(); i++)
-//         {
-//             size ++;
-//             if(i->get_status() < 0)
-//             {
-//                 polls->erase_fd(i->get_socket_client());
-//                 close(i->get_socket_client());
-//                 clients.erase(i);
-//                 size = 0;
-//                 break;
-//             }
-//         }
-//         if(size == clients.size())
-//             break;   
-//     }
-// }
 void    Socket::listen_port()
 {
     short re;
@@ -211,22 +108,17 @@ void    Socket::listen_port()
                 {
                     if (re & POLLIN)
                         (*j).verify_connex(1);
-            //    else if (re & POLLOUT)
-            //         clients[j].verify_connex(2);
                 }
-                if ((*j).size_fd_wait() != 0 && (*j).get_status_requette() == 1 )
+                if ((*j).size_fd_wait() != 0 && (*j).get_status_request() == 1 )
                 {
-                    (*j).parse_requette(); 
-                    std::cout << "size fd wait" << std::endl;
+                    (*j).parse_request(); 
                 }
-                else if ((*j).get_status_requette() == 1 && (*j).size_fd_wait() == 0 && (*j).get_requette() != "")
+                else if ((*j).get_status_request() == 1 && (*j).size_fd_wait() == 0 && (*j).get_request() != "")
                 {
-                    std::cout << "wait" << std::endl;
-                    (*j).parse_requette();
+                    (*j).parse_request();
                 }
-                else if ((*j).get_status_requette() != 1 && (*j).get_requette() != "")
+                else if ((*j).get_status_request() != 1 && (*j).get_request() != "")
                 {
-                // std::cout << "ato " << time(NULL) - clients[j].get_timeout()<<std::endl;
                     if (time(NULL) - (*j).get_timeout() >= 60 && !(re & POLLIN))
                     {
                        (*j).exec_request_timeout();
@@ -234,7 +126,6 @@ void    Socket::listen_port()
                 }
                 else if( time(NULL) - (*j).get_timeout_client() >= 60 && !(re & POLLIN))
                 {
-                    std::cout << "ato" << std::endl;
                     (*j).set_status_client(-1);
                 }
                 if ((*j).get_status() < 0)
@@ -280,39 +171,9 @@ void    Socket::listen_port()
         }
     }
     }
-    // for(int i = 0; i < size_fd; i++)
-    // {
-    //     if(fd_serv[i].fd == fd && (fd_serv[i].revents & POLLIN) == 1)
-    //     {
-    //         add_new_fd();
-    //     }
-    //     else if(fd_serv[i].revents > 0)
-    //     {
-    //         for(size_t j = 0; j < clients.size(); j++)
-    //         {
-    //             if(fd_serv[i].fd == clients[j].get_socket_client())
-    //             {
-    //                 if (fd_serv[i].revents & POLLIN)
-    //                     clients[j].verify_connex(1);
-    //                 else
-    //                     clients[j].verify_connex(2);
-    //             }
-    //         }
-    //     }
-    // }
-    // maj_fd_client();
 }
 
 std::list<Client> &Socket::get_clients()
 {
     return this->clients;
 }
-
-// void    Socket::free_addrinfo()
-// {
-//     if(info != NULL)
-//     {
-//         freeaddrinfo(info);
-//         info = NULL;
-//     }
-// }

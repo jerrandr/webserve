@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 11:35:23 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/15 12:26:24 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:33:35 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ bool    Client::is_post()
     std::string nw;
     std::vector <std::string> tab;
 
-    nw = requette.substr(0,requette.find("\r\n"));
+    nw = request.substr(0,request.find("\r\n"));
     tab = split(nw," ");
     if (tab.size()>0 && tab[0] == "POST")
         return true;
@@ -26,7 +26,7 @@ bool    Client::is_post()
 
 bool    Client::is_len_required()
 {
-    if (is_post() && real_body == 0 && !is_chunked(requette))
+    if (is_post() && real_body == 0 && !is_chunked(request))
         return true;
     return false;
 }
@@ -47,7 +47,6 @@ void    Client::exec_len_required()
 	else
 	{
 		fd = fd_is_ready(config.get_errors().get_path_411(),polls,fd_wait);
-    	// std::cout << config.get_errors().get_path_400() << "===" <<fd<< std::endl;
 		if (fd == -1)
         	throw NotReady("411");
     	head = get_html_page(fd);

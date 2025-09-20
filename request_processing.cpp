@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request_processing.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/18 13:50:27 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/19 13:36:32 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,12 @@ void Client::max_body_size_trait()
 	fd = -1;
 	if (access(path.c_str(), F_OK | R_OK) < 0)
 	{
-		// path = this->config.get_errors().get_path_500();
-		// if (access(path.c_str(), F_OK | R_OK) < 0)
-		// {
 			t = "413 PLAYLOAD TOO LARGE";
 			ss << t.size();
 			t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 			if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
 				send(socket, t.c_str(), t.size(), 0);
 			return;
-		// }
-		// fd = fd_is_ready(path, polls, fd_wait);
-		// if (fd != -1)
-		// {
-		// 	t = get_html_page(fd);
-		// 	ss << t.size();
-		// 	t = "HTTP/1.1 500 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
-		// 	if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
-		// 		send(socket, t.c_str(), t.size(), 0);
-		// 	fd_closed(fd, polls, fd_wait, path);
-		// }
-		// return;
 	}
 	fd = fd_is_ready(path, polls, fd_wait);
 	if (fd != -1)
@@ -74,7 +59,6 @@ int Client::is_dir_listing(std::string uri)
 
 	loc = config.get_location_match(uri);
 	path = config.get_real_path(uri, loc);
-	// std::cout << "path = " << path << std::endl;
 	if (is_directory(path))
 	{
 		if (loc.get_directory_listing() && loc.get_index() == "")
@@ -104,7 +88,6 @@ void Client::exec_http_not_supported()
 	else
 	{
 		fd = fd_is_ready(config.get_errors().get_path_505(),polls,fd_wait);
-    	// std::cout << config.get_errors().get_path_505() << "===" <<fd<< std::endl;
 		if (fd == -1)
         	throw NotReady("505");
     	head = get_html_page(fd);
@@ -151,7 +134,6 @@ void    Client::exec_not_implemented()
 	else
 	{
 		fd = fd_is_ready(config.get_errors().get_path_501(),polls,fd_wait);
-    	// std::cout << config.get_eerrors().get_path_501() << "===" <<fd<< std::endl;
 		if (fd == -1)
         	throw NotReady("501");
     	head = get_html_page(fd);
@@ -167,24 +149,22 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 {
 	if (this->config.get_max_allowed_size() < this->get_len_real_body())
 	{
-		std::cout << "max body size" << std::endl;
 		max_body_size_trait();
 		if (fd_wait.size() == 0)
 		{
-			requette = "";
+			request = "";
 			body = "";
 		}
 		return true;
 	}
 	else if (is_not_implemented(config))
 	{
-		std::cout << "not implemented " << std::endl;
 		try
 		{
 			exec_not_implemented();
 			if (fd_wait.size() == 0)
 			{
-				requette = "";
+				request = "";
 				body = "";
 			}
 		}
@@ -196,13 +176,12 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 	}
 	else if (http_not_supported(config["http_version"]))
 	{
-		std::cout << "HTTP NOT SUPPORTED" << std::endl;
 		try
 		{
 			exec_http_not_supported();
 			if (fd_wait.size() == 0)
 			{
-				requette = "";
+				request = "";
 				body = "";
 			}
 		}
@@ -214,13 +193,12 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 	}
 	else if (is_len_required())
 	{
-		std::cout << "len required" << std::endl;
 		try
 		{
 			exec_len_required();
 			if (fd_wait.size() == 0)
 			{
-				requette = "";
+				request = "";
 				body = "";
 			}
 		}
@@ -232,13 +210,12 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 	}
 	else if (is_dir_listing(config["uri"]))
 	{
-		std::cout << "is dir listing" << std::endl;
 		try
 		{
 			exec_dir_listing(config["uri"]);
 			if (fd_wait.size() == 0)
 			{
-				requette = "";
+				request = "";
 				body = "";
 			}
 		}
@@ -252,7 +229,7 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 }
 
 
-void Client::parse_requette()
+void Client::parse_request()
 {
 	std::map<std::string, std::string> config;
 	std::string tmp;
@@ -261,36 +238,31 @@ void Client::parse_requette()
 	std::vector<std::string> f;
 
 
-	// std::cout <<"{"<<requette<<"}"<< std::endl;
 	if (is_bad_request())
 	{
 		try
 		{
 			exec_bad_request();
-			std::cout << "fd_wait " << fd_wait.size() << std::endl;
 			if (fd_wait.size() == 0)
 			{
-				requette = "";
+				request = "";
 				body = "";
-				std::cout << "vita" << std::endl;
 			}
 		}
 		catch(NotReady &e)
 		{
-			std::cout << "non " <<e.what()<<std::endl;
-			// (void)e;
+			(void)e;
 		}
-		std::cout << "bad request" << std::endl;
 		return;
 	}
 	tmp = "";
 	start = 0;
 	end = 0;
 	
-	while(start < requette.size())
+	while(start < request.size())
 	{
-		end = requette.find("\r\n",start);
-		tmp = requette.substr(start, end-start);
+		end = request.find("\r\n",start);
+		tmp = request.substr(start, end-start);
 		if (start == 0)
 		{
 			f = split(tmp," ");
@@ -311,24 +283,9 @@ void Client::parse_requette()
 		start = end + 2;
 		end = 0;
 	}
-	// std::cout << requette << std::endl;
-	// std::cout <<"{Methode}" << "{" << config["method"] <<"}"<<std::endl;
-	// std::cout <<"{uri}" << "{" << config["uri"] <<"}"<<std::endl;
-	// std::cout <<"{http_version}" << "{" << config["http_version"] <<"}"<<std::endl;
-	if(config["method"] == "POST")
-	{
-		// std::cout << "------------------message--------------------" << std::endl;
-		// std::cout  << body <<std::endl;
-		// std::cout << "---------------------------------------------" << std::endl;
-	        std::ofstream fd("test.out");
-	        // std::cout <<"{"<<body <<"}"<<std::endl;
-	        fd << body;
-	}
-	std::cout << "link = " << config["uri"] << std::endl;
 	if (other_traitment(config))
 		return;
-	// config["uri"] = this->config.get_real_path(config["uri"],this->config.get_location_match(config["uri"]));
-	std::cout << "tsy dir listing" << std::endl;
+
 	try
 	{
 		Response a(config, *this);
@@ -336,12 +293,12 @@ void Client::parse_requette()
 	}
 	catch(const NotReady& e)
 	{
-		std::cerr << e.what() << '\n';
+		(void)e;
 	}
 	
 	if (fd_wait.size() == 0)
 	{
-		requette = "";
+		request = "";
 		body = "";
 		real_body = 0;
 		size_body = 0;

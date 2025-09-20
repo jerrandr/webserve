@@ -1,5 +1,0 @@
-    host localhost 127.1.1.1 127.2.2.2;
-    listen 8008 8080;
-    error_page 404 403 333 /error/404.html;
-    client_max_body_size 3.2G;
-    error_page 400 ./400.html

@@ -1,0 +1,88 @@
+/* Fond avec gradient jaune -> blanc -> noir */
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background: linear-gradient(190deg, white 20%,rgb(255,255,0) ,rgb(121, 121, 16), black); */
+  /* background-color: black; */
+  background-image: url("./f2.jpg");
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: #f0f0f0;
+  background-size: cover;
+  
+}
+
+/* Bloc central translucide */
+.container {
+  padding: 3rem 4rem;
+  border-radius: 1rem;
+  color: #fff000;
+  text-align: center;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.container:hover {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 3rem 4rem;
+  border-radius: 1rem;
+  color: #fff000;
+  text-align: center;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Titre */
+.container h1 {
+  margin-top: 0;
+  font-size: 3rem;
+  letter-spacing: 2px;
+}
+
+/* Paragraphe */
+.container p {
+  margin: 1rem 0 2rem;
+  font-size: 1.2rem;
+  color: #eee;
+}
+
+/* Bouton "Commencer" */
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.6rem;
+  background: #5105a8;
+  color: #000;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 999px;
+  transition: all 0.3s ease;
+}
+
+.start-btn:hover {
+  background: #000;
+  color:  #5105a8;
+  box-shadow: 0 0 10px  #5105a8;
+}
+
+.arrow {
+  transition: transform 0.3s;
+}
+
+.start-btn:hover .arrow {
+  transform: translateX(4px);
+}
+
+
+.container h1
+{
+    /* font-size: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px; */
+ background-image: linear-gradient(to right, #5105a8, #feb47b); /* Dégradé du rose au jaune-orange */
+  background-clip: text; /* Pour appliquer le dégradé au texte */
+  color: transparent; /* Rend le texte transparent pour voir le dégradé */
+}

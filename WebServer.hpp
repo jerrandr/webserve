@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 12:50:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/31 10:01:15 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/19 13:24:13 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ class WebServer
     private:
         Pollfd *polls;
         std::vector<Server> servs;
-        void    non_stop_serv();
+        void    no_stop_serv();
         std::vector<struct addrinfo *> struct_addr;
     public:
         WebServer();
