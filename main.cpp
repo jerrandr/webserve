@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:58:07 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/13 13:53:03 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/20 13:11:32 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     }
     catch(SignalHandling::ExceptSTop &e)
     {
-        std::cout << e.what() << std::endl;
+         (void)e;
     }
     catch(std::logic_error &e)
     {

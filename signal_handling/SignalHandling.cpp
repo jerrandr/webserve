@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   SignalHandling.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 08:22:22 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/29 08:43:12 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 13:11:12 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ SignalHandling &SignalHandling::operator=(const SignalHandling &other)
 
 SignalHandling::ExceptSTop::ExceptSTop()
 {
-    m = "Server stop ...";
+    m = "SS";
 }
 SignalHandling::ExceptSTop::~ExceptSTop() throw()
 {
