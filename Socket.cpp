@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/19 13:26:11 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/20 10:22:41 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,8 @@ void    Socket::add_new_fd()
     int socket_client;
 
     socket_client = accept(fd,NULL,NULL);
-    std::perror("accept ");
+    if (socket_client < 0)
+        return ;
     Client cl(socket_client,this->polls,this->config);
     clients.push_back(cl);
     polls->add_new_fd(socket_client);
