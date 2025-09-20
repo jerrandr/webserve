@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/18 13:53:52 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 14:18:41 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ void	Cgi::IfFound(std::string p, int fdc)
 {
 	Pollfd	*pl = Cl.getPoll();
 	std::string	ext = getType(envp[4]);
-	std::cout << "P: {" << p<< "}\n";
 	std::string	rp;
 	rp = ParseCgi(p);
 	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + utils->ToString(rp.size()) + "\r\nContent-Type: " + ext + "\r\n\r\n" + rp;
@@ -102,7 +101,6 @@ void	Cgi::MyExec2(int &fd, int fdc)
 
 	Cl.getPoll()->add_new_fd(fd);
 	p = utils->getData(fd);
-	std::cout << RED << "P: {" << p << "}\n" << R;
 	st = getStatus(p);
 	Cl.getPoll()->erase_fd(fd);
 	if (st != "")
@@ -138,7 +136,6 @@ void    Cgi::MyExec(int fdc, std::string body)
 	{
 		if (body != "")
 		{
-			std::cout << "BODY: {" << body << "}" << std::endl;
 			if (pl->get_status(fd2[1]) & POLLIN)
 			{
 				write(fd2[1], body.c_str(), body.size());

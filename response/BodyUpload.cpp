@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/18 14:32:56 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 14:55:18 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	BodyUpload::UploadHandler(Client &cl)
 	int	fd;
 
 	fd = 0;
+	std::cout << RED << "etoooooooooo\n" << R << std::endl;
 	ParseBody(cl);
 	for (std::map<std::string, std::string>::iterator i = vl.begin(); i != vl.end(); i++)
 	{

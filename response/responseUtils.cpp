@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/20 13:51:47 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 14:18:03 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	Response::initEnvp(std::string rt, std::string bd)
 	envStock.push_back("SCRIPT_FILENAME=" + rt);
 	if (bd != "")
 		envStock.push_back("CONTENT_TYPE=" + bd);
-	std::cout << "Rt: " << rt << std::endl;
 	if (rq["method"] == "GET" && query != "")
 		envStock.push_back("QUERY_STRING=" + query);
 	else if (rq["method"] == "POST" && cl != "")
@@ -64,10 +63,7 @@ void	Response::Delete(std::string path)
 			if (is_directory(fullpath))
 				Delete(fullpath);
 			else
-			{
-				std::cout << RED << "{" << fullpath << "}\n";
 				std::remove(fullpath.c_str());
-			}
 			next = readdir(dir);
 		}
 		std::remove(path.c_str());
@@ -96,7 +92,6 @@ int	Response::IfDelete(int socket)
 			rp = utils->getError(Cl, 403);
 		if (rp == "")
 		{
-			std::cout << "DELETE {" << rt << "}\n";
 			Delete(rt);
 			rp = "HTTP/1.1 204 No Content\r\nConnection: close\r\n\r\n";
 		}
@@ -110,7 +105,6 @@ int	Response::IfDirList(Location lt)
 {
 	struct stat st;
 
-	std::cout << "uri: {" << rq["uri"] << "}\n";
 	if (stat(Cl.getConfig().get_real_path(rq["uri"], lt).c_str(), &st) == -1)
 		perror("stat Error");
 	else
@@ -126,7 +120,6 @@ int	Response::IfDirList(Location lt)
 
 void	Response::ifCgi(Location Loc, int socket, std::string bd)
 {
-	std::cout << RED << "CGI\n" << R;
 	std::string rt;
 	std::string	bdy;
 

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:56:34 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/18 13:49:08 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 14:17:18 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void	Response::redir_rp(std::string redir, int socket)
 	std::string	rp;
 
 	rp = redir_rp2(redir);
-	std::cout << "RP: {" << rp << "}\n";
 	if (rp != "")
 	{
 		utils->SendResponse(Cl.getPoll(), rp, socket);

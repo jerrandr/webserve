@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/20 10:35:43 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 14:16:59 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void	Response::rp3(int socket, Location Loc)
 			bd.UploadHandler(Cl);
 			filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
 			rp = rp5(filename);
-			std::cout << "rp = {" << rp << "}\n";
 		}
 	}
 	utils->SendResponse(Cl.getPoll(), rp, socket);
@@ -86,14 +85,12 @@ std::string	Response::rp5(std::string	rt)
 
 void	Response::rp2(int socket, Location &Loc)
 {
-	std::cout << RED << "NORMALE\n" << R;
 	std::string	rt;
 	std::string	rp;
 	
 	if (rq["method"] == "GET")
 	{
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
-		std::cout << RED << "FILE: " << rt << R << std::endl;
 		rp = utils->CheckError(rt, Cl);
 		if (rp == "" && is_directory(rt) && Loc.get_index() != "")
 		{
@@ -116,7 +113,6 @@ void    Response::rp(int socket)
 
 	mth = "GET POST DELETE";
 	Loc = findLoc();
-	std::cout << "METHOD: " << rq["method"] << std::endl;
 	if (rq["uri"].size() >= 2048)
 	{
 		rp = utils->getError(Cl, 405); 
@@ -124,10 +120,7 @@ void    Response::rp(int socket)
 		return ;
 	}
 	else if (IfDelete(socket) == 1)
-	{
-		std::cout << "HEREEEEEEEEEEEEEEEEEEEEE\n";
 		return ;
-	}
 	if (Loc.get_redir() != "" && rq["method"] == "GET")
 		redir_rp(Loc.get_redir(), socket);
 	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
