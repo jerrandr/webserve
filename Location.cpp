@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Location.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:23:00 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/24 13:42:09 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/18 14:17:23 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

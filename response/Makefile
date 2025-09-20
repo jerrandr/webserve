@@ -11,8 +11,8 @@ cc = c++
 
 FLAG = -Wall -Wextra -Werror -std=c++98 -g
 
-.cpp.o:
-	${cc} ${FLAG} -c $< -o ${<:.cpp=.o}
+%.o: %.cpp
+	${cc} ${FLAG} -c $< -o $@
 
 all : ${NAME}
 

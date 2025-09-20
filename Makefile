@@ -23,20 +23,22 @@ cc = c++
 
 FLAG = -Wall -Wextra -Werror -std=c++98 -g
 
-.cpp.o:
-	${cc} ${FLAG} -c $< -o ${<:.cpp=.o}
+%.o: %.cpp
+	${cc} ${FLAG} -c $< -o $@
 
 all : ${NAME}
 
 ${NAME} : ${OBJ}
-		make -C response
+		$(MAKE) -C response
 		${cc} -Lresponse ${FLAG} ${OBJ} -o ${NAME} -lresponse
+
+
 clean :
-		make -C response clean
+		$(MAKE) -C response clean
 		rm -f ${OBJ}
 
 fclean : clean
-		make -C response fclean
+		$(MAKE) -C response fclean
 		rm -f ${NAME}
 
 re : fclean all

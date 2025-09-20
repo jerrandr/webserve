@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/13 10:46:31 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/18 14:32:56 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ std::string	BodyUpload::ParseHeader(std::string header)
 	start = 0;
 	end = 0;
 	res = "";
-	// std::cout << "HEADER: {" << header << "}" << std::endl;
 	if (header.find("filename") != std::string::npos)
 	{
 		res = header.substr(header.find("filename"), header.find("\r\n"));

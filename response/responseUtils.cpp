@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/18 13:48:43 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 13:51:47 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,39 @@ void	Response::initEnvp(std::string rt, std::string bd)
 	envp[nb] = NULL;
 }
 
+void	Response::Delete(std::string path)
+{
+	if (is_directory(path))
+	{
+		DIR				*dir = opendir(path.c_str());
+		struct dirent	*next;
+		
+		next = readdir(dir);
+		while (next != NULL)
+		{
+			std::string fullpath = path + "/" + next->d_name; 
+			std::string	test = next->d_name;
+			if (test == "." || test == "..")
+			{
+				next = readdir(dir);
+				continue ;
+			}
+			if (is_directory(fullpath))
+				Delete(fullpath);
+			else
+			{
+				std::cout << RED << "{" << fullpath << "}\n";
+				std::remove(fullpath.c_str());
+			}
+			next = readdir(dir);
+		}
+		std::remove(path.c_str());
+		closedir(dir);
+	}
+	else
+		std::remove(path.c_str());
+}
+
 int	Response::IfDelete(int socket)
 {
 	std::string rt;
@@ -59,11 +92,12 @@ int	Response::IfDelete(int socket)
 			rt = rq["uri"].substr(1, rq["uri"].length());
 		if (stat(rt.c_str(), &st) == -1 && rp == "")
 			rp = utils->getError(Cl, 405);
-		if (access(rt.c_str(), O_RDWR) != 0 && rp == "")
+		else if (access(rt.c_str(), O_RDWR) != 0 && rp == "")
 			rp = utils->getError(Cl, 403);
 		if (rp == "")
 		{
-			std::remove(rt.c_str());
+			std::cout << "DELETE {" << rt << "}\n";
+			Delete(rt);
 			rp = "HTTP/1.1 204 No Content\r\nConnection: close\r\n\r\n";
 		}
 		utils->SendResponse(Cl.getPoll(), rp, socket);

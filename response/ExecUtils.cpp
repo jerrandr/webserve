@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/18 12:43:44 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 08:58:38 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,16 +190,8 @@ std::string	ExecUtils::CheckError(std::string	rp, Client &Cl)
 
 void	ExecUtils::SendResponse(Pollfd *pl, std::string rp, int fdc)
 {
-	size_t	pc;
-	size_t	len;
-
-	pc = 2048;
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
-		for (size_t i = 0; i < rp.size(); i += pc)
-		{
-				len = std::min(pc, rp.size() - i);
-				send(fdc, rp.c_str(), len, 0);
-		}
+		send(fdc, rp.c_str(), rp.size(), 0);
 	}
 }

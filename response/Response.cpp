@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/18 13:47:49 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/20 10:35:43 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,21 @@ void	Response::rp3(int socket, Location Loc)
 
 std::string	Response::rp5(std::string	rt)
 {
-	std::string	data;
+	std::stringstream	data;
 	std::string	ext;
 	std::string	nbr;
 	std::string	rp;
-
+	
 	ext = ".html";
-	data = utils->CheckError(rt, Cl);
-	if (data == "")
+	data << utils->CheckError(rt, Cl);
+	if (data.str() == "")
 	{
 		ext = utils->getExt(rt);
-		data = utils->getData(rt, Cl);
+		data.clear();
+		data << utils->getData(rt, Cl);
 	}
-	nbr = utils->ToString(data.size());
-	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data;
+	nbr = utils->ToString(data.str().size());
+	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
 	return (rp);
 }
 
@@ -122,6 +123,11 @@ void    Response::rp(int socket)
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
+	else if (IfDelete(socket) == 1)
+	{
+		std::cout << "HEREEEEEEEEEEEEEEEEEEEEE\n";
+		return ;
+	}
 	if (Loc.get_redir() != "" && rq["method"] == "GET")
 		redir_rp(Loc.get_redir(), socket);
 	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
@@ -135,8 +141,10 @@ void    Response::rp(int socket)
 	}
 	else if (ifCgi2(Loc))
 		ifCgi(Loc, socket, ctType);
-	else if (IfDelete(socket) == 1)
-		return ;
+	else if (Cl.is_dir_listing(rq["uri"]))
+	{
+		Cl.exec_dir_listing(rq["uri"]);
+	}
 	else
 		rp2(socket, Loc);
 }

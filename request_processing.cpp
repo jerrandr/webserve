@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request_processing.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/19 13:36:32 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/20 10:33:28 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,23 +196,6 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		try
 		{
 			exec_len_required();
-			if (fd_wait.size() == 0)
-			{
-				request = "";
-				body = "";
-			}
-		}
-		catch (NotReady &e)
-		{
-			(void)e;
-		}
-		return true;
-	}
-	else if (is_dir_listing(config["uri"]))
-	{
-		try
-		{
-			exec_dir_listing(config["uri"]);
 			if (fd_wait.size() == 0)
 			{
 				request = "";

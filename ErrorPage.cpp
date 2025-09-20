@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ErrorPage.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 10:46:21 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/23 13:08:18 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/18 13:54:01 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
