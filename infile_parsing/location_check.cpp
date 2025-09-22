@@ -79,7 +79,13 @@ int     cgi_check(std::string value, std::vector<std::string> &found_key)
 {
     found_key.push_back("cgi");
     if (value.empty())
-        return (0);
+    return (0);
+    std::vector<std::string>    spl_value = split(value, " ");
+    for (size_t i = 0; i < spl_value.size(); i ++)
+    {
+        if (spl_value[i][0] != '.')
+            return (0);
+    };
     return (1);
 }
 
