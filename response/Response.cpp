@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/20 14:16:59 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/22 08:53:49 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,10 @@ void    Response::rp(int socket)
 	else if (IfDelete(socket) == 1)
 		return ;
 	if (Loc.get_redir() != "" && rq["method"] == "GET")
+	{
+		std::cout << RED << "REDIRECTION\n" << R;
 		redir_rp(Loc.get_redir(), socket);
+	}
 	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
 		if (mth.find(rq["method"]) == std::string::npos)
@@ -133,11 +136,18 @@ void    Response::rp(int socket)
 		return ;
 	}
 	else if (ifCgi2(Loc))
+	{
+		std::cout << RED << "CGI\n" << R;
 		ifCgi(Loc, socket, ctType);
+	}
 	else if (Cl.is_dir_listing(rq["uri"]))
 	{
+		std::cout << RED << "DIR_LISTING\n" << R;
 		Cl.exec_dir_listing(rq["uri"]);
 	}
 	else
+	{
+		std::cout << RED << "NORMAL\n" << R;
 		rp2(socket, Loc);
+	}
 }

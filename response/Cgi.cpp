@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/20 14:18:41 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/22 14:52:38 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,15 +98,27 @@ void	Cgi::MyExec2(int &fd, int fdc)
 {
 	std::string	p;
 	std::string	st;
+	Pollfd		*pl;
 
-	Cl.getPoll()->add_new_fd(fd);
-	p = utils->getData(fd);
+	pl = Cl.getPoll();
+	pl->add_new_fd(fd);
+	std::cerr << "++++++++++++++\n";
+	if (pl->get_status(fd) & POLLIN)
+		p = utils->getData(fd);
+	else
+		throw NotReady();
 	st = getStatus(p);
 	Cl.getPoll()->erase_fd(fd);
 	if (st != "")
+	{
+		std::cerr << "blem\n";
 		IfNotFound(st, fdc);
+	}
 	else
+	{
+		std::cerr << "tsy blem\n";
 		IfFound(p, fdc);
+	}
 }
 
 void    Cgi::MyExec(int fdc, std::string body)
@@ -136,19 +148,21 @@ void    Cgi::MyExec(int fdc, std::string body)
 	{
 		if (body != "")
 		{
+			std::cerr << "BODY {" << body << "}\n";
 			if (pl->get_status(fd2[1]) & POLLIN)
 			{
 				write(fd2[1], body.c_str(), body.size());
 				pl->erase_fd(fd2[1]);
 			}
 		}
-		close(fd2[0]);
 		pl->erase_fd(fd2[1]);
+		close(fd2[0]);
 		close(fd[1]);
 		while (true)
 		{
 			if (waitpid(pid, NULL, WNOHANG) == pid)
 			{
+				std::cout << "HEREEEEEEE\n";
 				MyExec2(fd[0], fdc);
 				break;
 			}

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/20 14:18:03 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/22 14:49:15 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ void	Response::initEnvp(std::string rt, std::string bd)
 	envStock.push_back("SERVER_PROTOCOL=HTTP/1.1");
     envStock.push_back("REDIRECT_STATUS=200");
 	envStock.push_back("SCRIPT_FILENAME=" + rt);
-	if (bd != "")
+	if (bd != "" && rq["method"] == "POST")
 		envStock.push_back("CONTENT_TYPE=" + bd);
 	if (rq["method"] == "GET" && query != "")
 		envStock.push_back("QUERY_STRING=" + query);
-	else if (rq["method"] == "POST" && cl != "")
+	if (rq["method"] == "POST" && cl != "")
 		envStock.push_back("CONTENT_LENGTH=" + cl);
 	envp = new char*[envStock.size() + 1];
 	for (std::vector<std::string>::iterator i = envStock.begin(); i < envStock.end(); i++)
