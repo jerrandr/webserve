@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 10:32:23 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 11:00:32 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,12 @@ void    Cgi::MyExec(int fdc, std::string body)
 	int		fd[2];
 	int		fd2[2];
 	int		pid;
-	// time_t	bg;
+	time_t	bg;
 	Pollfd	*pl;
 
 	Error504 = utils->getError(Cl, 504);
 	pl = Cl.getPoll();
-	// bg = time(NULL);
+	bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		exit(0);
 	if (pl->fd_is_here(fd2[1]) == false)
@@ -170,27 +170,26 @@ void    Cgi::MyExec(int fdc, std::string body)
 		}
 		else
 		{
-					pl->erase_fd(fd2[1]);
-		pl->decrement_new_fd();
-		close(fd2[0]);
-		close(fd[1]);	
+			pl->erase_fd(fd2[1]);
+			pl->decrement_new_fd();
+			close(fd2[0]);
+			close(fd[1]);	
 		}
-		(void)fdc;
-		// while (true)
-		// {
+		while (true)
+		{
 			if (waitpid(pid, NULL, WNOHANG) == pid)
 			{
 				std::cout << "HEREEEEEEE\n";
 				MyExec2(fd[0], fdc);
-				// break;
+				break;
 			}
-		// 	if (utils->checkTimeOut(bg, time(NULL)))
-		// 	{
-		// 		kill(pid, SIGTERM);
-		// 		utils->SendResponse(Cl.getPoll(), Error504, fdc);
-		// 		break;
-		// 	}
-		// 	sleep(1);
-		// }
+			if (utils->checkTimeOut(bg, time(NULL)))
+			{
+				kill(pid, SIGTERM);
+				utils->SendResponse(Cl.getPoll(), Error504, fdc);
+				break;
+			}
+			// sleep(1);
+		}
 	}
 }

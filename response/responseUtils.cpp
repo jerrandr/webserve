@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/22 14:49:15 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 11:42:40 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	Response::IfDelete(int socket)
 		if (rq["uri"].size() > 1)
 			rt = rq["uri"].substr(1, rq["uri"].length());
 		if (stat(rt.c_str(), &st) == -1 && rp == "")
-			rp = utils->getError(Cl, 405);
+			rp = utils->getError(Cl, 404);
 		else if (access(rt.c_str(), O_RDWR) != 0 && rp == "")
 			rp = utils->getError(Cl, 403);
 		if (rp == "")
