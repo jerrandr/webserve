@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 11:42:40 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 12:07:26 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,19 @@ void	Response::Delete(std::string path)
 		std::remove(path.c_str());
 }
 
-int	Response::IfDelete(int socket)
+int	Response::IfDelete(int socket, Location loc)
 {
 	std::string rt;
 	std::string	rp;
 	std::string	nbr;
 	struct stat st;
+	Config		cf;
 
-	rt = "";
+	cf = Cl.getConfig();
 	rp = "";
+	rt = cf.get_real_path(rq["uri"], loc);
 	if (rq["method"] == "DELETE")
 	{
-		if (rq["uri"].size() > 1)
-			rt = rq["uri"].substr(1, rq["uri"].length());
 		if (stat(rt.c_str(), &st) == -1 && rp == "")
 			rp = utils->getError(Cl, 404);
 		else if (access(rt.c_str(), O_RDWR) != 0 && rp == "")

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/20 09:54:20 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 11:49:45 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ class Response
 		void					rp3(int socket, Location Loc);
 		std::string				rp5(std::string	rt);
 		void					Delete(std::string path);
-		int						IfDelete(int socket);
+		int						IfDelete(int socket, Location loc);
         int	             		IfDirList(Location lt);
 		bool					ifCgi2(Location Loc);
 	public:

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 09:06:27 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 11:49:28 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ void    Response::rp(int socket)
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
-	else if (IfDelete(socket) == 1)
+	else if (IfDelete(socket, Loc) == 1)
 		return ;
 	if (Loc.get_redir() != "" && rq["method"] == "GET")
 	{

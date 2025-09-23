@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 12:03:53 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/23 12:26:06 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,7 @@ std::string	Cgi::getType(std::string ct)
 {
 	std::string	res;
 
-	res = "";
-	if (ct.find("=") != std::string::npos)	
-		res = ct.substr(ct.find("="), ct.length());
-	if (res.find(".") != std::string::npos)
-		res = res.substr(res.find("."), res.length());
-	std::cout << "res {" << res << "}\n";
+	res = utils->getExt(ct);
 	if (res == ".php")
 		res = ".html";
 	res = Cl.getConfig().get_mime(res);
@@ -138,12 +133,12 @@ void    Cgi::MyExec(int fdc, std::string body)
 	int		fd[2];
 	int		fd2[2];
 	int		pid;
-	// time_t	bg;
+	time_t	bg;
 	Pollfd	*pl;
 
 	Error504 = utils->getError(Cl, 504);
 	pl = Cl.getPoll();
-	// bg = time(NULL);
+	bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		exit(0);
 	if (!(pl->get_status(fd2[1])  & POLLIN))
@@ -184,8 +179,8 @@ void    Cgi::MyExec(int fdc, std::string body)
 		{
 		if ((pl->get_status(fd2[1])  & POLLIN))
 		{
-					pl->erase_fd(fd2[1]);
-				pl->decrement_new_fd();
+			pl->erase_fd(fd2[1]);
+			pl->decrement_new_fd();
 		}	
 		}
 				close(fd2[0]);
@@ -199,12 +194,12 @@ void    Cgi::MyExec(int fdc, std::string body)
 				MyExec2(fd[0], fdc);
 				break;
 			}
-		// 	if (utils->checkTimeOut(bg, time(NULL)))
-		// 	{
-		// 		kill(pid, SIGTERM);
-		// 		utils->SendResponse(Cl.getPoll(), Error504, fdc);
-		// 		break;
-		// 	}
+			if (utils->checkTimeOut(bg, time(NULL)))
+			{
+				kill(pid, SIGTERM);
+				utils->SendResponse(Cl.getPoll(), Error504, fdc);
+				break;
+			}
 		// 	sleep(1);
 		}
 	}
