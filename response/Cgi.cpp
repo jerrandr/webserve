@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 11:00:32 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 12:03:53 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	Cgi::IfFound(std::string p, int fdc)
 {
 	Pollfd	*pl = Cl.getPoll();
 	std::string	ext = getType(envp[4]);
+	std::cout << "ext {" << ext << "}\n";
+	std::cout << "envp {" << envp[4] << "}\n";
 	std::string	rp;
 	rp = ParseCgi(p);
 	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + utils->ToString(rp.size()) + "\r\nContent-Type: " + ext + "\r\n\r\n" + rp;
@@ -88,6 +90,7 @@ std::string	Cgi::getType(std::string ct)
 		res = ct.substr(ct.find("="), ct.length());
 	if (res.find(".") != std::string::npos)
 		res = res.substr(res.find("."), res.length());
+	std::cout << "res {" << res << "}\n";
 	if (res == ".php")
 		res = ".html";
 	res = Cl.getConfig().get_mime(res);
@@ -101,7 +104,13 @@ void	Cgi::MyExec2(int &fd, int fdc)
 	Pollfd		*pl;
 
 	pl = Cl.getPoll();
-	pl->add_new_fd(fd);
+	// pl->add_new_fd(fd);
+	if (!(pl->get_status(fd)  & POLLIN))
+	{
+		pl->add_new_fd(fd);
+		pl->set_new_fd();
+		throw NotReady();
+	}
 	std::cerr << "++++++++++++++\n";
 	if (pl->get_status(fd) & POLLIN)
 		p = utils->getData(fd);
@@ -109,6 +118,7 @@ void	Cgi::MyExec2(int &fd, int fdc)
 		throw NotReady();
 	st = getStatus(p);
 	Cl.getPoll()->erase_fd(fd);
+	pl->decrement_new_fd();
 	if (st != "")
 	{
 		std::cerr << "blem\n";
@@ -116,7 +126,9 @@ void	Cgi::MyExec2(int &fd, int fdc)
 	}
 	else
 	{
+		
 		std::cerr << "tsy blem\n";
+		std::cerr << "P : {" << p << "}\n";
 		IfFound(p, fdc);
 	}
 }
@@ -126,19 +138,19 @@ void    Cgi::MyExec(int fdc, std::string body)
 	int		fd[2];
 	int		fd2[2];
 	int		pid;
-	time_t	bg;
+	// time_t	bg;
 	Pollfd	*pl;
 
 	Error504 = utils->getError(Cl, 504);
 	pl = Cl.getPoll();
-	bg = time(NULL);
+	// bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		exit(0);
-	if (pl->fd_is_here(fd2[1]) == false)
+	if (!(pl->get_status(fd2[1])  & POLLIN))
 	{
 		pl->add_new_fd(fd2[1]);
 		pl->set_new_fd();
-		std::cout << pl->get_new_fd_poll() << std::endl;
+		throw NotReady();
 	}
 	pid = fork();
 	if (pid == 0)
@@ -170,26 +182,30 @@ void    Cgi::MyExec(int fdc, std::string body)
 		}
 		else
 		{
-			pl->erase_fd(fd2[1]);
-			pl->decrement_new_fd();
-			close(fd2[0]);
-			close(fd[1]);	
+		if ((pl->get_status(fd2[1])  & POLLIN))
+		{
+					pl->erase_fd(fd2[1]);
+				pl->decrement_new_fd();
+		}	
 		}
+				close(fd2[0]);
+		close(fd[1]);	
+		(void)fdc;
 		while (true)
 		{
 			if (waitpid(pid, NULL, WNOHANG) == pid)
 			{
-				std::cout << "HEREEEEEEE\n";
+				std::cerr << "HEREEEEEEE\n";
 				MyExec2(fd[0], fdc);
 				break;
 			}
-			if (utils->checkTimeOut(bg, time(NULL)))
-			{
-				kill(pid, SIGTERM);
-				utils->SendResponse(Cl.getPoll(), Error504, fdc);
-				break;
-			}
-			// sleep(1);
+		// 	if (utils->checkTimeOut(bg, time(NULL)))
+		// 	{
+		// 		kill(pid, SIGTERM);
+		// 		utils->SendResponse(Cl.getPoll(), Error504, fdc);
+		// 		break;
+		// 	}
+		// 	sleep(1);
 		}
 	}
 }
