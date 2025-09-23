@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Pollfd.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/08/30 10:45:24 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/23 10:04:56 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Pollfd::Pollfd()
 {
-    
+    new_fd = 0;
 }
 Pollfd::~Pollfd()
 {
@@ -31,6 +31,15 @@ Pollfd &Pollfd::operator=(const Pollfd &other)
     return *this;
 }
 
+bool    Pollfd::fd_is_here(int fd)
+{
+    for(std::size_t i = 0; i < fds.size() ;i++)
+    {
+        if (fds[i].fd == fd)
+            return true;
+    }
+    return false;
+}
 void    Pollfd::add_new_fd(int fd)
 {
     struct pollfd tmp;
@@ -40,6 +49,20 @@ void    Pollfd::add_new_fd(int fd)
     tmp.revents = 0;
     tab_fds[fd] = 0;
     fds.push_back(tmp);
+}
+
+void    Pollfd::set_new_fd()
+{
+    new_fd += 1;
+}
+int     Pollfd::get_new_fd_poll()
+{
+    return new_fd;
+}
+
+void    Pollfd::decrement_new_fd()
+{
+    new_fd -= 1;
 }
 void    Pollfd::start_poll()
 {

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/22 08:53:49 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 09:06:27 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	Response::rp2(int socket, Location &Loc)
 	if (rq["method"] == "GET")
 	{
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
+		std::cout << "RT {" << rt << "}\n";
 		rp = utils->CheckError(rt, Cl);
 		if (rp == "" && is_directory(rt) && Loc.get_index() != "")
 		{
@@ -113,6 +114,7 @@ void    Response::rp(int socket)
 
 	mth = "GET POST DELETE";
 	Loc = findLoc();
+	std::cout << "URI = " << rq["uri"] << std::endl;
 	if (rq["uri"].size() >= 2048)
 	{
 		rp = utils->getError(Cl, 405); 
@@ -140,7 +142,7 @@ void    Response::rp(int socket)
 		std::cout << RED << "CGI\n" << R;
 		ifCgi(Loc, socket, ctType);
 	}
-	else if (Cl.is_dir_listing(rq["uri"]))
+	else if (Cl.is_dir_listing(rq["uri"]) == 1)
 	{
 		std::cout << RED << "DIR_LISTING\n" << R;
 		Cl.exec_dir_listing(rq["uri"]);

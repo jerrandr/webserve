@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/22 14:52:38 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 10:32:23 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,15 +126,20 @@ void    Cgi::MyExec(int fdc, std::string body)
 	int		fd[2];
 	int		fd2[2];
 	int		pid;
-	time_t	bg;
+	// time_t	bg;
 	Pollfd	*pl;
 
 	Error504 = utils->getError(Cl, 504);
 	pl = Cl.getPoll();
-	bg = time(NULL);
+	// bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		exit(0);
-	pl->add_new_fd(fd2[1]);
+	if (pl->fd_is_here(fd2[1]) == false)
+	{
+		pl->add_new_fd(fd2[1]);
+		pl->set_new_fd();
+		std::cout << pl->get_new_fd_poll() << std::endl;
+	}
 	pid = fork();
 	if (pid == 0)
 	{
@@ -151,28 +156,41 @@ void    Cgi::MyExec(int fdc, std::string body)
 			std::cerr << "BODY {" << body << "}\n";
 			if (pl->get_status(fd2[1]) & POLLIN)
 			{
+				std::cout << "ato ah e" << std::endl;
 				write(fd2[1], body.c_str(), body.size());
 				pl->erase_fd(fd2[1]);
+				pl->decrement_new_fd();
+			}
+			else
+			{
+				std::cerr << "+++++++++++++++++++++++++++++++++\n";
+				kill(pid, SIGTERM);
+				throw NotReady();
 			}
 		}
-		pl->erase_fd(fd2[1]);
-		close(fd2[0]);
-		close(fd[1]);
-		while (true)
+		else
 		{
+					pl->erase_fd(fd2[1]);
+		pl->decrement_new_fd();
+		close(fd2[0]);
+		close(fd[1]);	
+		}
+		(void)fdc;
+		// while (true)
+		// {
 			if (waitpid(pid, NULL, WNOHANG) == pid)
 			{
 				std::cout << "HEREEEEEEE\n";
 				MyExec2(fd[0], fdc);
-				break;
+				// break;
 			}
-			if (utils->checkTimeOut(bg, time(NULL)))
-			{
-				kill(pid, SIGTERM);
-				utils->SendResponse(Cl.getPoll(), Error504, fdc);
-				break;
-			}
-			sleep(1);
-		}
+		// 	if (utils->checkTimeOut(bg, time(NULL)))
+		// 	{
+		// 		kill(pid, SIGTERM);
+		// 		utils->SendResponse(Cl.getPoll(), Error504, fdc);
+		// 		break;
+		// 	}
+		// 	sleep(1);
+		// }
 	}
 }

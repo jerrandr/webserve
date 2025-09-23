@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/20 10:22:41 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/23 10:26:52 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,8 +110,10 @@ void    Socket::listen_port()
                     if (re & POLLIN)
                         (*j).verify_connex(1);
                 }
-                if ((*j).size_fd_wait() != 0 && (*j).get_status_request() == 1 )
+                if (((*j).size_fd_wait() != 0 || polls->get_new_fd_poll() != 0) && (*j).get_status_request() == 1)
                 {
+                    std::cout << "miverina " <<(*j).size_fd_wait()  << std::endl;
+                    std::cout << polls->get_new_fd_poll() << std::endl;
                     (*j).parse_request(); 
                 }
                 else if ((*j).get_status_request() == 1 && (*j).size_fd_wait() == 0 && (*j).get_request() != "")

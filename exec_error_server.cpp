@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_error_server.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 13:19:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/19 13:36:03 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/23 10:28:55 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void    Client::exec_error_server()
      try
     {
         error_serv();
-        if (fd_wait.size() == 0)
+        if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
 		{
             stat = -1;
 			request = "";
