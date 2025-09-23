@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 12:26:06 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/23 14:17:25 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,37 +160,29 @@ void    Cgi::MyExec(int fdc, std::string body)
 	{
 		if (body != "")
 		{
-			std::cerr << "BODY {" << body << "}\n";
 			if (pl->get_status(fd2[1]) & POLLIN)
 			{
-				std::cout << "ato ah e" << std::endl;
 				write(fd2[1], body.c_str(), body.size());
 				pl->erase_fd(fd2[1]);
 				pl->decrement_new_fd();
 			}
 			else
 			{
-				std::cerr << "+++++++++++++++++++++++++++++++++\n";
 				kill(pid, SIGTERM);
 				throw NotReady();
 			}
 		}
-		else
-		{
-		if ((pl->get_status(fd2[1])  & POLLIN))
+		else if ((pl->get_status(fd2[1])  & POLLIN))
 		{
 			pl->erase_fd(fd2[1]);
 			pl->decrement_new_fd();
 		}	
-		}
-				close(fd2[0]);
-		close(fd[1]);	
-		(void)fdc;
+		close(fd2[0]);
+		close(fd[1]);
 		while (true)
 		{
 			if (waitpid(pid, NULL, WNOHANG) == pid)
 			{
-				std::cerr << "HEREEEEEEE\n";
 				MyExec2(fd[0], fdc);
 				break;
 			}
@@ -200,7 +192,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 				utils->SendResponse(Cl.getPoll(), Error504, fdc);
 				break;
 			}
-		// 	sleep(1);
+			sleep(1);
 		}
 	}
 }
