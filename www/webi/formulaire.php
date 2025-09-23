@@ -2,8 +2,6 @@
 
 $nom       = $_POST['nom'] ;
 $prenom    = $_POST['prenom']
-$age       = $_POST['age'] ;
-$telephone = $_POST['telephone'];
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -45,8 +43,6 @@ body {
     <h1>Données reçues</h1>
     <p><strong>Nom :</strong> <?php echo $nom; ?></p>
     <p><strong>Prénom :</strong> <?php echo $prenom; ?></p>
-    <p><strong>Âge :</strong> <?php echo $age; ?></p>
-    <p><strong>Téléphone :</strong> <?php echo $telephone; ?></p>
   </div>
 </body>
 </html>
