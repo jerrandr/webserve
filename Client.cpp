@@ -24,6 +24,13 @@ Client::Client()
 	real_body = 0;
 	request_time = 0;
 	client_timeout = time(NULL);
+	//+++++++++++++++++++
+		pid = -1;
+		fd_in = -1;
+		fd_out = -1;
+		fl = false;
+		bg = 0;
+	//++++++++++++++++++
 }
 
 Client::~Client() {}
@@ -46,6 +53,13 @@ Client &Client::operator=(const Client &other)
 	polls = other.polls;
 	request_time = other.request_time;
 	client_timeout = other.client_timeout;
+	//+++++++++++++++++++
+	pid = other.pid;
+	fd_in = other.fd_in;
+	fd_out = other.fd_out;
+	fl = other.fl;
+	bg = other.bg;
+	//++++++++++++++++++
 	return (*this);
 }
 
@@ -64,6 +78,13 @@ Client::Client(int s, Pollfd *poll, Config &conf)
 	polls = poll;
 	request_time = 0;
 	client_timeout = time(NULL);
+	//+++++++++++++++++++
+		pid = -1;
+		fd_in = -1;
+		fd_out = -1;
+		fl = false;
+		bg = 0;
+	//++++++++++++++++++
 }
 std::string Client::get_request() const
 {

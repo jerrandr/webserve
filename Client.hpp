@@ -18,7 +18,7 @@
 
 class Client
 {
-    private:
+    private:    
         Config config;
         Pollfd *polls;
         int socket;
@@ -35,6 +35,13 @@ class Client
         ssize_t client_timeout;
         Client();
     public:
+        //+++++++++++++++++++++    
+        int     pid;
+        int     fd_in;
+        int     fd_out;
+        bool    fl;
+        time_t  bg;
+        //+++++++++++++++++++++
         ~Client();
         Client(const Client &other);
         Client &operator=(const Client &other);

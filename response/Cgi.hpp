@@ -43,7 +43,10 @@ class Cgi
 		std::string	getStatus(std::string p);
 		void		IfNotFound(std::string p, int fdc);
 		void		IfFound(std::string p, int fdc);
-		void		MyExec2(int &fd, int fdc);
+		void		GetAndSend(int &fd, int fdc);
+		void		IfNotActif(std::string body, int fdc, Pollfd *pl);
+		void		IfBody(Pollfd *pl, std::string body, int fd, int pid);
+		void		ParentTasks(Pollfd *pl, int fd2[2], int fd[2], int pid, int fdc);
 		std::string	ParseCgi(std::string content);
 		std::string	getType(std::string ct);
 	public:

@@ -171,7 +171,8 @@ bool	ExecUtils::checkTimeOut(time_t begin, time_t end)
 	time_t tmp;
 
 	tmp = end - begin;
-	if (tmp >= 60)
+	std::cerr << "tmp = " << tmp << "\n";
+	if (tmp >= 10)
 		return (true);
 	return (false);
 }

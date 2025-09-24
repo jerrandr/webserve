@@ -92,7 +92,9 @@ std::string	Cgi::getType(std::string ct)
 	return (res);	
 }
 
-void	Cgi::MyExec2(int &fd, int fdc)
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+void	Cgi::GetAndSend(int &fd, int fdc)
 {
 	std::string	p;
 	std::string	st;
@@ -128,17 +130,53 @@ void	Cgi::MyExec2(int &fd, int fdc)
 	}
 }
 
-void    Cgi::MyExec(int fdc, std::string body)
+void	Cgi::IfBody(Pollfd *pl, std::string body, int fd, int pid)
+{
+	if (body != "")
+	{
+		if (pl->get_status(fd) & POLLOUT)
+		{
+			write(fd, body.c_str(), body.size());
+			pl->erase_fd(fd);
+			pl->decrement_new_fd();
+		}
+		else
+		{
+			kill(pid, SIGTERM);
+			throw NotReady();
+		}
+	}
+}
+
+void	Cgi::ParentTasks(Pollfd *pl, int fd2[2], int fd[2], int pid, int fdc)
+{
+	if ((pl->get_status(fd2[1])  & POLLIN))
+	{
+		pl->erase_fd(fd2[1]);
+		pl->decrement_new_fd();
+	}	
+	close(fd2[0]);
+	close(fd[1]);
+	if (waitpid(pid, NULL, WNOHANG) == pid)
+		GetAndSend(fd[0], fdc);
+	else
+	{
+		Cl.pid = pid;
+		Cl.fd_in = fd[0];
+		Cl.fd_out = fd2[1];
+		Cl.fl = true;
+		std::cout << "HEREEEEEEEEEEEE\n";	
+		throw NotReady();
+	}
+}
+
+void	Cgi::IfNotActif(std::string body, int fdc, Pollfd *pl)
 {
 	int		fd[2];
 	int		fd2[2];
 	int		pid;
-	time_t	bg;
-	Pollfd	*pl;
 
-	Error504 = utils->getError(Cl, 504);
-	pl = Cl.getPoll();
-	bg = time(NULL);
+	Cl.bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		exit(0);
 	if (!(pl->get_status(fd2[1])  & POLLIN))
@@ -150,7 +188,6 @@ void    Cgi::MyExec(int fdc, std::string body)
 	pid = fork();
 	if (pid == 0)
 	{
-		
 		dup2(fd2[0], STDIN_FILENO);
 		dup2(fd[1], STDOUT_FILENO);
 		execve("/usr/bin/php-cgi", argv, envp);
@@ -158,41 +195,38 @@ void    Cgi::MyExec(int fdc, std::string body)
 	}
 	else
 	{
-		if (body != "")
+		IfBody(pl, body, fd2[1], pid);
+		ParentTasks(pl, fd2, fd, pid, fdc);
+	}
+}
+
+void    Cgi::MyExec(int fdc, std::string body)
+{
+	Pollfd	*pl;
+
+	Error504 = utils->getError(Cl, 504);
+	pl = Cl.getPoll();
+	if (!Cl.fl)
+		IfNotActif(body, fdc, pl);
+	else
+	{
+		std::cout << "+++++++++++++++++++++++++++++++++++++++\n";	
+		int	res = waitpid(Cl.pid, NULL, WNOHANG); 
+		if (res != Cl.pid)
 		{
-			if (pl->get_status(fd2[1]) & POLLIN)
+			if (utils->checkTimeOut(Cl.bg, time(NULL)))
 			{
-				write(fd2[1], body.c_str(), body.size());
-				pl->erase_fd(fd2[1]);
-				pl->decrement_new_fd();
+				kill(Cl.pid, SIGTERM);
+				Cl.pid = false;
+				utils->SendResponse(pl, Error504, fdc);
 			}
 			else
-			{
-				kill(pid, SIGTERM);
 				throw NotReady();
-			}
 		}
-		else if ((pl->get_status(fd2[1])  & POLLIN))
+		else if (res == Cl.pid)
 		{
-			pl->erase_fd(fd2[1]);
-			pl->decrement_new_fd();
-		}	
-		close(fd2[0]);
-		close(fd[1]);
-		while (true)
-		{
-			if (waitpid(pid, NULL, WNOHANG) == pid)
-			{
-				MyExec2(fd[0], fdc);
-				break;
-			}
-			if (utils->checkTimeOut(bg, time(NULL)))
-			{
-				kill(pid, SIGTERM);
-				utils->SendResponse(Cl.getPoll(), Error504, fdc);
-				break;
-			}
-			sleep(1);
+			Cl.pid = false;
+			GetAndSend(Cl.fd_in, fdc);
 		}
 	}
 }
