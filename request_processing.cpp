@@ -6,13 +6,13 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/25 08:58:12 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/25 09:37:13 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-
+#include "response/Response.hpp"
 void Client::max_body_size_trait()
 {
 	int fd;

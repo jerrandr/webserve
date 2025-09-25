@@ -6,12 +6,12 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/25 08:55:58 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/25 10:08:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
-
+#include "response/Response.hpp"
 Client::Client()
 {
 	socket = -1;

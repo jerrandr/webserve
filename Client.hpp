@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/19 13:32:52 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/25 09:37:53 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 #include "Socket.hpp"
-#include "response/Cgi.hpp"
-#include "response/Response.hpp"
-
+// #include "response/Cgi.hpp"
+// #include "response/Response.hpp"
+class Response;
 class Client
 {
     private:    
