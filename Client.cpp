@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/23 10:28:49 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/25 08:55:58 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -279,7 +279,7 @@ void Client::receve_message()
 	if (real_body == 0 && !is_chunked(request) && is_post() && request.find("\r\n\r\n") != std::string::npos)
 	{
 		parse_request();
-		if (fd_wait.size() == 0 &&  polls->get_new_fd_poll() <= 0)
+		if (fd_wait.size() == 0 &&  polls->get_new_fd_poll() <= 0 && !fl)
 		{
 			request = "";
 			body = "";

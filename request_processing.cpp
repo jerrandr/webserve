@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/23 10:29:36 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/25 08:58:12 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 	if (this->config.get_max_allowed_size() < this->get_len_real_body())
 	{
 		max_body_size_trait();
-		if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
+		if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
 		{
 			request = "";
 			body = "";
@@ -162,7 +162,7 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		try
 		{
 			exec_not_implemented();
-			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
+			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
 			{
 				request = "";
 				body = "";
@@ -179,7 +179,7 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		try
 		{
 			exec_http_not_supported();
-			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
+			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
 			{
 				request = "";
 				body = "";
@@ -196,7 +196,7 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		try
 		{
 			exec_len_required();
-			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
+			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
 			{
 				request = "";
 				body = "";
@@ -226,7 +226,7 @@ void Client::parse_request()
 		try
 		{
 			exec_bad_request();
-			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
+			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl )
 			{
 				request = "";
 				body = "";
@@ -281,7 +281,7 @@ void Client::parse_request()
 		std::cout << "nandalo" << std::endl;
 	}
 	
-	if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
+	if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
 	{
 		request = "";
 		body = "";

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 10:39:04 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/23 10:28:59 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/25 08:57:35 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void    Client::exec_request_timeout()
     try
     {
         read_timeout();
-        if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
+        if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
 		{
             stat = -1;
 			request = "";

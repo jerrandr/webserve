@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 18:04:38 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 08:58:15 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/25 09:04:33 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ std::string ExecUtils::getData(std::string filename, Client & cl)
 	data = "";
 	fd = fd_is_ready(filename, cl.getPoll(), cl.getFdWait());
 	if (fd == -1)
-		throw NotReady("TSY METYYYYYYYYYYYYYYYYYY");
+		throw NotReady();
 	data = getData(fd);
 	fd_closed(fd, cl.getPoll(), cl.getFdWait(),filename);
 	return (data);

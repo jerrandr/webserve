@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 14:17:25 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/25 09:02:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ void	Cgi::IfFound(std::string p, int fdc)
 {
 	Pollfd	*pl = Cl.getPoll();
 	std::string	ext = getType(envp[4]);
-	std::cout << "ext {" << ext << "}\n";
-	std::cout << "envp {" << envp[4] << "}\n";
 	std::string	rp;
 	rp = ParseCgi(p);
 	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + utils->ToString(rp.size()) + "\r\nContent-Type: " + ext + "\r\n\r\n" + rp;
@@ -92,8 +90,6 @@ std::string	Cgi::getType(std::string ct)
 	return (res);	
 }
 
-//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 void	Cgi::GetAndSend(int &fd, int fdc)
 {
 	std::string	p;
@@ -101,14 +97,12 @@ void	Cgi::GetAndSend(int &fd, int fdc)
 	Pollfd		*pl;
 
 	pl = Cl.getPoll();
-	// pl->add_new_fd(fd);
 	if (!(pl->get_status(fd)  & POLLIN))
 	{
 		pl->add_new_fd(fd);
 		pl->set_new_fd();
 		throw NotReady();
 	}
-	std::cerr << "++++++++++++++\n";
 	if (pl->get_status(fd) & POLLIN)
 		p = utils->getData(fd);
 	else
@@ -117,17 +111,9 @@ void	Cgi::GetAndSend(int &fd, int fdc)
 	Cl.getPoll()->erase_fd(fd);
 	pl->decrement_new_fd();
 	if (st != "")
-	{
-		std::cerr << "blem\n";
 		IfNotFound(st, fdc);
-	}
 	else
-	{
-		
-		std::cerr << "tsy blem\n";
-		std::cerr << "P : {" << p << "}\n";
 		IfFound(p, fdc);
-	}
 }
 
 void	Cgi::IfBody(Pollfd *pl, std::string body, int fd, int pid)
@@ -165,7 +151,6 @@ void	Cgi::ParentTasks(Pollfd *pl, int fd2[2], int fd[2], int pid, int fdc)
 		Cl.fd_in = fd[0];
 		Cl.fd_out = fd2[1];
 		Cl.fl = true;
-		std::cout << "HEREEEEEEEEEEEE\n";	
 		throw NotReady();
 	}
 }
@@ -210,7 +195,6 @@ void    Cgi::MyExec(int fdc, std::string body)
 		IfNotActif(body, fdc, pl);
 	else
 	{
-		std::cout << "+++++++++++++++++++++++++++++++++++++++\n";	
 		int	res = waitpid(Cl.pid, NULL, WNOHANG); 
 		if (res != Cl.pid)
 		{
