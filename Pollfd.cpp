@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Pollfd.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/23 11:53:48 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/09/25 14:43:19 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,8 @@ int     Pollfd::get_new_fd_poll()
 
 void    Pollfd::decrement_new_fd()
 {
-    new_fd -= 1;
+    if (new_fd > 0)
+        new_fd -= 1;
     std::cout << "decrease" << std::endl;
 }
 void    Pollfd::start_poll()

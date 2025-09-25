@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/25 09:02:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/09/25 14:58:48 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ void	Cgi::IfNotActif(std::string body, int fdc, Pollfd *pl)
 
 	Cl.bg = time(NULL);
 	if (pipe(fd) < 0 || pipe(fd2) < 0)
-		exit(0);
+		throw std::bad_alloc();
 	if (!(pl->get_status(fd2[1])  & POLLIN))
 	{
 		pl->add_new_fd(fd2[1]);
@@ -200,6 +200,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 		{
 			if (utils->checkTimeOut(Cl.bg, time(NULL)))
 			{
+			
 				kill(Cl.pid, SIGTERM);
 				Cl.pid = false;
 				utils->SendResponse(pl, Error504, fdc);
