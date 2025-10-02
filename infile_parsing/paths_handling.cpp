@@ -103,7 +103,7 @@ int error_page_set(std::string path, ErrorPage &err_page, std::vector<std::strin
     page_name = path.substr(0, last);
     err_vect.push_back(page_name);
     page_path = path.substr(last + 1, path.size() - (last + 1));
-    if (access(page_path.c_str(), F_OK || R_OK) == -1)
+    if (access(page_path.c_str(), R_OK) == -1)
         return (0);
     err_set = std::atoi(page_name.c_str());
     if (!path_set(err_set, err_page, page_path))

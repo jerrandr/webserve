@@ -68,7 +68,7 @@ int check_all_error_path(Config &cfg)
     all_path.push_back(err_page.get_path_505());
     for (size_t i = 0; i < all_path.size(); i ++)
     {
-        if (access(all_path[i].c_str(), F_OK || R_OK) == -1)
+        if (access(all_path[i].c_str(), R_OK) == -1)
             return (0);
     };
     return (1); 
