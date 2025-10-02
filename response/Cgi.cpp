@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/02 12:53:23 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 13:45:51 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,10 +130,12 @@ void		Cgi::IfBody(Pollfd *pl, std::string body, int fd2[2], int fd[2], int pid)
 		else
 		{
 			kill(pid, SIGTERM);
-			close(fd2[1]);
-			close(fd2[0]);
-			close(fd[0]);
-			close(fd[1]);
+			// close(fd2[1]);
+			// close(fd2[0]);
+			// close(fd[0]);
+			// close(fd[1]);
+			(void)fd2;
+			(void)fd;
 			throw NotReady();
 		}
 	}

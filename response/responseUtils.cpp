@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/02 12:38:59 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 13:52:22 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,14 @@ void	Response::ifCgi(Location Loc, int socket, std::string bd)
 
 	bdy = Cl.getBody();
 	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
+	if (Loc.get_path_cgi() == "")
+	{
+		std::string	rp;
+
+		rp = utils->getError(Cl, 502);
+		utils->SendResponse(Cl.getPoll(), rp, socket);
+		return;
+	}
 	initEnvp(rt, bd);
 	Cgi cgi(envp, lv, Cl);
 	cgi.MyExec(socket, bdy, Loc.get_path_cgi());
