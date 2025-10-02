@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/25 08:55:24 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 11:24:05 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,13 +112,10 @@ void    Socket::listen_port()
                 }
                 if (((*j).size_fd_wait() != 0 || polls->get_new_fd_poll() > 0) && (*j).get_status_request() == 1)
                 {
-                    std::cout << "miverina " <<(*j).size_fd_wait()  << std::endl;
-                    std::cout << polls->get_new_fd_poll() << std::endl;
                     (*j).parse_request(); 
                 }
                 else if ((*j).get_status_request() == 1 && (*j).size_fd_wait() == 0 && (*j).get_request() != "")
                 {
-                    std::cout << "miverina miparse" << std::endl;
                     (*j).parse_request();
                 }
                 else if ((*j).get_status_request() != 1 && (*j).get_request() != "")

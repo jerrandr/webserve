@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   port_checking.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: randrina <randrina@student.42antananarivo  +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/06 15:32:53 by randrina          #+#    #+#             */
-/*   Updated: 2025/08/06 15:32:54 by randrina         ###   ########.fr       */
+/*   Updated: 2025/10/02 11:27:45 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

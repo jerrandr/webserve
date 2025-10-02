@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/25 14:43:19 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 11:23:21 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ void    Pollfd::add_new_fd(int fd)
 
 void    Pollfd::set_new_fd()
 {
-    std::cout << "increase" << std::endl;
     new_fd += 1;
 }
 int     Pollfd::get_new_fd_poll()
@@ -70,7 +69,6 @@ void    Pollfd::decrement_new_fd()
 {
     if (new_fd > 0)
         new_fd -= 1;
-    std::cout << "decrease" << std::endl;
 }
 void    Pollfd::start_poll()
 {

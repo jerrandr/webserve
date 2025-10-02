@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/25 09:00:57 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 11:24:29 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,7 +171,6 @@ bool	ExecUtils::checkTimeOut(time_t begin, time_t end)
 	time_t tmp;
 
 	tmp = end - begin;
-	std::cerr << "tmp = " << tmp << "\n";
 	if (tmp >= 60)
 		return (true);
 	return (false);

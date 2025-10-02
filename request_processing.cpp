@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/25 09:37:13 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 11:23:31 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,14 +271,12 @@ void Client::parse_request()
 
 	try
 	{
-		std::cout << "ato" << std::endl;
 		Response a(config, *this);
 		a.rp(socket);
 	}
 	catch(const NotReady& e)
 	{
 		(void)e;
-		std::cout << "nandalo" << std::endl;
 	}
 	
 	if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
@@ -287,7 +285,6 @@ void Client::parse_request()
 		body = "";
 		real_body = 0;
 		size_body = 0;
-		std::cout << "voafafa" << std::endl;
 		try
 		{
 			if(config.at("Connection") == "close")
