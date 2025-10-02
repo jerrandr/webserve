@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ExecUtils.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/02 11:24:29 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:20:38 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ std::string	ExecUtils::getError(Client &cl, int stat)
 	ct = getData(filename, cl);
 	nbr = ToString(ct.size());
 	status = ToString(stat);
-	res = "HTTP/1.1 " + status + Er[status] + "\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + ct;
+	res = "HTTP/1.1 " + status +" "+ Er[status] + "\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + ct;
 	return (res);
 }
 

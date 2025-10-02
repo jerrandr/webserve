@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/25 10:08:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:02:24 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ Client::Client()
 	size_body = 0;
 	body = "";
 	stat = 0;
-	real_body = 0;
+	real_body = -1;
 	request_time = 0;
 	client_timeout = time(NULL);
 	//+++++++++++++++++++
@@ -73,7 +73,7 @@ Client::Client(int s, Pollfd *poll, Config &conf)
 	size_body = 0;
 	body = "";
 	stat = 0;
-	real_body = 0;
+	real_body = -1;
 	config = conf;
 	polls = poll;
 	request_time = 0;
@@ -96,7 +96,7 @@ int Client::get_socket_client() const
 	return socket;
 }
 
-size_t Client::get_len_real_body()
+long Client::get_len_real_body()
 {
 	size_t size;
 	std::string len;
@@ -106,7 +106,7 @@ size_t Client::get_len_real_body()
 	len = "";
 	size = request.find("Content-Length:");
 	if (size == std::string::npos)
-		return 0;
+		return -1;
 	size = size + 16;
 	for (size_t i = size; i < request.length(); i++)
 	{
@@ -252,7 +252,7 @@ void Client::receve_message()
 	body += get_body(tmp, size,this->request);
 	size_body += status - size;
 	set_head(size, tmp);
-	if (real_body == 0)
+	if (real_body == -1)
 		real_body = get_len_real_body();
 	if (stat >= 1 || (is_chunked(request)))
 	{
@@ -268,7 +268,7 @@ void Client::receve_message()
 	}
 	else if (stat != 1)
 	{
-		if (real_body == size_body)
+		if (real_body == size_body || (real_body == -1 && size_body == 0))
 		{
 			status_request = 1;
 		}

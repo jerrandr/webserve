@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:56:34 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 14:30:58 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 19:19:51 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

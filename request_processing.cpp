@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   request_processing.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/02 11:23:31 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:47:40 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ void    Client::exec_not_implemented()
 }
 bool    Client::other_traitment(std::map<std::string, std::string> config)
 {
-	if (this->config.get_max_allowed_size() < this->get_len_real_body())
+	if ((long)this->config.get_max_allowed_size() < this->get_len_real_body())
 	{
 		max_body_size_trait();
 		if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)

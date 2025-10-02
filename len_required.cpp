@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 11:35:23 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/19 13:33:35 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/02 18:44:04 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool    Client::is_post()
 
 bool    Client::is_len_required()
 {
-    if (is_post() && real_body == 0 && !is_chunked(request))
+    if (is_post() && real_body == -1 && !is_chunked(request))
         return true;
     return false;
 }

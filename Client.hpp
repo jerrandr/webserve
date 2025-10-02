@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/25 09:37:53 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/02 18:51:10 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ class Client
         std::string request;
         std::string reponse;
         std::string body;
-        size_t real_body;
+        long real_body;
         int status_request;
         int status_connexion;
-        size_t size_body;
+        long size_body;
         int stat;
         std::map<std::string, int> fd_wait;
         ssize_t request_time;
@@ -61,7 +61,7 @@ class Client
 
         void    verify_connex(int status);
 
-        size_t get_len_real_body();
+        long get_len_real_body();
         size_t get_len_body(std::string buffer);
         void    set_head(int size,std::string buffer);
 
