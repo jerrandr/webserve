@@ -52,6 +52,8 @@ static int      body_size_checking(std::string value, Config &cfg, std::vector<s
 
     if (value.empty())
         return (0);
+    if (!isdigit(value[0]))
+        return (0);
     std::vector<std::string> spl_value = split(value, " ");
     if (spl_value.size() != 1)
         return (0);
