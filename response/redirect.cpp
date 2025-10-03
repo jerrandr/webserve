@@ -43,7 +43,7 @@ std::string	Response::redir_rp2(std::string redir)
 				rp = "HTTP/1.1 301 Moved Permanently\r\n";
 				break;
 		}
-		rp += "Location: " + data[1] + "\r\n\r\n"; 
+		rp += "Location: " + data[1] + "\r\nContent-Length: 0\r\n\r\n"; 
 	}
 	return (rp);
 }

@@ -43,13 +43,19 @@ void	Response::initEnvp(std::string rt, std::string bd)
 	envp[nb] = NULL;
 }
 
-void	Response::Delete(std::string path)
+void	Response::Delete(std::string path, std::string &rp)
 {
+	if (rp != "")
+		return ;
 	if (is_directory(path))
 	{
 		DIR				*dir = opendir(path.c_str());
 		struct dirent	*next;
-		
+		if (dir == NULL)
+		{
+			rp = error_403;
+			return ;
+		}
 		next = readdir(dir);
 		while (next != NULL)
 		{
@@ -61,16 +67,27 @@ void	Response::Delete(std::string path)
 				continue ;
 			}
 			if (is_directory(fullpath))
-				Delete(fullpath);
+			{
+				Delete(fullpath, rp);
+				if (rp != "")
+					break;
+			}
 			else
-				std::remove(fullpath.c_str());
+			{
+				if ((access(fullpath.c_str(), W_OK) != 0 || std::remove(fullpath.c_str()) != 0) && rp == "")
+					rp = error_403;
+			}
 			next = readdir(dir);
 		}
-		std::remove(path.c_str());
+		if ((access(path.c_str(), W_OK) != 0 || std::remove(path.c_str()) != 0) && rp == "")
+			rp = error_403;
 		closedir(dir);
 	}
 	else
-		std::remove(path.c_str());
+	{
+		if ((access(path.c_str(), W_OK) != 0 || std::remove(path.c_str()) != 0) && rp == "")
+			rp = error_403;
+	}
 }
 
 int	Response::IfDelete(int socket, Location loc)
@@ -86,14 +103,16 @@ int	Response::IfDelete(int socket, Location loc)
 	rt = cf.get_real_path(rq["uri"], loc);
 	if (rq["method"] == "DELETE")
 	{
+		error_403 = utils->getError(Cl, 403);
 		if (stat(rt.c_str(), &st) == -1 && rp == "")
 			rp = utils->getError(Cl, 404);
-		else if (access(rt.c_str(), O_RDWR) != 0 && rp == "")
-			rp = utils->getError(Cl, 403);
+		else if (access(rt.c_str(), W_OK) != 0 && rp == "")
+			rp = error_403;
 		if (rp == "")
 		{
-			Delete(rt);
-			rp = "HTTP/1.1 204 No Content\r\nConnection: close\r\n\r\n";
+			Delete(rt, rp);
+			if (rp == "")
+				rp = "HTTP/1.1 204 No Content\r\nConnection: close\r\n\r\n";
 		}
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return (1);

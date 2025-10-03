@@ -1,0 +1,9 @@
+
+Nofy
+webservs
+500 -> fichier de config sans index nefa tokony 404
+
+De otrizay ihany koa rehefa mangataka fichier ilay client, tokony droit en lecture ihany no jerena fa tsy droit en ecriture.
+
+De aminl'iay header @ ilay redirection tokony hisy Content-Length: [0]
+De tsy haiko hoe mila amboarina ve ity comportement ity na tsia: raha micreer dossier test/test1/test2 sy micreer fichier ao @ test/test1/file de atao 000 ny permission an'ilay test/test1/file de raha fafaina ilay test @ DELETE de voafafa ilay izy kanefa raha /test/test1/file no angatahana ho fafaina de 403 no azo

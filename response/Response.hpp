@@ -27,6 +27,7 @@ class ExecUtils;
 class Response
 {
 	private:
+		std::string							error_403;
 		ExecUtils							*utils;
 		Cgi									*cgi;
 		Pollfd								*pl;
@@ -49,7 +50,7 @@ class Response
 		void					rp2(int socket, Location &Loc);
 		void					rp3(int socket, Location Loc);
 		std::string				rp5(std::string	rt);
-		void					Delete(std::string path);
+		void					Delete(std::string path, std::string &rp);
 		int						IfDelete(int socket, Location loc);
         int	             		IfDirList(Location lt);
 		bool					ifCgi2(Location Loc);

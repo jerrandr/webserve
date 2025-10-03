@@ -103,13 +103,19 @@ void	BodyUpload::UploadHandler(Client &cl)
 	int	fd;
 
 	fd = 0;
+	std::cout << "ttttttttttttttttttttttttttt\n";
 	ParseBody(cl);
-	for (std::map<std::string, std::string>::iterator i = vl.begin(); i != vl.end(); i++)
+	std::cout << "************************\n";
+	if (vl.size() > 0)
 	{
-		if ((fd = fd_create((*i).first, cl.getPoll(), cl.getFdWait())) != -1)
+		for (std::map<std::string, std::string>::iterator i = vl.begin(); i != vl.end(); i++)
 		{
-			write(fd, (*i).second.data(), (*i).second.size());
-			fd_closed(fd, cl.getPoll(), cl.getFdWait(), (*i).first);
-		}
-	}	
+			
+			if ((fd = fd_create((*i).first, cl.getPoll(), cl.getFdWait())) != -1)
+			{
+				write(fd, (*i).second.data(), (*i).second.size());
+				fd_closed(fd, cl.getPoll(), cl.getFdWait(), (*i).first);
+			}
+		}	
+	}
 }

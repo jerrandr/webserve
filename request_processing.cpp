@@ -59,6 +59,7 @@ int Client::is_dir_listing(std::string uri)
 
 	loc = config.get_location_match(uri);
 	path = config.get_real_path(uri, loc);
+	std::cout << "PATH ={" << path << "}\n";
 	if (is_directory(path))
 	{
 		if (loc.get_directory_listing() && loc.get_index() == "")

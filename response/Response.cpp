@@ -57,6 +57,8 @@ void	Response::rp3(int socket, Location Loc)
 		{
 			bd.UploadHandler(Cl);
 			filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
+			if (is_directory(filename))
+				return;
 			rp = rp5(filename);
 		}
 	}
@@ -97,11 +99,15 @@ void	Response::rp2(int socket, Location &Loc)
 	{
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
 		rp = utils->CheckError(rt, Cl);
-		if (rp == "" && is_directory(rt) && Loc.get_index() != "")
+		if (rp == "" && is_directory(rt))
 		{
-			rt = Cl.getConfig().get_real_path("/" + Loc.get_index(), Loc);
-			rp = rp5(rt);
-			std::cout << "RP5 {" << rp << "}\n";
+			if (Loc.get_index() != "")
+			{
+				rt = Cl.getConfig().get_real_path("/" + Loc.get_index(), Loc);
+				rp = rp5(rt);
+			}
+			else
+				rp = utils->getError(Cl, 404);
 		}
 		else if (rp == "")
 			rp = rp5(rt);
@@ -140,11 +146,14 @@ void    Response::rp(int socket)
 	}
 	else if (ifCgi2(Loc))
 		ifCgi(Loc, socket, ctType);
-	else if (Cl.is_dir_listing(rq["uri"]) == 1)
-		Cl.exec_dir_listing(rq["uri"]);
-	else
+	else if (rq["method"] == "GET" || rq["method"] == "POST")
 	{
-		std::cout << "RP2\n";
+		std::cout << "-----------------------\n";
 		rp2(socket, Loc);
+	}
+	if (Cl.is_dir_listing(rq["uri"]) == 1)
+	{
+		std::cout << "+++++++++++++++++++++++\n";
+		Cl.exec_dir_listing(rq["uri"]);
 	}
 }
