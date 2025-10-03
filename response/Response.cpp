@@ -78,6 +78,11 @@ std::string	Response::rp5(std::string	rt)
 		data.clear();
 		data << utils->getData(rt, Cl);
 	}
+	else
+	{
+		rp = data.str();
+		return (rp);
+	}
 	nbr = utils->ToString(data.str().size());
 	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
 	return (rp);
@@ -96,6 +101,7 @@ void	Response::rp2(int socket, Location &Loc)
 		{
 			rt = Cl.getConfig().get_real_path("/" + Loc.get_index(), Loc);
 			rp = rp5(rt);
+			std::cout << "RP5 {" << rp << "}\n";
 		}
 		else if (rp == "")
 			rp = rp5(rt);
@@ -137,5 +143,8 @@ void    Response::rp(int socket)
 	else if (Cl.is_dir_listing(rq["uri"]) == 1)
 		Cl.exec_dir_listing(rq["uri"]);
 	else
+	{
+		std::cout << "RP2\n";
 		rp2(socket, Loc);
+	}
 }
