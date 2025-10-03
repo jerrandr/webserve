@@ -131,10 +131,6 @@ void    Response::rp(int socket)
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
-	else if (IfDelete(socket, Loc) == 1)
-		return ;
-	if (Loc.get_redir() != "" && rq["method"] == "GET")
-		redir_rp(Loc.get_redir(), socket);
 	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
 	{
 		if (mth.find(rq["method"]) == std::string::npos)
@@ -144,16 +140,14 @@ void    Response::rp(int socket)
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
+	else if (IfDelete(socket, Loc) == 1)
+		return ;
+	if (Loc.get_redir() != "" && rq["method"] == "GET")
+		redir_rp(Loc.get_redir(), socket);
 	else if (ifCgi2(Loc))
 		ifCgi(Loc, socket, ctType);
 	else if (rq["method"] == "GET" || rq["method"] == "POST")
-	{
-		std::cout << "-----------------------\n";
 		rp2(socket, Loc);
-	}
 	if (Cl.is_dir_listing(rq["uri"]) == 1)
-	{
-		std::cout << "+++++++++++++++++++++++\n";
 		Cl.exec_dir_listing(rq["uri"]);
-	}
 }

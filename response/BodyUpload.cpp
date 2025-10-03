@@ -103,9 +103,7 @@ void	BodyUpload::UploadHandler(Client &cl)
 	int	fd;
 
 	fd = 0;
-	std::cout << "ttttttttttttttttttttttttttt\n";
 	ParseBody(cl);
-	std::cout << "************************\n";
 	if (vl.size() > 0)
 	{
 		for (std::map<std::string, std::string>::iterator i = vl.begin(); i != vl.end(); i++)
