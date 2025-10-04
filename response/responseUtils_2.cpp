@@ -34,16 +34,22 @@ bool	Response::Check405_501(Location Loc, int socket)
 {
 	std::string	mth;
 	std::string	rp;
+	std::vector<std::string> list_allowed;
+	std::vector<std::string> list_implemented;
 
 	rp = "";
 	mth = "GET POST DELETE";
-	if (Loc.get_meth().find(rq["method"]) == std::string::npos
-		|| Loc.get_meth() > mth)
+	list_allowed = split(Loc.get_meth()," ");
+	list_implemented = split(mth," ");
+	if (std::find(list_allowed.begin(),list_allowed.end(),rq["method"]) == list_allowed.end())
 	{
-		if (mth.find(rq["method"]) == std::string::npos && Loc.get_meth().find(rq["method"]) != std::string::npos)
-			rp = utils->getError(Cl, 501);
-		else
-			rp = utils->getError(Cl, 405);
+		rp = utils->getError(Cl, 405);
+		utils->SendResponse(Cl.getPoll(), rp, socket);
+		return true;
+	}
+	else if (std::find(list_allowed.begin(),list_allowed.end(),rq["method"]) != list_allowed.end()
+		&& std::find(list_implemented.begin(),list_implemented.end(),rq["method"]) == list_implemented.end())
+	{	rp = utils->getError(Cl, 501);
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return (true);
 	}

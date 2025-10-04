@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BodyUpload.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 14:42:30 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 19:37:53 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,9 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
     int fd;
 
     fd = -1;
-	std::cout << "path upload " << path << std::endl; 
     try
     {
         fd = fd_wait.at(path);
-		std::cout << "internal" << std::endl;
         if ((polls->get_status(fd) & POLLIN))
             return fd;
     }
@@ -63,11 +61,7 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
     {
 		fd = open(path.c_str(), O_CREAT | O_WRONLY, 0666);
         if (fd < 0)
-        {
-			std::cout << "wtf" << std::endl;
-			std::perror("upl ");
 			throw std::bad_alloc();
-		}
         (void)e;
         polls->add_new_fd(fd);
         fd_wait[path] = fd;
@@ -118,11 +112,9 @@ void	BodyUpload::UploadHandler(Client &cl)
 			
 			if ((fd = fd_create((*i).first, cl.getPoll(), cl.getFdWait())) != -1)
 			{
-				std::cout << "write" << std::endl;
 				write(fd, (*i).second.data(), (*i).second.size());
 				fd_closed(fd, cl.getPoll(), cl.getFdWait(), (*i).first);
 			}
-			std::cout << "mivoka" << std::endl;
 		}	
 	}
 }

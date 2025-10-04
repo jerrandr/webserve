@@ -231,7 +231,7 @@ void Client::parse_request()
 	{
 		request = "";
 		body = "";
-		real_body = 0;
+		real_body = -1;
 		size_body = 0;
 		try
 		{

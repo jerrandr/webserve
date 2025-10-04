@@ -25,7 +25,7 @@ void Client::body_unchunked()
 	tmp = "";
 	temp = 0;
 	new_body = "";
-	real_body = 0;
+	real_body = -1;
 	for (std::size_t i = 0; i < body.size(); i++)
 	{
 		temp = body.find("\r\n", i);

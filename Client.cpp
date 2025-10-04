@@ -241,14 +241,15 @@ void Client::receve_message()
 		stat = -1;
 		return;
 	}
-	std::cout << buffer << std::endl;
 	std::string tmp;
 	tmp.append(buffer, status);
 	body += get_body(tmp, size,this->request);
 	size_body += status - size;
 	set_head(size, tmp);
 	if (real_body == -1)
+	{
 		real_body = get_len_real_body();
+	}
 	if (stat >= 1 || (is_chunked(request)))
 	{
 		stat = 1;
@@ -278,24 +279,23 @@ void Client::receve_message()
 		{
 			request = "";
 			body = "";
-			real_body = 0;
+			real_body = -1;
 			status_request = 0;
 		}
 		return ;
 	}
-	if (status_request == 1 && real_body == size_body && request.find("\r\n\r\n") != std::string::npos)
+	if (status_request == 1 && (real_body == size_body || real_body == -1) && request.find("\r\n\r\n") != std::string::npos)
 	{
 		request_time = 0;
 		status_request = 1;
 		status = 2;
 		size_body = 0;
-		std::cout << "exec " << std::endl;
 		parse_request();
 		if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
 		{
 			request = "";
 			body = "";
-			real_body = 0;
+			real_body = -1;
 			status_request = 0;
 		}
 	}
