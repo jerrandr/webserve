@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 10:29:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 11:32:53 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	Response::ifCgi(Location Loc, int socket, std::string bd)
 		return;
 	}
 	initEnvp(rt, bd);
-	Cgi cgi(envp, lv, Cl);
-	cgi.MyExec(socket, bdy, Loc.get_path_cgi());
+	Cgi cgi(envp, lv, Cl, Loc.get_path_cgi());
+	cgi.MyExec(socket, bdy);
 	return ;
 }

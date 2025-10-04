@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 10:11:01 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 11:38:15 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ int Client::is_dir_listing(std::string uri)
 
 	loc = config.get_location_match(uri);
 	path = config.get_real_path(uri, loc);
-	std::cout << "PATH ={" << path << "}\n";
 	if (is_directory(path))
 	{
 		if (loc.get_directory_listing() && loc.get_index() == "")
@@ -215,10 +214,7 @@ void Client::parse_request()
 		end = 0;
 	}
 	if (other_traitment(config))
-	{
-		std::cout << "other" << std::endl;
 		return;
-	}
 
 	try
 	{

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/02 13:45:51 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 11:29:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,17 @@ Cgi::~Cgi()
 	delete [] envp;
 }
 
-Cgi::Cgi(char **Envp, int length, Client &cl): Cl(cl)
+Cgi::Cgi(char **Envp, int length, Client &cl, std::string path): Cl(cl)
 {
 	Config	cf;
 
+	pth = path;
 	cf = Cl.getConfig();
 	utils = new ExecUtils();
 	argv = new char*[2];
 	envp = Envp;
 	lv = length;
-	argv[0] = const_cast<char*>("/usr/bin/php-cgi");
+	argv[0] = const_cast<char*>(pth.c_str());
 	argv[1] = NULL;
 }
 
@@ -163,21 +164,15 @@ void	Cgi::ParentTasks(Pollfd *pl, int fd2[2], int fd[2], int pid, int fdc)
 	}
 }
 
-void		Cgi::IfNotActif(std::string body, int fdc, Pollfd *pl, std::string pth)
+void		Cgi::IfNotActif(std::string body, int fdc, Pollfd *pl)
 {
 	int		fd[2];
 	int		fd2[2];
 	int		pid;
 
 	Cl.bg = time(NULL);
-	if (pipe(fd) < 0)
-	{
+	if (pipe(fd) < 0 || pipe(fd2) < 0)
 		throw std::bad_alloc();
-	}
-	if (pipe(fd2) < 0)
-	{
-		throw std::bad_alloc();
-	}
 	if (!(pl->get_status(fd2[1])  & POLLIN))
 	{
 		pl->add_new_fd(fd2[1]);
@@ -199,14 +194,14 @@ void		Cgi::IfNotActif(std::string body, int fdc, Pollfd *pl, std::string pth)
 	}
 }
 
-void    Cgi::MyExec(int fdc, std::string body, std::string path)
+void    Cgi::MyExec(int fdc, std::string body)
 {
 	Pollfd	*pl;
 
 	Error504 = utils->getError(Cl, 504);
 	pl = Cl.getPoll();
 	if (!Cl.fl)
-		IfNotActif(body, fdc, pl, path);
+		IfNotActif(body, fdc, pl);
 	else
 	{
 		int	res = waitpid(Cl.pid, NULL, WNOHANG); 
