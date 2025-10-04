@@ -71,7 +71,7 @@ int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_
     }
     catch(const std::out_of_range &e)
     {
-        fd = open(path.c_str(), O_RDWR);
+        fd = open(path.c_str(), O_RDONLY);
         if (fd < 0)
             throw std::bad_alloc();
         (void)e;

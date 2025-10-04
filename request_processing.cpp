@@ -29,7 +29,10 @@ void Client::max_body_size_trait()
 			ss << t.size();
 			t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 			if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
-				send(socket, t.c_str(), t.size(), 0);
+			{
+				if (send(socket, t.c_str(), t.size(), 0) < 0)
+					stat = -1;
+			}
 			return;
 	}
 	fd = fd_is_ready(path, polls, fd_wait);
@@ -40,7 +43,10 @@ void Client::max_body_size_trait()
 		ss << t.size();
 		t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 		if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
-			send(socket, t.c_str(), t.size(), 0);
+		{
+			if (send(socket, t.c_str(), t.size(), 0) < 0)
+				stat = -1;
+		}
 	}
 }
 void Client::exec_dir_listing(std::string uri)
@@ -69,7 +75,7 @@ int Client::is_dir_listing(std::string uri)
 }
 static bool   http_not_supported(std::string v)
 {
-	if (v != "HTTP/1.1" && v != "HTTP/1.0")
+	if (v != "HTTP/1.1")
 		return (true);
 	return false;
 }
@@ -97,7 +103,10 @@ void Client::exec_http_not_supported()
 	ss << head.size();
 	exec = "HTTP/1.1 505 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
 	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
-        send(socket, exec.c_str(), exec.size(), 0);
+    {
+		if (send(socket, exec.c_str(), exec.size(), 0) < 0)
+			stat = -1;
+	}
 }
 
 bool    Client::is_not_implemented(std::map<std::string, std::string> cf)
@@ -143,8 +152,10 @@ void    Client::exec_not_implemented()
 	ss << head.size();
 	exec = "HTTP/1.1 501 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
 	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
-        send(socket, exec.c_str(), exec.size(), 0);
-
+    {
+		if (send(socket, exec.c_str(), exec.size(), 0) < 0)
+			stat = -1;
+	}
 }
 bool    Client::other_traitment(std::map<std::string, std::string> config)
 {

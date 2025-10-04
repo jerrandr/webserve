@@ -235,13 +235,8 @@ void Client::receve_message()
 	status = 0;
 	status = recv(socket, buffer, 1024 - 1, 0);
 	if (request_time == 0)
-	{
 		request_time = time(NULL);
-	}
-
-	if (status < 0)
-		return;
-	else if (status == 0)
+	if (status <= 0)
 	{
 		stat = -1;
 		return;
