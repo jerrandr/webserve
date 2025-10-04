@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 10:28:44 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 10:29:53 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 10:32:29 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,29 @@ bool	Response::Check405_501(Location Loc, int socket)
 		return (true);
 	}
 	return (false);
+}
+
+std::string	Response::rp5(std::string	rt)
+{
+	std::stringstream	data;
+	std::string	ext;
+	std::string	nbr;
+	std::string	rp;
+	
+	ext = ".html";
+	data << utils->CheckError(rt, Cl);
+	if (data.str() == "")
+	{
+		ext = utils->getExt(rt);
+		data.clear();
+		data << utils->getData(rt, Cl);
+	}
+	else
+	{
+		rp = data.str();
+		return (rp);
+	}
+	nbr = utils->ToString(data.str().size());
+	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
+	return (rp);
 }

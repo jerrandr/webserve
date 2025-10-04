@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 10:27:07 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 10:36:31 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,31 +65,6 @@ void	Response::rp3(int socket, Location Loc)
 	utils->SendResponse(Cl.getPoll(), rp, socket);
 }
 
-std::string	Response::rp5(std::string	rt)
-{
-	std::stringstream	data;
-	std::string	ext;
-	std::string	nbr;
-	std::string	rp;
-	
-	ext = ".html";
-	data << utils->CheckError(rt, Cl);
-	if (data.str() == "")
-	{
-		ext = utils->getExt(rt);
-		data.clear();
-		data << utils->getData(rt, Cl);
-	}
-	else
-	{
-		rp = data.str();
-		return (rp);
-	}
-	nbr = utils->ToString(data.str().size());
-	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
-	return (rp);
-}
-
 void	Response::rp2(int socket, Location &Loc)
 {
 	std::string	rt;
@@ -129,10 +104,10 @@ void    Response::rp(int socket)
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
+	if (Loc.get_redir() != "")
+		redir_rp(Loc.get_redir(), socket);
 	if (Check405_501(Loc, socket) || IfDelete(socket, Loc) == 1)
 		return ;
-	if (Loc.get_redir() != "" && rq["method"] == "GET")
-		redir_rp(Loc.get_redir(), socket);
 	else if (ifCgi2(Loc))
 		ifCgi(Loc, socket, ctType);
 	else if (rq["method"] == "GET" || rq["method"] == "POST")
