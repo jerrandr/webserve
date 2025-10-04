@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 11:38:15 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 12:45:59 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void Client::exec_dir_listing(std::string uri)
 
 	loc = config.get_location_match(uri);
 	path = config.get_real_path(uri, loc);
+	std::cout << "path " << path << std::endl;
 	directory_listing(path,uri);
 }
 int Client::is_dir_listing(std::string uri)

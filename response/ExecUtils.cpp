@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ExecUtils.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/02 19:20:38 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/04 14:37:52 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

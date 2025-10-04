@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/02 11:24:05 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 14:23:48 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,7 @@ void    Socket::listen_port()
                 try
                 {
                     (*j).exec_error_server();
+                    std::cout << "bad alloc " << e.what() << std::endl;
                 }
                 catch(std::bad_alloc& e)
                 {
@@ -160,11 +161,13 @@ void    Socket::listen_port()
                 (void)e;
                 try
                 {
+                    std::cout << "out of range " << e.what() << std::endl;
                     (*j).exec_error_server();
                 }
                 catch(std::out_of_range& e)
                 {
                    (void)e;
+                    std::cout << "out of range\n";
                    (*j).exec_500();
                 }
             }

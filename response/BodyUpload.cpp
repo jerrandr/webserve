@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/25 09:02:52 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 14:42:30 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,23 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
     int fd;
 
     fd = -1;
+	std::cout << "path upload " << path << std::endl; 
     try
     {
         fd = fd_wait.at(path);
+		std::cout << "internal" << std::endl;
         if ((polls->get_status(fd) & POLLIN))
             return fd;
     }
     catch(const std::out_of_range &e)
     {
-		fd = open(path.c_str(), O_CREAT | O_WRONLY, 0644);
+		fd = open(path.c_str(), O_CREAT | O_WRONLY, 0666);
         if (fd < 0)
-            throw std::bad_alloc();
+        {
+			std::cout << "wtf" << std::endl;
+			std::perror("upl ");
+			throw std::bad_alloc();
+		}
         (void)e;
         polls->add_new_fd(fd);
         fd_wait[path] = fd;
@@ -80,15 +86,16 @@ void BodyUpload::ParseBody(Client &cl)
 	Bdy = cl.getBody();
 	sep = getSep(Bdy);
 	
-	while (true)
+	while (Bdy.find("\r\n\r\n") != std::string::npos)
 	{
-		if (Bdy.find("\r\n\r\n") == std::string::npos)
-			break;
 		header = Bdy.substr(0, Bdy.find("\r\n\r\n"));
 		Bdy = Bdy.substr(header.length() + 4, Bdy.length());
 		ct = Bdy.substr(0, (Bdy.find(sep) - 1));
 		header = ParseHeader(header);
 		filename = Rt + header;
+		if (Bdy.length() < ct.size() + 4)
+			break;
+		
 		Bdy = Bdy.substr(ct.size() + 4, Bdy.length());
 		if (header != "")
 		{
@@ -111,9 +118,11 @@ void	BodyUpload::UploadHandler(Client &cl)
 			
 			if ((fd = fd_create((*i).first, cl.getPoll(), cl.getFdWait())) != -1)
 			{
+				std::cout << "write" << std::endl;
 				write(fd, (*i).second.data(), (*i).second.size());
 				fd_closed(fd, cl.getPoll(), cl.getFdWait(), (*i).first);
 			}
+			std::cout << "mivoka" << std::endl;
 		}	
 	}
 }

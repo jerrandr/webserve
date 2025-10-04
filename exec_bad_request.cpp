@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_bad_request.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:42:08 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/19 13:35:56 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/04 14:39:53 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ bool    Client::is_bad_request()
 			f = split(tmp," ");
 			if (f.size() != 3)
 			{
+				std::cout << "tmp " << tmp << std::endl;
 				return true;
 			}
 		}
@@ -42,6 +43,7 @@ bool    Client::is_bad_request()
 			f = split_sep(tmp,": ");
 			if (f.size() != 2 && end +2 < request.size())
 			{
+				std::cout << "f tmp " << tmp << std::endl;
 				return true;
 			}
 		}

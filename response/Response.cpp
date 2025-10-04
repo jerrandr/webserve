@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 11:07:26 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 15:01:25 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	Response::rp3(int socket, Location Loc)
 			if (is_directory(filename))
 				return;
 			rp = rp5(filename);
+			std::cout << "after upload" << std::endl;
 		}
 	}
 	utils->SendResponse(Cl.getPoll(), rp, socket);
@@ -70,10 +71,14 @@ void	Response::rp2(int socket, Location &Loc)
 	std::string	rt;
 	std::string	rp;
 	
-	if (rq["method"] == "GET")
+	if (rq["method"] == "GET" && Cl.is_dir_listing(rq["uri"]) != 1)
 	{
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
+		std::cout << "++++++++++++URI {" << rt << "}\n";
 		rp = utils->CheckError(rt, Cl);
+		std::cout << "*************************\n";
+		std::cout << rp << std::endl;
+		std::cout << "*************************\n";
 		if (rp == "" && is_directory(rt))
 		{
 			if (Loc.get_index() != "")
@@ -112,6 +117,9 @@ void    Response::rp(int socket)
 		ifCgi(Loc, socket, ctType);
 	else if (rq["method"] == "GET" || rq["method"] == "POST")
 		rp2(socket, Loc);
-	if (Cl.is_dir_listing(rq["uri"]) == 1)
-		Cl.exec_dir_listing(rq["uri"]);
+	// if (Cl.is_dir_listing(rq["uri"]) == 1)
+	// {
+	// 	std::cout << "dir tompoko" << std::endl;
+	// 	Cl.exec_dir_listing(rq["uri"]);
+	// }
 }

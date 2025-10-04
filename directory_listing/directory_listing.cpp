@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directory_listing.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 09:11:57 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/19 13:37:06 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/04 12:51:59 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ static bool access_denied(std::string &dir, std::string name, Config config, Pol
     std::stringstream ss;
 
     
+    std::cout << "name = " << name << std::endl;
     if(access(name.c_str(),F_OK) < 0)
     {
         dir = build_html_page_error(404,config,polls,fd_wait);
@@ -226,7 +227,10 @@ std::string    Client::directory_listing(std::string name, std::string uri)
         dir = build_html_page(test,detranslate_uri(locs,uri),file_name);
     }
     if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
-        send(socket, dir.c_str(), dir.size(), 0);
+    {
+        if (send(socket, dir.c_str(), dir.size(), 0) < 0)
+            stat = -1;;
+    }
     if(dirp)
         closedir(dirp);
     return dir;

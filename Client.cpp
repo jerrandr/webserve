@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/02 19:02:24 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/04 14:48:39 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,7 +242,6 @@ void Client::receve_message()
 		return;
 	}
 	std::string tmp;
-
 	tmp.append(buffer, status);
 	body += get_body(tmp, size,this->request);
 	size_body += status - size;
@@ -289,6 +288,7 @@ void Client::receve_message()
 		status = 2;
 		size_body = 0;
 		parse_request();
+		std::cout << "buffer {" << request+body << "}" << std::endl;
 		if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
 		{
 			request = "";
