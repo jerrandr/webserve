@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 14:48:39 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 15:46:29 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,7 @@ void Client::receve_message()
 		stat = -1;
 		return;
 	}
+	std::cout << buffer << std::endl;
 	std::string tmp;
 	tmp.append(buffer, status);
 	body += get_body(tmp, size,this->request);
@@ -270,7 +271,7 @@ void Client::receve_message()
 	}
 	if (request.find("\r\n\r\n") == std::string::npos)
 		status_request = 2;
-	if (real_body == 0 && !is_chunked(request) && is_post() && request.find("\r\n\r\n") != std::string::npos)
+	if (real_body < 0 && !is_chunked(request) && is_post() && request.find("\r\n\r\n") != std::string::npos)
 	{
 		parse_request();
 		if (fd_wait.size() == 0 &&  polls->get_new_fd_poll() <= 0 && !fl)
@@ -278,6 +279,7 @@ void Client::receve_message()
 			request = "";
 			body = "";
 			real_body = 0;
+			status_request = 0;
 		}
 		return ;
 	}
@@ -287,13 +289,14 @@ void Client::receve_message()
 		status_request = 1;
 		status = 2;
 		size_body = 0;
+		std::cout << "exec " << std::endl;
 		parse_request();
-		std::cout << "buffer {" << request+body << "}" << std::endl;
 		if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
 		{
 			request = "";
 			body = "";
 			real_body = 0;
+			status_request = 0;
 		}
 	}
 }

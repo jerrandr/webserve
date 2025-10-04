@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 14:23:48 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 15:37:00 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,18 +108,24 @@ void    Socket::listen_port()
                 if(re)
                 {
                     if (re & POLLIN)
+                    {
+                        std::cout << "mandray" << std::endl;
                         (*j).verify_connex(1);
+                    }
                 }
                 if (((*j).size_fd_wait() != 0 || polls->get_new_fd_poll() > 0) && (*j).get_status_request() == 1)
                 {
+                    std::cout << "parse 1" << std::endl;
                     (*j).parse_request(); 
                 }
                 else if ((*j).get_status_request() == 1 && (*j).size_fd_wait() == 0 && (*j).get_request() != "")
                 {
+                    std::cout << "parse 2" << std::endl;
                     (*j).parse_request();
                 }
                 else if ((*j).get_status_request() != 1 && (*j).get_request() != "")
                 {
+                    std::cout << "parse 3 " <<(*j).get_status_request() << std::endl;
                     if (time(NULL) - (*j).get_timeout() >= 60 && !(re & POLLIN))
                     {
                        (*j).exec_request_timeout();
@@ -127,10 +133,12 @@ void    Socket::listen_port()
                 }
                 else if( time(NULL) - (*j).get_timeout_client() >= 60 && !(re & POLLIN))
                 {
+                    std::cout << "parse 4" << std::endl;
                     (*j).set_status_client(-1);
                 }
                 if ((*j).get_status() < 0)
                 {
+                    std::cout << "parse 5" << std::endl;
                     std::list <Client>::iterator tmp = j;
                     polls->erase_fd((*j).get_socket_client());
                     close((*j).get_socket_client());

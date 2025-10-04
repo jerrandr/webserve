@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 13:19:58 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/02 11:23:21 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 15:27:41 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,9 @@ void    Pollfd::start_poll()
 {
     if(fds.size() <= 0)
         return ;
-    if (poll(&(fds[0]),(int)fds.size(),-1) == -1)
+    if (poll(&(fds[0]),(int)fds.size(),0) == -1)
     {
+        std::cout << "bad" << std::endl;
         return;
     }
     for(std::vector<pollfd>::iterator i = fds.begin(); i != fds.end();i++)
