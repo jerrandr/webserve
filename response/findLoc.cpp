@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:54:45 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/20 14:18:22 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 11:07:10 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ Location Response::findLoc()
 	{
 		std::vector<std::string> tmp;
 		tmp = split((*i).get_uri(), "/");
+		std::cout << "tmp_size: " << tmp.size() << " toFind_size: " << toFind.size() << std::endl;
 		if (tmp.size() <= toFind.size())
 			nb = findLoc2(tmp, toFind);
 		if (max < nb)

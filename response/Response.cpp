@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 10:36:31 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 11:07:26 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,16 +97,16 @@ void    Response::rp(int socket)
 	Location	Loc;
 	std::string	rp;
 
-	Loc = findLoc();	
+	Loc = findLoc();
 	if (rq["uri"].size() >= 2048)
 	{
-		rp = utils->getError(Cl, 405); 
+		rp = utils->getError(Cl, 414);
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
 	if (Loc.get_redir() != "")
 		redir_rp(Loc.get_redir(), socket);
-	if (Check405_501(Loc, socket) || IfDelete(socket, Loc) == 1)
+	else if (Check405_501(Loc, socket) || IfDelete(socket, Loc) == 1)
 		return ;
 	else if (ifCgi2(Loc))
 		ifCgi(Loc, socket, ctType);

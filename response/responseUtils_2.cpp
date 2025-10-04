@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 10:28:44 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 10:32:29 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 10:51:59 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ bool	Response::Check405_501(Location Loc, int socket)
 
 	rp = "";
 	mth = "GET POST DELETE";
+    std::cout << "HEREEEEEEEEEEEEEE\n";
 	if (Loc.get_meth().find(rq["method"]) == std::string::npos
 		|| Loc.get_meth() != mth)
 	{
