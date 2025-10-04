@@ -3,7 +3,7 @@ NAME = libresponse.a
 
 SRC =  ExecUtils.cpp BodyUpload.cpp Response.cpp Cgi.cpp \
 		responseUtils.cpp redirect.cpp findLoc.cpp \
-		getData.cpp 
+		getData.cpp responseUtils_2.cpp
 
 OBJ = ${SRC:.cpp=.o}
 

@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/25 09:57:37 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 10:27:07 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,7 @@ void    Response::rp(int socket)
 {
 	Location	Loc;
 	std::string	rp;
-	std::string	mth;
 
-	mth = "GET POST DELETE";
 	Loc = findLoc();	
 	if (rq["uri"].size() >= 2048)
 	{
@@ -131,16 +129,7 @@ void    Response::rp(int socket)
 		utils->SendResponse(Cl.getPoll(), rp, socket);
 		return ;
 	}
-	else if (Loc.get_meth().find(rq["method"]) == std::string::npos)
-	{
-		if (mth.find(rq["method"]) == std::string::npos)
-			rp = utils->getError(Cl, 501);
-		else
-			rp = utils->getError(Cl, 405);
-		utils->SendResponse(Cl.getPoll(), rp, socket);
-		return ;
-	}
-	else if (IfDelete(socket, Loc) == 1)
+	if (Check405_501(Loc, socket) || IfDelete(socket, Loc) == 1)
 		return ;
 	if (Loc.get_redir() != "" && rq["method"] == "GET")
 		redir_rp(Loc.get_redir(), socket);

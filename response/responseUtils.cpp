@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/02 13:52:22 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 10:29:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,22 +156,4 @@ void	Response::ifCgi(Location Loc, int socket, std::string bd)
 	Cgi cgi(envp, lv, Cl);
 	cgi.MyExec(socket, bdy, Loc.get_path_cgi());
 	return ;
-}
-
-bool	Response::ifCgi2(Location Loc)
-{
-	std::string					rlp;
-	Config						cfg;
-	std::string					uriExt;
-	std::vector<std::string>	ext;
-
-	cfg = Cl.getConfig();
-	rlp = cfg.get_real_path(rq["uri"], Loc);
-	ext = split(Loc.get_extension_cgi(), " ");
-	uriExt = utils->getExt(rlp);
-	if (is_directory(rlp))
-		return (false);
-	if (std::find(ext.begin(), ext.end(), uriExt) == ext.end())
-		return (false);
-	return (true);
 }

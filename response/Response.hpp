@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/23 11:49:45 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/04 10:23:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Response
 		int						IfDelete(int socket, Location loc);
         int	             		IfDirList(Location lt);
 		bool					ifCgi2(Location Loc);
+		bool					Check405_501(Location Loc, int socket);
 	public:
 				Response(std::map<std::string, std::string> config, Client  &cl);
 				~Response();

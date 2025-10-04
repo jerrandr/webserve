@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:30:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/02 18:51:10 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/04 10:10:26 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,6 @@ class Client
 
         void    set_status_client(int s);
 
-
-
-        bool    is_not_implemented(std::map<std::string, std::string> cf);
-        void    exec_not_implemented();
 
         void    exec_500();
 
