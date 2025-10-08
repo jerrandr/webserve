@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 11:32:53 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/07 13:46:51 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	Response::IfDelete(int socket, Location loc)
 			if (rp == "")
 				rp = "HTTP/1.1 204 No Content\r\nConnection: close\r\n\r\n";
 		}
-		utils->SendResponse(Cl.getPoll(), rp, socket);
+		utils->SendResponse(Cl, rp, socket);
 		return (1);
 	}
 	return (-1);
@@ -149,7 +149,7 @@ void	Response::ifCgi(Location Loc, int socket, std::string bd)
 		std::string	rp;
 
 		rp = utils->getError(Cl, 502);
-		utils->SendResponse(Cl.getPoll(), rp, socket);
+		utils->SendResponse(Cl, rp, socket);
 		return;
 	}
 	initEnvp(rt, bd);

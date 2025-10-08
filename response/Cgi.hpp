@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:25:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 11:28:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/07 21:02:18 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ class Cgi
 		void		IfFound(std::string p, int fdc);
 		void		GetAndSend(int &fd, int fdc);
 		void		IfNotActif(std::string body, int fdc, Pollfd *pl);
-		void		IfBody(Pollfd *pl, std::string body, int fd2[2], int fd[2], int pid);
+		void		IfBody(Pollfd *pl, std::string body, int fd2[2], int pid);
 		void		ParentTasks(Pollfd *pl, int fd2[2], int fd[2], int pid, int fdc);
 		std::string	ParseCgi(std::string content);
 		std::string	getType(std::string ct);

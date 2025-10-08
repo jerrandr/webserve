@@ -6,13 +6,14 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 14:37:52 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:31:26 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ExecUtils.hpp"
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <algorithm>
 
 ExecUtils::~ExecUtils() {}
 
@@ -188,10 +189,31 @@ std::string	ExecUtils::CheckError(std::string	rp, Client &Cl)
 	return (res);	
 }
 
-void	ExecUtils::SendResponse(Pollfd *pl, std::string rp, int fdc)
+void	ExecUtils::SendResponse(Client & Cl, std::string &rp, int fdc)
 {
+	Pollfd		*pl = Cl.getPoll();
+	size_t		pt = 1048576;
+
+	if (Cl.sd == NULL)
+	{
+		Cl.sd = new Send(rp);
+		pl->set_new_fd();
+	}
+	std::string	& data = Cl.sd->getData();	
+	pt = std::min(pt, data.length());
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
-		send(fdc, rp.c_str(), rp.size(), 0);
+		if (send(fdc, data.c_str(),pt, 0) < 0)
+			Cl.set_status_client(-1);
+		Cl.sd->sent += pt;
+		data = data.substr(pt, data.length());
+		if (Cl.sd->getSize() > Cl.sd->sent)
+			throw NotReady();
+		else
+		{
+			pl->decrement_new_fd();
+			delete Cl.sd;
+			Cl.sd = NULL;
+		}
 	}
 }

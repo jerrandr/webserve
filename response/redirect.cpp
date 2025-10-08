@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirect.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:56:34 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/02 19:19:51 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/07 13:46:02 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	Response::redir_rp(std::string redir, int socket)
 	rp = redir_rp2(redir);
 	if (rp != "")
 	{
-		utils->SendResponse(Cl.getPoll(), rp, socket);
+		utils->SendResponse(Cl, rp, socket);
 		return ;
 	}
 }

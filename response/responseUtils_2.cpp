@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 10:28:44 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 11:19:06 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:30:59 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,13 @@ bool	Response::Check405_501(Location Loc, int socket)
 	if (std::find(list_allowed.begin(),list_allowed.end(),rq["method"]) == list_allowed.end())
 	{
 		rp = utils->getError(Cl, 405);
-		utils->SendResponse(Cl.getPoll(), rp, socket);
+		utils->SendResponse(Cl, rp, socket);
 		return true;
 	}
 	else if (std::find(list_allowed.begin(),list_allowed.end(),rq["method"]) != list_allowed.end()
 		&& std::find(list_implemented.begin(),list_implemented.end(),rq["method"]) == list_implemented.end())
 	{	rp = utils->getError(Cl, 501);
-		utils->SendResponse(Cl.getPoll(), rp, socket);
+		utils->SendResponse(Cl, rp, socket);
 		return (true);
 	}
 	return (false);

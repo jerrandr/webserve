@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:47 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 10:23:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/07 11:06:21 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "Cgi.hpp"
 #include <cstdio>
 #include "../Client.hpp"
+#include "Send.hpp"
 
 class Pollfd;
 class Cgi;

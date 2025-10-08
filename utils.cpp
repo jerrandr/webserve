@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/20 12:29:35 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/06 13:58:31 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,7 +201,7 @@ std::string get_mime_type(std::string type)
     mime[".3gp"] = "video/3gpp";
     mime[".3g2"] = "video/3gpp2";
     mime[".7z"] = "application/x-7z-compressed";
-    mime[".mp4"] = "application/mp4";
+    mime[".mp4"] = "video/mp4";
     mime[".mp3"] = "audio/mpeg";
 
     std::string s;

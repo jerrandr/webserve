@@ -6,11 +6,12 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 11:29:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/08 19:09:46 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Cgi.hpp"
+#include "../signal_handling/SignalHandling.hpp"
 
 Cgi::~Cgi()
 {
@@ -48,24 +49,22 @@ std::string	Cgi::getStatus(std::string p)
 
 void	Cgi::IfNotFound(std::string p, int fdc)
 {
-	Pollfd				*pl = Cl.getPoll();
 	int					status;
 	std::stringstream	fl;
 
 	fl << p;
 	fl >> status;
 	p = utils->getError(Cl, status);
-	utils->SendResponse(pl, p, fdc);
+	utils->SendResponse(Cl, p, fdc);
 }
 
 void	Cgi::IfFound(std::string p, int fdc)
 {
-	Pollfd	*pl = Cl.getPoll();
 	std::string	ext = getType(envp[4]);
 	std::string	rp;
 	rp = ParseCgi(p);
 	rp = "HTTP/1.1 200 OK\r\nContent-Length: " + utils->ToString(rp.size()) + "\r\nContent-Type: " + ext + "\r\n\r\n" + rp;
-	utils->SendResponse(pl, rp, fdc);
+	utils->SendResponse(Cl, rp, fdc);
 }
 
 std::string	Cgi::ParseCgi(std::string content)
@@ -118,7 +117,7 @@ void	Cgi::GetAndSend(int &fd, int fdc)
 		IfFound(p, fdc);
 }
 
-void		Cgi::IfBody(Pollfd *pl, std::string body, int fd2[2], int fd[2], int pid)
+void		Cgi::IfBody(Pollfd *pl, std::string body, int fd2[2], int pid)
 {
 	if (body != "")
 	{
@@ -131,12 +130,6 @@ void		Cgi::IfBody(Pollfd *pl, std::string body, int fd2[2], int fd[2], int pid)
 		else
 		{
 			kill(pid, SIGTERM);
-			// close(fd2[1]);
-			// close(fd2[0]);
-			// close(fd[0]);
-			// close(fd[1]);
-			(void)fd2;
-			(void)fd;
 			throw NotReady();
 		}
 	}
@@ -171,8 +164,11 @@ void		Cgi::IfNotActif(std::string body, int fdc, Pollfd *pl)
 	int		pid;
 
 	Cl.bg = time(NULL);
-	if (pipe(fd) < 0 || pipe(fd2) < 0)
+	if (pipe(fd) < 0 )
 		throw std::bad_alloc();
+	if (pipe(fd2) < 0)
+		throw std::bad_alloc();
+	
 	if (!(pl->get_status(fd2[1])  & POLLIN))
 	{
 		pl->add_new_fd(fd2[1]);
@@ -185,11 +181,15 @@ void		Cgi::IfNotActif(std::string body, int fdc, Pollfd *pl)
 		dup2(fd2[0], STDIN_FILENO);
 		dup2(fd[1], STDOUT_FILENO);
 		execve(pth.c_str(), argv, envp);
-		exit(0);
+		close(fd2[1]);
+		close(fd[1]);
+		close(fd2[0]);
+		close(fd[0]);
+		throw SignalHandling::ExceptSTop();
 	}
 	else
 	{
-		IfBody(pl, body, fd2, fd, pid);
+		IfBody(pl, body, fd2, pid);
 		ParentTasks(pl, fd2, fd, pid, fdc);
 	}
 }
@@ -209,10 +209,10 @@ void    Cgi::MyExec(int fdc, std::string body)
 		{
 			if (utils->checkTimeOut(Cl.bg, time(NULL)))
 			{
-			
 				kill(Cl.pid, SIGTERM);
 				Cl.pid = false;
-				utils->SendResponse(pl, Error504, fdc);
+				close(Cl.fd_in);
+				utils->SendResponse(Cl, Error504, fdc);
 			}
 			else
 				throw NotReady();

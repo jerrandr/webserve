@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Config.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 09:04:49 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 20:27:33 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/06 13:58:14 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ Config::Config()
     mime[".3gp"] = "video/3gpp";
     mime[".3g2"] = "video/3gpp2";
     mime[".7z"] = "application/x-7z-compressed";
-    mime[".mp4"] = "application/mp4";
+    mime[".mp4"] = "video/mp4";
     mime[".mp3"] = "audio/mpeg";
 }
 Config::~Config()

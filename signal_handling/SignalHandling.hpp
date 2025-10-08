@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   SignalHandling.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 08:02:44 by msalohy           #+#    #+#             */
-/*   Updated: 2025/07/15 09:43:32 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/08 18:56:52 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ class SignalHandling
                 ExceptSTop(const ExceptSTop &other);
                 ExceptSTop &operator=(const ExceptSTop &other);
                 virtual const char * what() const throw();
-                
         };
 };
 

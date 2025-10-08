@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 20:29:08 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/08 19:30:11 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,11 @@ void	Response::rp3(int socket, Location Loc)
 			if (is_directory(filename))
 				return;
 			rp = rp5(filename);
+			// rp = "HTTP/1.1 201 Created\r\nLocation: "
 		}
+
 	}
-	utils->SendResponse(Cl.getPoll(), rp, socket);
+	utils->SendResponse(Cl, rp, socket);
 }
 
 void	Response::rp2(int socket, Location &Loc)
@@ -70,6 +72,11 @@ void	Response::rp2(int socket, Location &Loc)
 	std::string	rt;
 	std::string	rp;
 	
+	if (Cl.sd != NULL)
+	{
+		utils->SendResponse(Cl, Cl.sd->getData(), socket);
+		return ;
+	}
 	if (rq["method"] == "GET" && Cl.is_dir_listing(rq["uri"]) != 1)
 	{
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
@@ -86,7 +93,7 @@ void	Response::rp2(int socket, Location &Loc)
 		}
 		else if (rp == "")
 			rp = rp5(rt);
-		utils->SendResponse(Cl.getPoll(), rp, socket);
+		utils->SendResponse(Cl, rp, socket);
 	}
 	else
 		rp3(socket, Loc);
@@ -97,11 +104,13 @@ void    Response::rp(int socket)
 	Location	Loc;
 	std::string	rp;
 
+	rp = "";
+
 	Loc = Cl.getConfig().get_location_match(rq["uri"]);
 	if (rq["uri"].size() >= 2048)
 	{
 		rp = utils->getError(Cl, 414);
-		utils->SendResponse(Cl.getPoll(), rp, socket);
+		utils->SendResponse(Cl, rp, socket);
 		return ;
 	}
 	if (Loc.get_redir() != "")

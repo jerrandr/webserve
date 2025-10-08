@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 15:46:29 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/07 13:55:53 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,16 @@ Client::Client()
 		fd_out = -1;
 		fl = false;
 		bg = 0;
+		st = false;
+		sd = NULL;
 	//++++++++++++++++++
 }
 
-Client::~Client() {}
+Client::~Client()
+{
+	if (sd != NULL)
+		delete sd;
+}
 
 Client::Client(const Client &other)
 {
@@ -59,6 +65,9 @@ Client &Client::operator=(const Client &other)
 	fd_out = other.fd_out;
 	fl = other.fl;
 	bg = other.bg;
+	data = other.data;
+	st = other.st;
+	sd = other.sd;
 	//++++++++++++++++++
 	return (*this);
 }
@@ -84,6 +93,8 @@ Client::Client(int s, Pollfd *poll, Config &conf)
 		fd_out = -1;
 		fl = false;
 		bg = 0;
+		st = false;
+		sd = NULL;
 	//++++++++++++++++++
 }
 std::string Client::get_request() const
