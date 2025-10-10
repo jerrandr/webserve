@@ -3,20 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   BodyUpload.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/04 19:37:53 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/10 10:21:55 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ExecUtils.hpp"
 #include "BodyUpload.hpp"
 #define RED "\033[31m"
 #define R "\033[0m"
 
-BodyUpload::~BodyUpload() {}
+BodyUpload::~BodyUpload()
+{
+	delete utils;
+}
 
-BodyUpload::BodyUpload(std::string rt) : Rt(rt) {}
+BodyUpload::BodyUpload(std::string rt) : Rt(rt)
+{
+	utils = new ExecUtils();
+}
 
 std::string	BodyUpload::ParseHeader(std::string header)
 {
@@ -69,6 +76,31 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
     return -1;
 }
 
+std::string	BodyUpload::answer(std::string rt, Client &Cl)
+{
+	std::stringstream	data;
+	std::string	ext;
+	std::string	nbr;
+	std::string	rp;
+	
+	ext = ".html";
+	data << utils->CheckError(rt, Cl);
+	if (data.str() == "")
+	{
+		ext = utils->getExt(rt);
+		data.clear();
+		data << utils->getData(rt, Cl);
+	}
+	else
+	{
+		rp = data.str();
+		return (rp);
+	}
+	nbr = utils->ToString(data.str().size());
+	rp = "HTTP/1.1 201 Created\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
+	return (rp);
+}
+
 void BodyUpload::ParseBody(Client &cl)
 {
 	std::string		header;
@@ -86,6 +118,7 @@ void BodyUpload::ParseBody(Client &cl)
 		Bdy = Bdy.substr(header.length() + 4, Bdy.length());
 		ct = Bdy.substr(0, (Bdy.find(sep) - 1));
 		header = ParseHeader(header);
+		std::cout << "HEADER {" << header << "}\n";
 		filename = Rt + header;
 		if (Bdy.length() < ct.size() + 4)
 			break;
@@ -93,6 +126,7 @@ void BodyUpload::ParseBody(Client &cl)
 		Bdy = Bdy.substr(ct.size() + 4, Bdy.length());
 		if (header != "")
 		{
+			filPath.push_back(header);
 			fd_create(filename, cl.getPoll(), cl.getFdWait());
 			vl.insert(std::pair<std::string, std::string>(filename, ct));
 		}

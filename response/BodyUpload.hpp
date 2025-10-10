@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:37:58 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/09/13 10:14:48 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/10 10:22:39 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,12 @@
 #include "ExecUtils.hpp"
 #include "../Client.hpp"
 
+class ExecUtils;
 class BodyUpload
 {
 	private:
+		ExecUtils							*utils;
+		std::vector<std::string>			filPath;
 		std::vector<std::string>			Data;
 		std::string							Rt;
 		std::map<std::string, std::string>	vl;
@@ -34,6 +37,8 @@ class BodyUpload
 					~BodyUpload();
 		void		ParseBody(Client &cl);
 		void		UploadHandler(Client &cl);
+		std::string	answer(std::string rt, Client &Cl);
+
 };
 
 #endif

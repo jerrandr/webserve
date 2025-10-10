@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/08 19:30:11 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/10 10:19:44 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,9 @@ void	Response::rp3(int socket, Location Loc)
 	std::string	filename;
 	std::string	rp;
 	std::string	path;
-
-	path = Loc.get_root() + Loc.get_path_upload();
+	Config	cf = Cl.getConfig();
+	path = cf.get_real_path(Loc.get_path_upload(), Loc);
+	std::cout << "PATH +{" << path << "}\n";
 	BodyUpload	bd(path);
 	if (rq["method"] == "POST" && Loc.get_path_upload() != "")
 	{
@@ -59,10 +60,9 @@ void	Response::rp3(int socket, Location Loc)
 			filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
 			if (is_directory(filename))
 				return;
-			rp = rp5(filename);
-			// rp = "HTTP/1.1 201 Created\r\nLocation: "
+			rp = bd.answer(filename, Cl);
+			std::cout << "rp {" << "}\n";
 		}
-
 	}
 	utils->SendResponse(Cl, rp, socket);
 }
@@ -122,7 +122,5 @@ void    Response::rp(int socket)
 	else if (rq["method"] == "GET" || rq["method"] == "POST")
 		rp2(socket, Loc);
 	if (Cl.is_dir_listing(rq["uri"]) == 1)
-	{
 		Cl.exec_dir_listing(rq["uri"]);
-	}
 }
