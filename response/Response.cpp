@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/10 10:19:44 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/12 20:17:38 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,12 @@ void	Response::rp3(int socket, Location Loc)
 	std::string	filename;
 	std::string	rp;
 	std::string	path;
-	Config	cf = Cl.getConfig();
-	path = cf.get_real_path(Loc.get_path_upload(), Loc);
+	
+	path = utils->getRealPathUpload(Loc.get_path_upload(), Loc);
 	std::cout << "PATH +{" << path << "}\n";
+	std::cout << "upload_path +{" << Loc.get_path_upload() << "}\n";
 	BodyUpload	bd(path);
+
 	if (rq["method"] == "POST" && Loc.get_path_upload() != "")
 	{
 		rp = utils->CheckError(path, Cl);
@@ -58,11 +60,14 @@ void	Response::rp3(int socket, Location Loc)
 		{
 			bd.UploadHandler(Cl);
 			filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
-			if (is_directory(filename))
-				return;
-			rp = bd.answer(filename, Cl);
-			std::cout << "rp {" << "}\n";
-		}
+			// if (is_directory(filename))
+			// {
+				// 	std::cout << "HEREEEEEEEEEEEEE\n";
+				// 	return;
+				// }
+				rp = bd.answer(filename, Cl);
+				std::cout << "rp +++{" << rp << "}\n";
+			}
 	}
 	utils->SendResponse(Cl, rp, socket);
 }
@@ -105,7 +110,7 @@ void    Response::rp(int socket)
 	std::string	rp;
 
 	rp = "";
-
+	std::cout << "ETOOOOOOOO\n";
 	Loc = Cl.getConfig().get_location_match(rq["uri"]);
 	if (rq["uri"].size() >= 2048)
 	{

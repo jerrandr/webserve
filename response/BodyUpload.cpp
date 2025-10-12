@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/10 10:21:55 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/11 19:37:55 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,26 +78,31 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
 
 std::string	BodyUpload::answer(std::string rt, Client &Cl)
 {
-	std::stringstream	data;
-	std::string	ext;
+	// std::stringstream	data;
+	// std::string	ext;
 	std::string	nbr;
 	std::string	rp;
-	
-	ext = ".html";
-	data << utils->CheckError(rt, Cl);
-	if (data.str() == "")
-	{
-		ext = utils->getExt(rt);
-		data.clear();
-		data << utils->getData(rt, Cl);
-	}
-	else
-	{
-		rp = data.str();
-		return (rp);
-	}
-	nbr = utils->ToString(data.str().size());
-	rp = "HTTP/1.1 201 Created\r\nContent-Length: " + nbr + "\r\nContent-Type: " + Cl.getConfig().get_mime(ext) + "\r\n\r\n" + data.str();
+	// std::string	body;
+
+	(void)rt;
+	(void)Cl;
+	// body = "<!DOCTYPE html><html lang=\"en\"><head>    <meta charset=\"UTF-8\">    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">    <title>Document</title></head><body>    <h1>UPLOAD SUCCES</h1></body></html>";
+	// ext = ".html";
+	// std::cout << "RT {" << rt << "}\n";
+	// data << utils->CheckError(rt, Cl);
+	// if (data.str() == "")
+	// {
+	// 	data.clear();
+	// 	data << utils->getData(rt, Cl);
+	// 	ext = utils->getExt(rt);
+	// }
+	// else
+	// {
+	// 	rp = data.str();
+	// 	return (rp);
+	// }
+	// nbr = utils->ToString(body.size());
+	rp = "HTTP/1.1 201 Created\r\nContent-Length: 0\r\n\r\n";
 	return (rp);
 }
 
@@ -128,6 +133,8 @@ void BodyUpload::ParseBody(Client &cl)
 		{
 			filPath.push_back(header);
 			fd_create(filename, cl.getPoll(), cl.getFdWait());
+			std::cout << "CT {" << ct << "}\n";
+			std::cout << "FILENAME {" << filename << "}\n";
 			vl.insert(std::pair<std::string, std::string>(filename, ct));
 		}
 	}	

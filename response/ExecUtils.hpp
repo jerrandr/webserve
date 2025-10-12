@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:25:49 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/07 12:14:44 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/11 18:42:33 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,8 @@ class ExecUtils
 		std::string			getExt(std::string filename);
 		std::string			CheckError(std::string	rp, Client &Cl);
 		void				SendResponse(Client & Cl, std::string &rp, int fdc);
-
-		// void				SendResponse(Pollfd *pl, std::string rp, int fdc);
-		// std::string			getData2(std::string filename, Client & cl);
 		void				getData1(int fd, Client & cl);
-
+		std::string			getRealPathUpload(std::string uri, Location loc);
 };
 							
 

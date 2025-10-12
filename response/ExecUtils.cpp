@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/08 19:31:26 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/11 18:52:28 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,4 +216,13 @@ void	ExecUtils::SendResponse(Client & Cl, std::string &rp, int fdc)
 			Cl.sd = NULL;
 		}
 	}
+}
+
+std::string ExecUtils::getRealPathUpload(std::string uri, Location loc)
+{
+    std::string real;
+
+	real = loc.get_root();
+	real += uri;
+    return (real);
 }
