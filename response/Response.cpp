@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Response.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/12 20:17:38 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/13 09:15:27 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ void	Response::rp3(int socket, Location Loc)
 				// 	std::cout << "HEREEEEEEEEEEEEE\n";
 				// 	return;
 				// }
-				rp = bd.answer(filename, Cl);
-				std::cout << "rp +++{" << rp << "}\n";
-			}
+			rp = bd.answer(filename, Cl);
+			std::cout << "rp +++{" << rp << "}\n";
+			utils->SendResponse(Cl, rp, socket);
+		}
 	}
-	utils->SendResponse(Cl, rp, socket);
 }
 
 void	Response::rp2(int socket, Location &Loc)
@@ -119,13 +119,25 @@ void    Response::rp(int socket)
 		return ;
 	}
 	if (Loc.get_redir() != "")
+	{
+		std::cout << RED << "REDIRECTION" << R << std::endl;
 		redir_rp(Loc.get_redir(), socket);
+	}
 	else if (Check405_501(Loc, socket) || IfDelete(socket, Loc) == 1)
+	{
+		std::cout << RED << "DELETE" << R << std::endl;
 		return ;
+	}
 	else if (ifCgi2(Loc))
+	{
+		std::cout << RED << "CGI" << R << std::endl;
 		ifCgi(Loc, socket, ctType);
+	}
 	else if (rq["method"] == "GET" || rq["method"] == "POST")
+	{
+		std::cout << RED << "RP" << R << std::endl;
 		rp2(socket, Loc);
+	}
 	if (Cl.is_dir_listing(rq["uri"]) == 1)
 		Cl.exec_dir_listing(rq["uri"]);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   responseUtils.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/25 14:59:37 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/07 13:46:51 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/13 09:17:12 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int	Response::IfDelete(int socket, Location loc)
 	cf = Cl.getConfig();
 	rp = "";
 	rt = cf.get_real_path(rq["uri"], loc);
+	std::cout << "METHOD {" << rq["method"] << "}\n";
 	if (rq["method"] == "DELETE")
 	{
 		error_403 = utils->getError(Cl, 403);

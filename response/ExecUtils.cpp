@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ExecUtils.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/11 18:52:28 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/13 09:38:58 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,9 +200,12 @@ void	ExecUtils::SendResponse(Client & Cl, std::string &rp, int fdc)
 		pl->set_new_fd();
 	}
 	std::string	& data = Cl.sd->getData();	
-	pt = std::min(pt, data.length());
+	pt = std::min(pt, data.length() - 1);
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
+		std::cout << "data {" << data << "}\n";
+		std::cout << "paquet {" << pt << "}\n";
+		
 		if (send(fdc, data.c_str(),pt, 0) < 0)
 			Cl.set_status_client(-1);
 		Cl.sd->sent += pt;
