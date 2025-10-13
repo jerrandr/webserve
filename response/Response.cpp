@@ -6,7 +6,7 @@
 /*   By: jerrandr <jerrandr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:26:36 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/13 09:15:27 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/13 12:14:54 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,13 @@ void	Response::rp3(int socket, Location Loc)
 	std::string	path;
 	
 	path = utils->getRealPathUpload(Loc.get_path_upload(), Loc);
-	std::cout << "PATH +{" << path << "}\n";
-	std::cout << "upload_path +{" << Loc.get_path_upload() << "}\n";
+	rp = utils->CheckError(path, Cl);
+	if (rp != "")
+	{
+		utils->SendResponse(Cl, rp, socket);
+		return ;
+	}
 	BodyUpload	bd(path);
-
 	if (rq["method"] == "POST" && Loc.get_path_upload() != "")
 	{
 		rp = utils->CheckError(path, Cl);
@@ -60,13 +63,8 @@ void	Response::rp3(int socket, Location Loc)
 		{
 			bd.UploadHandler(Cl);
 			filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
-			// if (is_directory(filename))
-			// {
-				// 	std::cout << "HEREEEEEEEEEEEEE\n";
-				// 	return;
-				// }
-			rp = bd.answer(filename, Cl);
-			std::cout << "rp +++{" << rp << "}\n";
+			rp = bd.rp_201();
+			std::cout << "rp {" << rp << "}\n";
 			utils->SendResponse(Cl, rp, socket);
 		}
 	}
@@ -110,7 +108,6 @@ void    Response::rp(int socket)
 	std::string	rp;
 
 	rp = "";
-	std::cout << "ETOOOOOOOO\n";
 	Loc = Cl.getConfig().get_location_match(rq["uri"]);
 	if (rq["uri"].size() >= 2048)
 	{
@@ -119,25 +116,13 @@ void    Response::rp(int socket)
 		return ;
 	}
 	if (Loc.get_redir() != "")
-	{
-		std::cout << RED << "REDIRECTION" << R << std::endl;
 		redir_rp(Loc.get_redir(), socket);
-	}
 	else if (Check405_501(Loc, socket) || IfDelete(socket, Loc) == 1)
-	{
-		std::cout << RED << "DELETE" << R << std::endl;
 		return ;
-	}
 	else if (ifCgi2(Loc))
-	{
-		std::cout << RED << "CGI" << R << std::endl;
 		ifCgi(Loc, socket, ctType);
-	}
+	else if (Cl.is_dir_listing(rq["uri"]) == 1 && rq["method"] == "GET")
+			Cl.exec_dir_listing(rq["uri"]);
 	else if (rq["method"] == "GET" || rq["method"] == "POST")
-	{
-		std::cout << RED << "RP" << R << std::endl;
 		rp2(socket, Loc);
-	}
-	if (Cl.is_dir_listing(rq["uri"]) == 1)
-		Cl.exec_dir_listing(rq["uri"]);
 }

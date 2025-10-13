@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BodyUpload.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:49:28 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/11 19:37:55 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/13 12:54:02 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
     catch(const std::out_of_range &e)
     {
 		fd = open(path.c_str(), O_CREAT | O_WRONLY, 0666);
+		std::cout << "fd {" << fd << "}\n";
         if (fd < 0)
 			throw std::bad_alloc();
         (void)e;
@@ -76,33 +77,15 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
     return -1;
 }
 
-std::string	BodyUpload::answer(std::string rt, Client &Cl)
+std::string	BodyUpload::rp_201()
 {
-	// std::stringstream	data;
-	// std::string	ext;
 	std::string	nbr;
 	std::string	rp;
-	// std::string	body;
+	std::string	body;
 
-	(void)rt;
-	(void)Cl;
-	// body = "<!DOCTYPE html><html lang=\"en\"><head>    <meta charset=\"UTF-8\">    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">    <title>Document</title></head><body>    <h1>UPLOAD SUCCES</h1></body></html>";
-	// ext = ".html";
-	// std::cout << "RT {" << rt << "}\n";
-	// data << utils->CheckError(rt, Cl);
-	// if (data.str() == "")
-	// {
-	// 	data.clear();
-	// 	data << utils->getData(rt, Cl);
-	// 	ext = utils->getExt(rt);
-	// }
-	// else
-	// {
-	// 	rp = data.str();
-	// 	return (rp);
-	// }
-	// nbr = utils->ToString(body.size());
-	rp = "HTTP/1.1 201 Created\r\nContent-Length: 0\r\n\r\n";
+	body = "<!DOCTYPE html><html lang=\"fr\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Upload Réussi</title><style>body {background: linear-gradient(135deg, #1a002b, #4b0082);color: white;font-family: \"Poppins\", sans-serif;display: flex;flex-direction: column;justify-content: center;align-items: center;height: 100vh;margin: 0;}.card {background: rgba(255, 255, 255, 0.05);border: 1px solid rgba(255, 255, 255, 0.15);border-radius: 20px;padding: 50px 70px;text-align: center;box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);animation: fadeIn 0.8s ease;backdrop-filter: blur(8px);}h1 {font-size: 2.3em;margin-bottom: 10px;color: #d1aaff;}p {font-size: 1.1em;opacity: 0.9;color: #e5ccff;}.checkmark {font-size: 70px;color: #bb86fc;margin-bottom: 15px;animation: pop 0.6s ease;}@keyframes fadeIn {from {opacity: 0;transform: translateY(20px);}to {opacity: 1;transform: translateY(0);}}@keyframes pop {0% {transform: scale(0);}60% {transform: scale(1.2);}100% {transform: scale(1);}}</style></head><body><div class=\"card\"><div class=\"checkmark\">✔</div><h1>Upload réussi !</h1><p>Votre fichier a été téléchargé avec succès.</p></div></body></html>";
+	nbr = utils->ToString(body.length());
+	rp = "HTTP/1.1 201 Created\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + body;
 	return (rp);
 }
 
@@ -123,7 +106,6 @@ void BodyUpload::ParseBody(Client &cl)
 		Bdy = Bdy.substr(header.length() + 4, Bdy.length());
 		ct = Bdy.substr(0, (Bdy.find(sep) - 1));
 		header = ParseHeader(header);
-		std::cout << "HEADER {" << header << "}\n";
 		filename = Rt + header;
 		if (Bdy.length() < ct.size() + 4)
 			break;
@@ -133,8 +115,6 @@ void BodyUpload::ParseBody(Client &cl)
 		{
 			filPath.push_back(header);
 			fd_create(filename, cl.getPoll(), cl.getFdWait());
-			std::cout << "CT {" << ct << "}\n";
-			std::cout << "FILENAME {" << filename << "}\n";
 			vl.insert(std::pair<std::string, std::string>(filename, ct));
 		}
 	}	

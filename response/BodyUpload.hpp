@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BodyUpload.hpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/22 13:37:58 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/10 10:22:39 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/13 11:43:29 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ class BodyUpload
 					~BodyUpload();
 		void		ParseBody(Client &cl);
 		void		UploadHandler(Client &cl);
-		std::string	answer(std::string rt, Client &Cl);
+		std::string	rp_201();
 
 };
 
