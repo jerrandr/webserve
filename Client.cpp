@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/07 13:55:53 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/13 18:44:05 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,8 +245,7 @@ void Client::receve_message()
 	std::memset(buffer, 0, sizeof(buffer));
 	status = 0;
 	status = recv(socket, buffer, 1024 - 1, 0);
-	if (request_time == 0)
-		request_time = time(NULL);
+	request_time = time(NULL);
 	if (status <= 0)
 	{
 		stat = -1;
