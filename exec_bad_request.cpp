@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:42:08 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 19:45:13 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/13 21:45:31 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,15 @@ bool    Client::is_bad_request()
 			if (f.size() != 2 && tmp != "")
 			{
 				return true;
+			}
+			if (f[0] == "Content-Length")
+			{
+				for (size_t b = 0; b < f[1].size() ; b++)
+				{
+					if (!std::isdigit(f[1][b]))
+						return true;
+				}
+				
 			}
 		}
 		f.clear();

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:34:25 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/13 18:44:05 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/13 21:48:07 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,12 @@ long Client::get_len_real_body()
 			break;
 		len += request[i];
 	}
+	for (size_t i = 0; i < len.size(); i++)
+	{
+		if (!std::isdigit(len[i]))
+			return 0;
+	}
+	
 	ss << len;
 	ss >> size;
 	return (size);
