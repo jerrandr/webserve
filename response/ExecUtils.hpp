@@ -32,13 +32,13 @@ class Client;
 class ExecUtils
 {
 	private:
-		std::string							getStatus(std::string fl);
-		std::map<std::string, std::string>	Er;
-		std::string							Erro;
-											ExecUtils(ExecUtils const & cpy);
-		ExecUtils 							&operator=(ExecUtils const & cpy);
-		std::string							getFilenameError(int st, const ErrorPage & ep);
-		
+		std::string									getStatus(std::string fl);
+		std::map<std::string, std::string>			Er;
+		std::string									Erro;
+													ExecUtils(ExecUtils const & cpy);
+		ExecUtils 									&operator=(ExecUtils const & cpy);
+		std::string									getFilenameError(int st, const ErrorPage & ep);
+		std::vector<std::pair<int, std::string> >	get_403_404(std::string str);
 	public:
 							ExecUtils();
 							~ExecUtils();

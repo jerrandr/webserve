@@ -67,7 +67,6 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
     catch(const std::out_of_range &e)
     {
 		fd = open(path.c_str(), O_CREAT | O_WRONLY, 0666);
-		std::cout << "fd {" << fd << "}\n";
         if (fd < 0)
 			throw std::bad_alloc();
         (void)e;

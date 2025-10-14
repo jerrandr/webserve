@@ -90,7 +90,7 @@ Config::Config()
 }
 Config::~Config()
 {
-    
+    mime.clear();
 }
 Config::Config(const Config &other)
 {

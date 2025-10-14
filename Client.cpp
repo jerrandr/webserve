@@ -39,6 +39,8 @@ Client::~Client()
 {
 	if (sd != NULL)
 		delete sd;
+	if (fd_in != -1)
+		close(fd_in);
 }
 
 Client::Client(const Client &other)

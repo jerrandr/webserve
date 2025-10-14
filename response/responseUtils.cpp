@@ -137,17 +137,36 @@ int	Response::IfDirList(Location lt)
 	return (0);
 }
 
+bool	Response::Check_502(std::string str)
+{
+	struct stat st;
+	bool		res;
+
+	res = false;
+	if (stat(str.c_str(), &st) == -1)
+		res = true;
+	else if (!(st.st_mode & S_IXUSR))
+		res = true;
+	if (access(str.c_str(), F_OK) == -1)
+		res = true;
+	else if (access(str.c_str(), X_OK) == -1)
+		res = true;
+	return (res);
+}
+
 void	Response::ifCgi(Location Loc, int socket, std::string bd)
 {
 	std::string rt;
 	std::string	bdy;
+	std::string	pth;
+	std::string	rp;
 
+	pth = Loc.get_path_cgi();
 	bdy = Cl.getBody();
 	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
-	if (Loc.get_path_cgi() == "")
-	{
-		std::string	rp;
 
+	if (Check_502(pth))
+	{
 		rp = utils->getError(Cl, 502);
 		utils->SendResponse(Cl, rp, socket);
 		return;

@@ -17,6 +17,8 @@
 Response::~Response()
 {
 	delete utils;
+	// if (envp != NULL)
+	// 	delete envp;
 }
 
 Response::Response(std::map<std::string, std::string> config, Client &cl): Cl(cl)
@@ -26,6 +28,7 @@ Response::Response(std::map<std::string, std::string> config, Client &cl): Cl(cl
 	cf = Cl.getConfig();
 	utils = new ExecUtils();
 	ctType = "";
+	// envp = NULL;
 	for (std::map<std::string, std::string>::iterator i = config.begin(); i != config.end(); i++)
 	{
 		if ((*i).first == "Content-Type")
@@ -64,7 +67,6 @@ void	Response::rp3(int socket, Location Loc)
 			bd.UploadHandler(Cl);
 			filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
 			rp = bd.rp_201();
-			std::cout << "rp {" << rp << "}\n";
 			utils->SendResponse(Cl, rp, socket);
 		}
 	}

@@ -31,6 +31,27 @@ std::string ExecUtils::getData(std::string filename, Client & cl)
 	return (data);
 }
 
+std::vector<std::pair<int, std::string> >	ExecUtils::get_403_404(std::string str)
+{
+	std::vector<std::pair<int, std::string> >	res;
+	std::string						data;
+	int								st;
+
+	st = 0;
+	data = "";
+	if (access(str.c_str(), F_OK) == -1)
+	{
+		st = 404;
+		data = "<h1> 404 error </h1>";
+	}
+	else if (access(str.c_str(), R_OK) == -1)
+	{
+		st = 403;
+		data = "<h1> 403 error </h1>";
+	}
+	res.push_back(std::pair<int, std::string >(st, data));
+	return (res);
+}
 
 void	ExecUtils::getData1(int fd, Client & cl)
 {

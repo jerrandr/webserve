@@ -15,7 +15,10 @@
 #include <fcntl.h>
 #include <algorithm>
 
-ExecUtils::~ExecUtils() {}
+ExecUtils::~ExecUtils() 
+{
+	Er.clear();
+}
 
 ExecUtils::ExecUtils()
 {
@@ -126,18 +129,28 @@ std::string	ExecUtils::getFilenameError(int st, const ErrorPage & ep)
 
 std::string	ExecUtils::getError(Client &cl, int stat)
 {
-	std::string res;
-	std::string	status;
-	std::string	ct;
-	std::string	nbr;
-	std::string	filename;
-	Config		cf;
+	std::string 								res;
+	std::string									status;
+	std::string									ct;
+	std::string									nbr;
+	std::string									filename;
+	std::vector<std::pair<int, std::string> >	checker;
+	Config										cf;
 
 	cf = cl.getConfig();
 	filename = getFilenameError(stat, cf.get_errors());
-	ct = getData(filename, cl);
+	checker = get_403_404(filename);
+	if (checker[0].first !=  0)
+	{
+		ct = checker[0].second;
+		status = checker[0].first;
+	}
+	else
+	{
+		ct = getData(filename, cl);
+		status = ToString(stat);
+	}
 	nbr = ToString(ct.size());
-	status = ToString(stat);
 	res = "HTTP/1.1 " + status +" "+ Er[status] + "\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + ct;
 	return (res);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Cgi.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: jerrandr <jerrandr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/17 12:23:35 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/08 19:09:46 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/13 13:10:09 by jerrandr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ void	Cgi::GetAndSend(int &fd, int fdc)
 	st = getStatus(p);
 	close(fd);
 	Cl.getPoll()->erase_fd(fd);
+	fd = -1;
 	pl->decrement_new_fd();
 	if (st != "")
 		IfNotFound(st, fdc);
@@ -204,14 +205,17 @@ void    Cgi::MyExec(int fdc, std::string body)
 		IfNotActif(body, fdc, pl);
 	else
 	{
-		int	res = waitpid(Cl.pid, NULL, WNOHANG); 
-		if (res != Cl.pid)
+		int	res = waitpid(Cl.pid, NULL, WNOHANG);
+		if (res == 0)
 		{
 			if (utils->checkTimeOut(Cl.bg, time(NULL)))
 			{
-				kill(Cl.pid, SIGTERM);
+				if (Cl.pid != 0)
+					kill(Cl.pid, SIGTERM);
 				Cl.pid = false;
 				close(Cl.fd_in);
+				Cl.fd_in = -1;
+				Cl.fd_out = -1;
 				utils->SendResponse(Cl, Error504, fdc);
 			}
 			else
@@ -221,6 +225,7 @@ void    Cgi::MyExec(int fdc, std::string body)
 		{
 			Cl.pid = -1;
 			Cl.fl = false;
+			Cl.fd_out = -1;
 			GetAndSend(Cl.fd_in, fdc);
 		}
 	}

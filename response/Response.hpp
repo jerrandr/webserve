@@ -56,6 +56,7 @@ class Response
         int	             		IfDirList(Location lt);
 		bool					ifCgi2(Location Loc);
 		bool					Check405_501(Location Loc, int socket);
+		bool					Check_502(std::string str);
 	public:
 				Response(std::map<std::string, std::string> config, Client  &cl);
 				~Response();
