@@ -38,6 +38,11 @@ class BodyUpload
 		void		ParseBody(Client &cl);
 		void		UploadHandler(Client &cl);
 		std::string	rp_201();
+		class Error409: std::exception
+		{
+			public:
+				virtual const char *what() const throw();
+		};
 
 };
 

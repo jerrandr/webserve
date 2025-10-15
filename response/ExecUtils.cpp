@@ -234,7 +234,7 @@ void	ExecUtils::SendResponse(Client & Cl, std::string &rp, int fdc)
 	}
 }
 
-std::string ExecUtils::getRealPathUpload(std::string uri, Location loc)
+std::string ExecUtils::getRealPath(std::string uri, Location loc)
 {
     std::string real;
 

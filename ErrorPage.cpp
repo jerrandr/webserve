@@ -89,6 +89,10 @@ const std::string &ErrorPage::get_path_408() const
 {
     return path_408;
 }
+const std::string &ErrorPage::get_path_409() const
+{
+    return path_409;
+}
 const std::string &ErrorPage::get_path_410() const
 {
     return path_410;
@@ -162,6 +166,11 @@ void    ErrorPage::set_path_406(std::string &path)
 void    ErrorPage::set_path_408(std::string &path)
 {
     path_408 = path;
+}
+
+void    ErrorPage::set_path_409(std::string &path)
+{
+    path_409 = path;
 }
 void    ErrorPage::set_path_410(std::string &path)
 {

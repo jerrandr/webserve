@@ -45,6 +45,11 @@ std::string	BodyUpload::ParseHeader(std::string header)
 	return (res);
 }
 
+const char * BodyUpload::Error409::what() const throw()
+{
+	return ("");
+}
+
 std::string	BodyUpload::getSep(std::string bd)
 {
 	std::string	res;
@@ -55,9 +60,9 @@ std::string	BodyUpload::getSep(std::string bd)
 
 int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string, int> &fd_wait)
 {
-    int fd;
-
+    int			fd;
     fd = -1;
+
     try
     {
         fd = fd_wait.at(path);
@@ -66,6 +71,8 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
     }
     catch(const std::out_of_range &e)
     {
+		if (is_directory(path))
+			throw (BodyUpload::Error409());
 		fd = open(path.c_str(), O_CREAT | O_WRONLY, 0666);
         if (fd < 0)
 			throw std::bad_alloc();
@@ -73,7 +80,7 @@ int  BodyUpload::fd_create(std::string path, Pollfd *polls, std::map<std::string
         polls->add_new_fd(fd);
         fd_wait[path] = fd;
     }
-    return -1;
+    return fd;
 }
 
 std::string	BodyUpload::rp_201()

@@ -49,7 +49,7 @@ void	Response::rp3(int socket, Location Loc)
 	std::string	rp;
 	std::string	path;
 	
-	path = utils->getRealPathUpload(Loc.get_path_upload(), Loc);
+	path = utils->getRealPath(Loc.get_path_upload(), Loc);
 	rp = utils->CheckError(path, Cl);
 	if (rp != "")
 	{
@@ -62,10 +62,20 @@ void	Response::rp3(int socket, Location Loc)
 		rp = utils->CheckError(path, Cl);
 		if (rp == "" && is_directory(path))
 		{
-			bd.UploadHandler(Cl);
-			filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
-			rp = bd.rp_201();
-			utils->SendResponse(Cl, rp, socket);
+			try
+			{
+				bd.UploadHandler(Cl);
+				filename = Cl.getConfig().get_real_path(rq["uri"], Loc);
+				rp = bd.rp_201();
+				utils->SendResponse(Cl, rp, socket);
+
+			}
+			catch(const BodyUpload::Error409 & e)
+			{
+				(void)e;
+				rp = utils->getError(Cl, 409);
+				utils->SendResponse(Cl, rp, socket);
+			}
 		}
 	}
 }
@@ -89,7 +99,8 @@ void	Response::rp2(int socket, Location &Loc)
 		{
 			if (Loc.get_index() != "")
 			{
-				rt = Cl.getConfig().get_real_path("/" + Loc.get_index(), Loc);
+				std::string	index = "/" + Loc.get_index();
+				rt = utils->getRealPath(index, Loc);
 				rp = rp5(rt);
 			}
 			else

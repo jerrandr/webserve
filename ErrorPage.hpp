@@ -22,6 +22,7 @@ class ErrorPage
         std::string path_405;
         std::string path_406;
         std::string path_408;
+        std::string path_409;
         std::string path_410;
         std::string path_411;
         std::string path_413;
@@ -48,6 +49,7 @@ class ErrorPage
         const std::string &get_path_405() const;
         const std::string &get_path_406() const;
         const std::string &get_path_408() const;
+        const std::string &get_path_409() const;
         const std::string &get_path_410() const;
         const std::string &get_path_411() const;
         const std::string &get_path_413() const;
@@ -68,6 +70,7 @@ class ErrorPage
         void    set_path_405(std::string &path);
         void    set_path_406(std::string &path);
         void    set_path_408(std::string &path);
+        void    set_path_409(std::string &path);
         void    set_path_410(std::string &path);
         void    set_path_411(std::string &path);
         void    set_path_413(std::string &path);
