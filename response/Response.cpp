@@ -48,7 +48,9 @@ void	Response::rp3(int socket, Location Loc)
 	std::string	filename;
 	std::string	rp;
 	std::string	path;
-	
+	std::string	error409;
+
+	error409 = utils->getError(Cl, 409);
 	path = utils->getRealPath(Loc.get_path_upload(), Loc);
 	rp = utils->CheckError(path, Cl);
 	if (rp != "")
@@ -73,8 +75,7 @@ void	Response::rp3(int socket, Location Loc)
 			catch(const BodyUpload::Error409 & e)
 			{
 				(void)e;
-				rp = utils->getError(Cl, 409);
-				utils->SendResponse(Cl, rp, socket);
+				utils->SendResponse(Cl, error409, socket);
 			}
 		}
 	}

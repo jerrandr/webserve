@@ -20,6 +20,7 @@ ErrorPage::ErrorPage()
     path_405 = "error/405.html";
     path_406 = "error/406.html";
     path_408 = "error/408.html";
+    path_409 = "error/409.html";
     path_410 = "error/410.html";
     path_411 = "error/411.html";
     path_413 = "error/413.html";
@@ -62,6 +63,7 @@ ErrorPage &ErrorPage::operator=(const ErrorPage &other)
     path_503 = other.path_503;
     path_504 = other.path_504;
     path_505 = other.path_505;
+    path_409 = other.path_409;
     return *this;
 }
 /*getters*/

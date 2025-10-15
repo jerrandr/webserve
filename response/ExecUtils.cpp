@@ -28,6 +28,7 @@ ExecUtils::ExecUtils()
 	Er.insert(std::pair<std::string, std::string>("405", "method not allowed"));
 	Er.insert(std::pair<std::string, std::string>("406", "not acceptable"));
 	Er.insert(std::pair<std::string, std::string>("408", "request timeout"));
+	Er.insert(std::pair<std::string, std::string>("409", "Conflict"));
 	Er.insert(std::pair<std::string, std::string>("410", "gone"));
 	Er.insert(std::pair<std::string, std::string>("411", "length required"));
 	Er.insert(std::pair<std::string, std::string>("413", "playload too large"));
@@ -84,6 +85,9 @@ std::string	ExecUtils::getFilenameError(int st, const ErrorPage & ep)
 			break;
 		case 408:
 			filename = ep.get_path_408();
+			break;
+		case 409:
+			filename = ep.get_path_409();
 			break;
 		case 410:
 			filename = ep.get_path_410();
