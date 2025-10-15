@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:58:07 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 12:28:15 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/15 10:23:36 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,10 @@ int main(int argc, char **argv)
          (void)e;
     }
     catch(std::logic_error &e)
+    {
+        std::cerr << e.what() << std::endl;
+    }
+    catch(std::exception &e)
     {
         std::cerr << e.what() << std::endl;
     }

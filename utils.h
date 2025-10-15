@@ -6,13 +6,13 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/02 12:57:35 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/10 13:45:47 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/15 10:19:46 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef UTILS_H
 #define UTILS_H
-
+extern int g_while;
 #include <cstring>
 #include <iostream>
 #include <netinet/in.h>

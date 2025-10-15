@@ -6,13 +6,14 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:14:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/19 13:36:59 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/15 10:18:34 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "WebServer.hpp"
 #include "Server.hpp"
 
+int g_while = 0;
 WebServer::WebServer()
 {
     polls = NULL;
@@ -40,7 +41,7 @@ WebServer &WebServer::operator=(const WebServer &other)
 void    WebServer::no_stop_serv()
 {
     signal(SIGINT,SignalHandling::handle_signal); 
-    while(1)
+    while(g_while == 0)
     {
         polls->start_poll();
         for(std::size_t i = 0; i < servs.size();i++)

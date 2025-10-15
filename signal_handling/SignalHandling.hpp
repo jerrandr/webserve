@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   SignalHandling.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 08:02:44 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/08 18:56:52 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/15 10:23:22 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

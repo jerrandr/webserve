@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/09 08:22:22 by msalohy           #+#    #+#             */
-/*   Updated: 2025/09/20 13:11:12 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/15 10:23:18 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,7 @@ const char * SignalHandling::ExceptSTop::what() const throw()
 void SignalHandling::handle_signal(int sign)
 {
    if (sign > 0)
-        throw ExceptSTop() ;
+    {
+        g_while = 1;
+    }
 }
