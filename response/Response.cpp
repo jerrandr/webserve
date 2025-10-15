@@ -17,8 +17,6 @@
 Response::~Response()
 {
 	delete utils;
-	// if (envp != NULL)
-	// 	delete envp;
 }
 
 Response::Response(std::map<std::string, std::string> config, Client &cl): Cl(cl)
@@ -28,7 +26,7 @@ Response::Response(std::map<std::string, std::string> config, Client &cl): Cl(cl
 	cf = Cl.getConfig();
 	utils = new ExecUtils();
 	ctType = "";
-	// envp = NULL;
+	qr = "";
 	for (std::map<std::string, std::string>::iterator i = config.begin(); i != config.end(); i++)
 	{
 		if ((*i).first == "Content-Type")
@@ -85,6 +83,7 @@ void	Response::rp2(int socket, Location &Loc)
 	if (rq["method"] == "GET" && Cl.is_dir_listing(rq["uri"]) != 1)
 	{
 		rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
+		utils->getQuery(rt);
 		rp = utils->CheckError(rt, Cl);
 		if (rp == "" && is_directory(rt))
 		{
@@ -109,6 +108,9 @@ void    Response::rp(int socket)
 	Location	Loc;
 	std::string	rp;
 
+	qr = utils->getQuery(rq["uri"]);
+	if (qr != "")
+		rq["uri"] = rq["uri"].substr(0, rq["uri"].find(qr) - 1);
 	rp = "";
 	Loc = Cl.getConfig().get_location_match(rq["uri"]);
 	if (rq["uri"].size() >= 2048)

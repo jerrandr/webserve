@@ -20,10 +20,11 @@ Cgi::~Cgi()
 	delete [] envp;
 }
 
-Cgi::Cgi(char **Envp, int length, Client &cl, std::string path): Cl(cl)
+Cgi::Cgi(char **Envp, int length, Client &cl, std::string path, std::string	query): Cl(cl)
 {
 	Config	cf;
 
+	qr = query;
 	pth = path;
 	cf = Cl.getConfig();
 	utils = new ExecUtils();
@@ -120,11 +121,16 @@ void	Cgi::GetAndSend(int &fd, int fdc)
 
 void		Cgi::IfBody(Pollfd *pl, std::string body, int fd2[2], int pid)
 {
+	std::string	tmp;
+
+	tmp = envp[1];
 	if (body != "")
 	{
 		if (pl->get_status(fd2[1]) & POLLOUT)
 		{
 			write(fd2[1], body.c_str(), body.size());
+			if (tmp.find("POST") != std::string::npos && qr != "")
+				write(fd2[1], qr.c_str(), qr.size());			
 			pl->erase_fd(fd2[1]);
 			pl->decrement_new_fd();
 		}

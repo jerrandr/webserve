@@ -39,6 +39,7 @@ class Response
 		int									lv;
 		Client								&Cl;
 		std::vector<std::string>			envStock;
+		std::string							qr;
 
 								Response(Response const &cpy);
 		void					initEnvp(std::string rt, std::string bd);

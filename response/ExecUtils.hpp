@@ -52,6 +52,7 @@ class ExecUtils
 		void				SendResponse(Client & Cl, std::string &rp, int fdc);
 		void				getData1(int fd, Client & cl);
 		std::string			getRealPathUpload(std::string uri, Location loc);
+		std::string			getQuery(std::string str);
 };
 							
 

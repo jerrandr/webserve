@@ -39,6 +39,7 @@ class Cgi
 		int			lv;
 		Client		&Cl;
 		std::string	pth;
+		std::string	qr;
 		Cgi			&operator=(Cgi const & cpy);
 					Cgi(Cgi const & cpy);
 		std::string	getStatus(std::string p);
@@ -52,7 +53,7 @@ class Cgi
 		std::string	getType(std::string ct);
 	public:
 				~Cgi();
-				Cgi(char **Envp, int length, Client &cl, std::string path);
+				Cgi(char **Envp, int length, Client &cl, std::string path, std::string	query);
 		void	MyExec(int fdc, std::string body);
 };
 

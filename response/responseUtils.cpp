@@ -15,14 +15,10 @@
 void	Response::initEnvp(std::string rt, std::string bd)
 {
 	std::string	cl;
-	std::string	query;
 	int			nb;
 
 	nb = 0;
 	cl = utils->ToString(lv);
-	query = "";
-	if (rq["uri"].find("?") != std::string::npos)
-		query = rq["uri"].substr(rq["uri"].find("?") + 1, rq["uri"].length() - 1);
 	envStock.push_back("GATEWAY_INTERFACE=CGI/1.1");
 	envStock.push_back("REQUEST_METHOD=" + rq["method"]);
 	envStock.push_back("SERVER_PROTOCOL=HTTP/1.1");
@@ -30,8 +26,8 @@ void	Response::initEnvp(std::string rt, std::string bd)
 	envStock.push_back("SCRIPT_FILENAME=" + rt);
 	if (bd != "" && rq["method"] == "POST")
 		envStock.push_back("CONTENT_TYPE=" + bd);
-	if (rq["method"] == "GET" && query != "")
-		envStock.push_back("QUERY_STRING=" + query);
+	if (rq["method"] == "GET" && qr != "")
+		envStock.push_back("QUERY_STRING=" + qr);
 	if (rq["method"] == "POST" && cl != "")
 		envStock.push_back("CONTENT_LENGTH=" + cl);
 	envp = new char*[envStock.size() + 1];
@@ -164,7 +160,6 @@ void	Response::ifCgi(Location Loc, int socket, std::string bd)
 	pth = Loc.get_path_cgi();
 	bdy = Cl.getBody();
 	rt = Cl.getConfig().get_real_path(rq["uri"], Loc);
-
 	if (Check_502(pth))
 	{
 		rp = utils->getError(Cl, 502);
@@ -172,7 +167,7 @@ void	Response::ifCgi(Location Loc, int socket, std::string bd)
 		return;
 	}
 	initEnvp(rt, bd);
-	Cgi cgi(envp, lv, Cl, Loc.get_path_cgi());
+	Cgi cgi(envp, lv, Cl, Loc.get_path_cgi(), qr);
 	cgi.MyExec(socket, bdy);
 	return ;
 }

@@ -242,3 +242,14 @@ std::string ExecUtils::getRealPathUpload(std::string uri, Location loc)
 	real += uri;
     return (real);
 }
+
+std::string	ExecUtils::getQuery(std::string str)
+{
+	std::string					qr;
+	
+	qr = "";
+	if (str.find("?") == std::string::npos)
+		return (qr);
+	qr = str.substr(str.find("?") + 1, str.length());
+	return (qr);	
+}

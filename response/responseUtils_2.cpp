@@ -18,7 +18,7 @@ bool	Response::ifCgi2(Location Loc)
 	Config						cfg;
 	std::string					uriExt;
 	std::vector<std::string>	ext;
-
+	
 	cfg = Cl.getConfig();
 	rlp = cfg.get_real_path(rq["uri"], Loc);
 	ext = split(Loc.get_extension_cgi(), " ");
