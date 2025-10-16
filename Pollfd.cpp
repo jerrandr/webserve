@@ -75,10 +75,7 @@ void    Pollfd::start_poll()
     if(fds.size() <= 0)
         return ;
     if (poll(&(fds[0]),(int)fds.size(),0) == -1)
-    {
-        std::cout << "bad" << std::endl;
         return;
-    }
     for(std::vector<pollfd>::iterator i = fds.begin(); i != fds.end();i++)
     {
         tab_fds[(*i).fd] = (*i).revents;

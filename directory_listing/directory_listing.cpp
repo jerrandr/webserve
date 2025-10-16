@@ -110,7 +110,6 @@ static bool access_denied(std::string &dir, std::string name, Config config, Pol
     std::stringstream ss;
 
     
-    std::cout << "name = " << name << std::endl;
     if(access(name.c_str(),F_OK) < 0)
     {
         dir = build_html_page_error(404,config,polls,fd_wait);

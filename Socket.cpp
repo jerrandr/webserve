@@ -142,7 +142,6 @@ void    Socket::listen_port()
                 try
                 {
                     (*j).exec_error_server();
-                    std::cout << "bad alloc " << e.what() << std::endl;
                 }
                 catch(std::bad_alloc& e)
                 {
@@ -156,13 +155,11 @@ void    Socket::listen_port()
                 (void)e;
                 try
                 {
-                    std::cout << "out of range " << e.what() << std::endl;
                     (*j).exec_error_server();
                 }
                 catch(std::out_of_range& e)
                 {
                    (void)e;
-                    std::cout << "out of range\n";
                    (*j).exec_500();
                 }
             }
