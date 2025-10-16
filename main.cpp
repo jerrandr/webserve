@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 13:58:07 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/15 10:23:36 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/16 08:16:20 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int main(int argc, char **argv)
     int         fd;
     std::string input;
 
+    signal(SIGINT,SignalHandling::handle_signal); 
     if (argc > 2)
     {
         std::cout << "invalid arg" << std::endl;
@@ -60,10 +61,6 @@ int main(int argc, char **argv)
          (void)e;
     }
     catch(std::logic_error &e)
-    {
-        std::cerr << e.what() << std::endl;
-    }
-    catch(std::exception &e)
     {
         std::cerr << e.what() << std::endl;
     }

@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/28 13:14:17 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/15 10:18:34 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/16 08:16:05 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ WebServer &WebServer::operator=(const WebServer &other)
 
 void    WebServer::no_stop_serv()
 {
-    signal(SIGINT,SignalHandling::handle_signal); 
     while(g_while == 0)
     {
         polls->start_poll();
