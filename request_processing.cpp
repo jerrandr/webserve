@@ -30,7 +30,7 @@ void Client::max_body_size_trait()
 			t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 			if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
 			{
-				if (send(socket, t.c_str(), t.size(), 0) < 0)
+				if (send(socket, t.c_str(), t.size(), MSG_NOSIGNAL) < 0)
 					stat = -1;
 			}
 			return;
@@ -44,7 +44,7 @@ void Client::max_body_size_trait()
 		t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 		if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
 		{
-			if (send(socket, t.c_str(), t.size(), 0) < 0)
+			if (send(socket, t.c_str(), t.size(), MSG_NOSIGNAL) < 0)
 				stat = -1;
 		}
 	}
@@ -103,7 +103,7 @@ void Client::exec_http_not_supported()
 	exec = "HTTP/1.1 505 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
 	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
     {
-		if (send(socket, exec.c_str(), exec.size(), 0) < 0)
+		if (send(socket, exec.c_str(), exec.size(), MSG_NOSIGNAL) < 0)
 			stat = -1;
 	}
 }

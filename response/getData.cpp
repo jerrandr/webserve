@@ -21,13 +21,8 @@ std::string ExecUtils::getData(std::string filename, Client & cl)
 	fd = fd_is_ready(filename, cl.getPoll(), cl.getFdWait());
 	if (fd == -1)
 		throw NotReady();
-	getData1(fd, cl);
-	if (!cl.st)
-		throw NotReady();
+	data = getData(fd);
 	cl.st = false;
-	data.assign(cl.data.data(), cl.data.size());
-	cl.data.clear();
-	fd_closed(fd, cl.getPoll(), cl.getFdWait(),filename);
 	return (data);
 }
 
@@ -53,18 +48,6 @@ std::vector<std::pair<int, std::string> >	ExecUtils::get_403_404(std::string str
 	return (res);
 }
 
-void	ExecUtils::getData1(int fd, Client & cl)
-{
-	std::vector<char> &data = cl.data;
-	char		buff[1048576];
-	size_t			n;
-
-	n = 0;
-	if ((n = read(fd, buff, sizeof(buff))) > 0)
-		data.insert(data.end(), buff, buff + n);
-	else
-		cl.st = true;
-}
 
 std::string	ExecUtils::getData(int fd)
 {

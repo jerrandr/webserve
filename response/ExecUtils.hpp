@@ -50,10 +50,7 @@ class ExecUtils
 		std::string			getExt(std::string filename);
 		std::string			CheckError(std::string	rp, Client &Cl);
 		void				SendResponse(Client & Cl, std::string &rp, int fdc);
-		void				getData1(int fd, Client & cl);
 		std::string 		getRealPath(std::string uri, Location loc);
-
-		// std::string			getRealPathUpload(std::string uri, Location loc);
 		std::string			getQuery(std::string str);
 };
 							

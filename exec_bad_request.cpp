@@ -85,7 +85,7 @@ void    Client::exec_bad_request()
 	exec = "HTTP/1.1 400 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
 	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
     {
-		if (send(socket, exec.c_str(), exec.size(), 0) < 0)
+		if (send(socket, exec.c_str(), exec.size(), MSG_NOSIGNAL) < 0)
 			stat = -1;
 	}
 }

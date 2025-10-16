@@ -227,7 +227,7 @@ std::string    Client::directory_listing(std::string name, std::string uri)
     }
     if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
     {
-        if (send(socket, dir.c_str(), dir.size(), 0) < 0)
+        if (send(socket, dir.c_str(), dir.size(), MSG_NOSIGNAL) < 0)
             stat = -1;;
     }
     if(dirp)

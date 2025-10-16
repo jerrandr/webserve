@@ -107,6 +107,18 @@ void    Socket::listen_port()
             {
                 if(re)
                 {
+                    if ((re & POLLERR) || (re & POLLHUP))
+                    {
+                        std::list <Client>::iterator tmp = j;
+                        polls->erase_fd((*j).get_socket_client());
+                        close((*j).get_socket_client());
+                        (*j).set_socket(-1);
+                        j++;
+                        clients.erase(tmp);
+                        if (j++ == clients.end())
+                            break;
+                        continue;
+                    }
                     if (re & POLLIN)
                         (*j).verify_connex(1);
                 }

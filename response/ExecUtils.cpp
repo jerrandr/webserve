@@ -139,6 +139,7 @@ std::string	ExecUtils::getError(Client &cl, int stat)
 	std::string									nbr;
 	std::string									filename;
 	std::vector<std::pair<int, std::string> >	checker;
+	std::string									ext;
 	Config										cf;
 
 	cf = cl.getConfig();
@@ -148,14 +149,16 @@ std::string	ExecUtils::getError(Client &cl, int stat)
 	{
 		ct = checker[0].second;
 		status = checker[0].first;
+		ext = ".html";
 	}
 	else
 	{
 		ct = getData(filename, cl);
 		status = ToString(stat);
+		ext = getExt(filename);
 	}
 	nbr = ToString(ct.size());
-	res = "HTTP/1.1 " + status +" "+ Er[status] + "\r\nContent-Length: " + nbr + "\r\nContent-Type: text/html\r\n\r\n" + ct;
+	res = "HTTP/1.1 " + status +" "+ Er[status] + "\r\nContent-Length: " + nbr + "\r\nContent-Type: " + cf.get_mime(ext) + "\r\n\r\n" + ct;
 	return (res);
 }
 
@@ -223,7 +226,7 @@ void	ExecUtils::SendResponse(Client & Cl, std::string &rp, int fdc)
 		pt = std::min(pt, data.length() - 1);
 	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 	{
-		if (send(fdc, data.c_str(),pt, 0) < 0)
+		if (send(fdc, data.c_str(),pt, MSG_NOSIGNAL) < 0)
 			Cl.set_status_client(-1);
 		Cl.sd->sent += pt;
 		data = data.substr(pt, data.length());
