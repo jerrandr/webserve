@@ -129,3 +129,9 @@ void    Pollfd::close_all_socket()
             close((*i).fd);
         }
 }
+void    Pollfd::dec_fd_num(int num)
+{
+    new_fd -= num;
+    if (new_fd < 0)
+        new_fd = 0;
+}

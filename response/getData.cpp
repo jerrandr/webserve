@@ -22,6 +22,7 @@ std::string ExecUtils::getData(std::string filename, Client & cl)
 	if (fd == -1)
 		throw NotReady();
 	data = getData(fd);
+	close(fd);
 	cl.st = false;
 	return (data);
 }

@@ -34,8 +34,8 @@ private:
 	std::map<std::string, int> fd_wait;
 	ssize_t request_time;
 	ssize_t client_timeout;
-	Client();
 
+	Client();
 public:
 	//+++++++++++++++++++++
 	int 				pid;
@@ -46,6 +46,7 @@ public:
 	std::vector<char>	data;
 	bool				st;
 	Send				*sd;
+	int len_fd;
 	//+++++++++++++++++++++
 	~Client();
 	Client(const Client &other);
@@ -109,5 +110,9 @@ public:
 	bool is_post();
 	bool is_len_required();
 	void exec_len_required();
+
+	void	len_dec();
+	void	len_inc();
+	int		get_len_fd();
 };
 #endif

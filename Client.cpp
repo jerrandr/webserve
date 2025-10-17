@@ -32,13 +32,16 @@ Client::Client()
 		bg = 0;
 		st = false;
 		sd = NULL;
+		len_fd = 0;
 	//++++++++++++++++++
 }
 
 Client::~Client()
 {
 	if (sd != NULL)
+	{
 		delete sd;
+	}
 	if (fd_in != -1)
 		close(fd_in);
 }
@@ -70,6 +73,7 @@ Client &Client::operator=(const Client &other)
 	data = other.data;
 	st = other.st;
 	sd = other.sd;
+	len_fd = other.len_fd;
 	//++++++++++++++++++
 	return (*this);
 }
@@ -97,6 +101,7 @@ Client::Client(int s, Pollfd *poll, Config &conf)
 		bg = 0;
 		st = false;
 		sd = NULL;
+		len_fd =0;
 	//++++++++++++++++++
 }
 std::string Client::get_request() const
@@ -282,7 +287,7 @@ void Client::receve_message()
 	}
 	else if (stat != 1)
 	{
-		if (real_body == size_body || (real_body == -1 && size_body == 0))
+		if (real_body == size_body || (real_body == -1))
 		{
 			status_request = 1;
 		}
@@ -309,7 +314,7 @@ void Client::receve_message()
 		status = 2;
 		size_body = 0;
 		parse_request();
-		if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0)
+		if ((fd_wait.size() == 0 && get_len_fd() <= 0 && !fl))
 		{
 			request = "";
 			body = "";
@@ -378,4 +383,19 @@ void    Client::set_status_client(int s)
 void    Client::set_socket(int s)
 {
 	socket  = s;
+}
+
+
+void	Client::len_dec()
+{
+	if (len_fd > 0)
+		len_fd = len_fd - 1;
+}
+void	Client::len_inc()
+{
+	len_fd = len_fd +1;
+}
+int		Client::get_len_fd()
+{
+	return len_fd;
 }

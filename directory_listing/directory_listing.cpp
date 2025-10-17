@@ -84,6 +84,7 @@ static std::string build_html_page_error(int err,Config config, Pollfd *polls,st
             if (fd < 0)
                 throw NotReady("404");
             head = get_html_page(fd);
+            close(fd);
             fd_closed(fd,polls,fd_wait,config.get_errors().get_path_404());
         }
     }
@@ -99,6 +100,7 @@ static std::string build_html_page_error(int err,Config config, Pollfd *polls,st
             if (fd < 0)
                 throw NotReady("403");
             head = get_html_page(fd);
+            close(fd);
             fd_closed(fd,polls,fd_wait,config.get_errors().get_path_403());
         }
     }
@@ -227,7 +229,7 @@ std::string    Client::directory_listing(std::string name, std::string uri)
     }
     if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
     {
-        if (send(socket, dir.c_str(), dir.size(), MSG_NOSIGNAL) < 0)
+        if (send(socket, dir.c_str(), dir.size(), MSG_NOSIGNAL) <= 0)
             stat = -1;;
     }
     if(dirp)

@@ -1,0 +1,80 @@
+/* ---- RESET & BASE ---- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-image: url("./f2.jpg");
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: #f0f0f0;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* ---- FORM ---- */
+.upload-container {
+  width: 500px;
+  max-width: 90%;
+  padding: 30px;
+  border: 1px solid #5105a8c7;
+  border-radius: 12px;
+  background-color: rgba(81, 5, 168, 0.05);
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 0 20px rgba(81, 5, 168, 0.3);
+}
+
+.upload-container:hover {
+  background-color: rgba(81, 5, 168, 0.2);
+  transform: scale(1.02);
+}
+
+/* ---- ICON ---- */
+.upload-icon i {
+  font-size: 60px;
+  background-image: linear-gradient(to right, #5105a8, #feb47b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+/* ---- TITLE ---- */
+.upload-title {
+  color: #5105a8;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+/* ---- FILE INPUT ---- */
+.file-input {
+  color: #fff;
+  border: 1px solid #5105a8c7;
+  padding: 10px;
+  border-radius: 8px;
+  background: transparent;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* ---- BUTTON ---- */
+.upload-btn {
+  background: linear-gradient(to right, #5105a8, #feb47b);
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.upload-btn:hover {
+  opacity: 0.85;
+}

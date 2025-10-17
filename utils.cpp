@@ -63,22 +63,12 @@ int fd_is_ready(std::string path, Pollfd *polls, std::map<std::string, int> &fd_
     int fd;
 
     fd = -1;
-    try
-    {
-        fd = fd_wait.at(path);
-        if ((polls->get_status(fd) & POLLIN))
-            return fd;
-    }
-    catch(const std::out_of_range &e)
-    {
-        fd = open(path.c_str(), O_RDONLY);
-        if (fd < 0)
-            throw std::bad_alloc();
-        (void)e;
-        polls->add_new_fd(fd);
-        fd_wait[path] = fd;
-    }
-    return -1;
+    (void)polls;
+    (void)fd_wait;
+    fd = open(path.c_str(), O_RDONLY);
+    if (fd < 0)
+        throw std::bad_alloc();
+    return fd;
 }
 
 void  fd_closed(int fd,Pollfd *polls, std::map<std::string, int> &fd_wait, std::string path)

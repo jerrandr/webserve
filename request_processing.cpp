@@ -30,7 +30,7 @@ void Client::max_body_size_trait()
 			t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 			if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
 			{
-				if (send(socket, t.c_str(), t.size(), MSG_NOSIGNAL) < 0)
+				if (send(socket, t.c_str(), t.size(), MSG_NOSIGNAL) <= 0)
 					stat = -1;
 			}
 			return;
@@ -39,12 +39,13 @@ void Client::max_body_size_trait()
 	if (fd != -1)
 	{
 		t = get_html_page(fd);
+		close(fd);
 		fd_closed(fd, polls, fd_wait, path);
 		ss << t.size();
 		t = "HTTP/1.1 413 KO\r\nContent-Length: " + ss.str() + "\r\nContent-Type: text/html\r\n\r\n" + t;
 		if ((this->polls->get_status(socket) & POLLOUT) && !(this->polls->get_status(socket) & POLLHUP))
 		{
-			if (send(socket, t.c_str(), t.size(), MSG_NOSIGNAL) < 0)
+			if (send(socket, t.c_str(), t.size(), MSG_NOSIGNAL) <= 0)
 				stat = -1;
 		}
 	}
@@ -97,13 +98,14 @@ void Client::exec_http_not_supported()
 		if (fd == -1)
         	throw NotReady("505");
     	head = get_html_page(fd);
+		close(fd);
 		fd_closed(fd,polls,fd_wait,config.get_errors().get_path_505());
 	}
 	ss << head.size();
 	exec = "HTTP/1.1 505 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
 	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
     {
-		if (send(socket, exec.c_str(), exec.size(), MSG_NOSIGNAL) < 0)
+		if (send(socket, exec.c_str(), exec.size(), MSG_NOSIGNAL) <= 0)
 			stat = -1;
 	}
 }
@@ -114,7 +116,7 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 	if ((long)this->config.get_max_allowed_size() < this->get_len_real_body())
 	{
 		max_body_size_trait();
-		if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
+		if ((fd_wait.size() == 0 && get_len_fd() <= 0 && !fl))
 		{
 			request = "";
 			body = "";
@@ -126,7 +128,7 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		try
 		{
 			exec_http_not_supported();
-			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
+			if ((fd_wait.size() == 0 && get_len_fd() <= 0 && !fl))
 			{
 				request = "";
 				body = "";
@@ -143,7 +145,7 @@ bool    Client::other_traitment(std::map<std::string, std::string> config)
 		try
 		{
 			exec_len_required();
-			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
+			if ((fd_wait.size() == 0 && get_len_fd() <= 0 && !fl))
 			{
 				request = "";
 				body = "";
@@ -173,7 +175,7 @@ void Client::parse_request()
 		try
 		{
 			exec_bad_request();
-			if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl )
+			if ((fd_wait.size() == 0 && get_len_fd() <= 0 && !fl) )
 			{
 				request = "";
 				body = "";
@@ -226,7 +228,7 @@ void Client::parse_request()
 		(void)e;
 	}
 	
-	if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
+	if (fd_wait.size() == 0 && get_len_fd() <= 0 && !fl)
 	{
 		request = "";
 		body = "";

@@ -40,6 +40,7 @@ class Pollfd
         void    set_new_fd();
         int     get_new_fd_poll();
         void    decrement_new_fd();
+        void    dec_fd_num(int num);
 
         void    close_all_socket();
 };

@@ -50,13 +50,14 @@ void    Client::exec_len_required()
 		if (fd == -1)
         	throw NotReady("411");
     	head = get_html_page(fd);
+		close(fd);
 		fd_closed(fd,polls,fd_wait,config.get_errors().get_path_411());
 	}
 	ss << head.size();
 	exec = "HTTP/1.1 411 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
 	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
     {
-		if (send(socket, exec.c_str(), exec.size(), MSG_NOSIGNAL) < 0)
+		if (send(socket, exec.c_str(), exec.size(), MSG_NOSIGNAL) <= 0)
 			stat = -1;
 	}
 }

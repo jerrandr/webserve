@@ -30,13 +30,14 @@ void    Client::read_timeout()
 		if (fd == -1)
         	throw NotReady("408");
     	head = get_html_page(fd);
+		close(fd);
 		fd_closed(fd,polls,fd_wait,config.get_errors().get_path_408());
 	}
 	ss << head.size();
 	exec = "HTTP/1.1 408 KO\r\nContent-Length: "+ss.str()+"\r\nContent-Type: text/html\r\n\r\n"+ head;
 	if ((this->polls->get_status(socket) & POLLOUT) && ! (this->polls->get_status(socket) & POLLHUP))
     {
-		if (send(socket, exec.c_str(), exec.size(), MSG_NOSIGNAL) < 0)
+		if (send(socket, exec.c_str(), exec.size(), MSG_NOSIGNAL) <= 0)
 			stat = -1;
 	}
 }
@@ -45,7 +46,7 @@ void    Client::exec_request_timeout()
     try
     {
         read_timeout();
-        if (fd_wait.size() == 0 && polls->get_new_fd_poll() <= 0 && !fl)
+        if ((fd_wait.size() == 0 && get_len_fd() <= 0 && !fl))
 		{
             stat = -1;
 			request = "";

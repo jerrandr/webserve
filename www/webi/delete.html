@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supprimer un fichier</title>
+<link rel="stylesheet" href="delete.css">
+</head>
+<body>
+
+<form class="delete-container" id="deleteForm">
+  <h1>Supprimer un fichier</h1>
+
+  <div class="form-group">
+    <label for="filePath">Chemin du fichier</label>
+    <input type="text" id="filePath" name="filePath" placeholder="Ex : /dir/monfichier.txt" required>
+  </div>
+
+  <button type="submit" class="delete-btn">Supprimer</button>
+</form>
+
+<script>
+const form = document.getElementById('deleteForm');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const path = document.getElementById('filePath').value;
+
+  try {
+    const response = await fetch(path, {
+      method: 'DELETE'
+    });
+
+    if (response.ok) {
+      alert('Fichier supprimé avec succès !');
+    } else {
+      alert('Erreur lors de la suppression : ' + response.status);
+    }
+  } catch (err) {
+    alert('Erreur : ' + err);
+  }
+});
+</script>
+
+</body>
+</html>

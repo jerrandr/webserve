@@ -102,6 +102,7 @@ void	Cgi::GetAndSend(int &fd, int fdc)
 	{
 		pl->add_new_fd(fd);
 		pl->set_new_fd();
+		Cl.len_inc();
 		throw NotReady();
 	}
 	if (pl->get_status(fd) & POLLIN)
@@ -113,6 +114,7 @@ void	Cgi::GetAndSend(int &fd, int fdc)
 	Cl.getPoll()->erase_fd(fd);
 	fd = -1;
 	pl->decrement_new_fd();
+	Cl.len_dec();
 	if (st != "")
 		IfNotFound(st, fdc);
 	else
@@ -133,6 +135,7 @@ void		Cgi::IfBody(Pollfd *pl, std::string body, int fd2[2], int pid)
 				write(fd2[1], qr.c_str(), qr.size());			
 			pl->erase_fd(fd2[1]);
 			pl->decrement_new_fd();
+			Cl.len_dec();
 		}
 		else
 		{
@@ -149,6 +152,7 @@ void	Cgi::ParentTasks(Pollfd *pl, int fd2[2], int fd[2], int pid, int fdc)
 	{
 		pl->erase_fd(fd2[1]);
 		pl->decrement_new_fd();
+		Cl.len_dec();
 	}	
 	close(fd2[0]);
 	close(fd[1]);
@@ -180,6 +184,7 @@ void		Cgi::IfNotActif(std::string body, int fdc, Pollfd *pl)
 	{
 		pl->add_new_fd(fd2[1]);
 		pl->set_new_fd();
+		Cl.len_inc();
 		throw NotReady();
 	}
 	pid = fork();

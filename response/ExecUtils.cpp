@@ -213,31 +213,44 @@ void	ExecUtils::SendResponse(Client & Cl, std::string &rp, int fdc)
 {
 	Pollfd		*pl = Cl.getPoll();
 	size_t		pt = 1048576;
+	size_t		sentNow = 0;
 
 	if (Cl.sd == NULL)
 	{
 		Cl.sd = new Send(rp);
 		pl->set_new_fd();
+		Cl.len_inc();
 	}
-	std::string	& data = Cl.sd->getData();	
-	if (data.length() == 1)
-		pt = 1;
-	else
-		pt = std::min(pt, data.length() - 1);
-	if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
-	{
-		if (send(fdc, data.c_str(),pt, MSG_NOSIGNAL) < 0)
-			Cl.set_status_client(-1);
-		Cl.sd->sent += pt;
-		data = data.substr(pt, data.length());
-		if (Cl.sd->getSize() > Cl.sd->sent)
-			throw NotReady();
-		else
+	std::string	& data = Cl.sd->getData();
+	pt = std::min(pt, data.length());
+	if (pt > 0)
+	{		
+		if ((pl->get_status(fdc) & POLLOUT) && !(pl->get_status(fdc) & POLLHUP))
 		{
-			pl->decrement_new_fd();
-			delete Cl.sd;
-			Cl.sd = NULL;
+			if ((sentNow = send(fdc, data.c_str(),pt, MSG_NOSIGNAL)) <= 0)
+			{
+				Cl.set_status_client(-1);
+				pl->decrement_new_fd();
+				Cl.len_dec();
+				delete Cl.sd;
+				Cl.sd = NULL;
+				pt = 0;
+				return ;
+			}
+			Cl.sd->sent += sentNow;
+			data = data.substr(sentNow);
+			if (Cl.sd->getSize() > Cl.sd->sent)
+			{
+				throw NotReady();
+			}
 		}
+	}
+	else
+	{
+		pl->decrement_new_fd();
+		Cl.len_dec();
+		delete Cl.sd;
+		Cl.sd = NULL;
 	}
 }
 

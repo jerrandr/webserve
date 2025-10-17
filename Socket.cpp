@@ -105,27 +105,31 @@ void    Socket::listen_port()
             re = polls->get_status((*j).get_socket_client());
             try
             {
-                if(re)
+                if(re & POLLIN)
                 {
                     if ((re & POLLERR) || (re & POLLHUP))
                     {
-                        std::list <Client>::iterator tmp = j;
-                        polls->erase_fd((*j).get_socket_client());
-                        close((*j).get_socket_client());
-                        (*j).set_socket(-1);
-                        j++;
-                        clients.erase(tmp);
-                        if (j++ == clients.end())
-                            break;
-                        continue;
+                    std::list <Client>::iterator tmp = j;
+                    polls->erase_fd((*j).get_socket_client());
+                    close((*j).get_socket_client());
+                    (*j).set_socket(-1);
+                    polls->dec_fd_num((*j).get_len_fd());
+                    j++;
+                    clients.erase(tmp);
+                    if (j++ == clients.end())
+                        break;
+                    continue;
                     }
-                    if (re & POLLIN)
-                        (*j).verify_connex(1);
+                    (*j).verify_connex(1);
                 }
-                if (((*j).size_fd_wait() != 0 || polls->get_new_fd_poll() > 0) && (*j).get_status_request() == 1)
-                    (*j).parse_request(); 
-                else if ((*j).get_status_request() == 1 && (*j).size_fd_wait() == 0 && (*j).get_request() != "")
+                else if (((*j).size_fd_wait() != 0 || polls->get_new_fd_poll() > 0) && (*j).get_status_request() == 1)
+                {
                     (*j).parse_request();
+                } 
+                else if ((*j).get_status_request() == 1 && (*j).size_fd_wait() == 0 && (*j).get_request() != "")
+                {
+                    (*j).parse_request();
+                }
                 else if ((*j).get_status_request() != 1 && (*j).get_request() != "")
                 {
                     if (time(NULL) - (*j).get_timeout() >= 60 && !(re & POLLIN))
@@ -137,11 +141,11 @@ void    Socket::listen_port()
                     (*j).set_status_client(-1);
                 if ((*j).get_status() < 0)
                 {
-    
                     std::list <Client>::iterator tmp = j;
                     polls->erase_fd((*j).get_socket_client());
                     close((*j).get_socket_client());
                     (*j).set_socket(-1);
+                    polls->dec_fd_num((*j).get_len_fd());
                     j++;
                     clients.erase(tmp);
                     if (j++ == clients.end())
