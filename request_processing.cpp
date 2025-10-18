@@ -6,7 +6,7 @@
 /*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/13 08:48:38 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/15 12:15:36 by msalohy          ###   ########.fr       */
+/*   Updated: 2025/10/18 08:28:48 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,6 @@ void Client::parse_request()
 	{
 		(void)e;
 	}
-	
 	if (fd_wait.size() == 0 && get_len_fd() <= 0 && !fl)
 	{
 		request = "";
@@ -237,12 +236,13 @@ void Client::parse_request()
 		try
 		{
 			if(config.at("Connection") == "close")
+			{
 				stat = -1;
+			}
 		}
 		catch(const std::out_of_range &e)
     	{
         	(void)e;
     	}
-		
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ExecUtils.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 12:29:23 by jerrandr          #+#    #+#             */
-/*   Updated: 2025/10/13 10:17:43 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/18 08:31:19 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -242,6 +242,13 @@ void	ExecUtils::SendResponse(Client & Cl, std::string &rp, int fdc)
 			if (Cl.sd->getSize() > Cl.sd->sent)
 			{
 				throw NotReady();
+			}
+			else
+			{
+			pl->decrement_new_fd();
+			Cl.len_dec();
+			delete Cl.sd;
+			Cl.sd = NULL;
 			}
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Socket.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jerrandr <jerrandr@student.42antananari    +#+  +:+       +#+        */
+/*   By: msalohy <msalohy@student.42antananarivo    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/20 14:21:11 by msalohy           #+#    #+#             */
-/*   Updated: 2025/10/04 15:37:00 by jerrandr         ###   ########.fr       */
+/*   Updated: 2025/10/18 08:34:06 by msalohy          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,9 +120,10 @@ void    Socket::listen_port()
                         break;
                     continue;
                     }
-                    (*j).verify_connex(1);
+                    if (re & POLLIN)
+                        (*j).verify_connex(1);
                 }
-                else if (((*j).size_fd_wait() != 0 || polls->get_new_fd_poll() > 0) && (*j).get_status_request() == 1)
+                else if (((*j).size_fd_wait() != 0 || (*j).get_len_fd() > 0) && (*j).get_status_request() == 1)
                 {
                     (*j).parse_request();
                 } 
